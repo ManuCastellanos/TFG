@@ -1,14 +1,21 @@
-import { useEffect } from "react";
-import { moodleWsClient } from "./modules/shared/moodleClientFactory"; // ajusta ruta/alias
+import { useState } from "react";
+import Login from "./components/login/Login";
+import TokenStorage from "./modules/login/infrastructure/TokenStorage";
 
 export default function App() {
-  useEffect(() => {
-    moodleWsClient
-      .call("core_webservice_get_site_info")
-      .then((x) => console.log("SITE INFO:", x))
-      .catch((e) => console.error("MOODLE ERROR FULL:", JSON.stringify(e, null, 2)));
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    TokenStorage.get() !== null
+  );
 
-  }, []);
+  if (!isLoggedIn) {
+    return (
+      <Login
+        baseUrl="http://localhost:8080"
+        serviceShortName="dev_api"
+        onLoggedIn={() => setIsLoggedIn(true)}
+      />
+    );
+  }
 
-  return <h1>Prima Cognita</h1>;
+  return <h1>LOGIN OK</h1>;
 }
