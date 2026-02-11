@@ -87,4 +87,8 @@ export const s = {
   pageFooter:
     "fixed bottom-6 left-6",
 
+  forgotLink:
+  "mt-0.5 w-full text-center text-sm text-sky-600 hover:text-sky-700 hover:underline"
+
+
 };

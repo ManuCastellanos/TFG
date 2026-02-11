@@ -1,6 +1,6 @@
 import type { Token } from "../domain/Token";
 import type IAuthRepository from "../domain/IAuthRepository";
-import { env } from "../../shared/env";
+import { env } from "../../../shared/utils/env";
 
 type ApiResponse =
   | { token: string }

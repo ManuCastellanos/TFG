@@ -4,8 +4,7 @@ import AuthRepository from "../../modules/login/infrastructure/AuthRepository";
 import TokenStorage from "../../modules/login/infrastructure/TokenStorage";
 import { Eye, EyeOff } from "lucide-react";
 import { s } from "./Login.styles";
-
-const INVALID_ACCESS_MSG = "Acceso inválido. Por favor, inténtelo otra vez.";
+import { Constants } from "../../shared/constants/Constants";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ export default function Login() {
       TokenStorage.set(token);
       navigate({ to: "/dashboard" });
     } catch {
-      setError(INVALID_ACCESS_MSG);
+      setError(Constants.INVALID_ACCESS_MSG);
     } finally {
       setLoading(false);
     }
@@ -77,8 +76,17 @@ export default function Login() {
           </div>
 
           <button type="submit" disabled={loading} className={s.primaryBtn}>
-            {loading ? "Entrando..." : "Log in"}
+            {loading ? "Entrando..." : "Acceder"}
           </button>
+          
+          <button
+            type="button"
+            className={s.forgotLink}
+            onClick={() => navigate({ to: "/forgot-password" })}
+          >
+            ¿Olvidó su contraseña?
+          </button>
+          
         </form>
 
         <div className={s.divider} />
