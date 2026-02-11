@@ -1,16 +1,25 @@
-import { useState } from "react";
+import {createRouter, RouterProvider, Route, RootRoute} from "@tanstack/react-router";
 import Login from "./components/login/Login";
-import TokenStorage from "./modules/login/infrastructure/TokenStorage";
+import Dashboard from "./components/dashboard/Dashboard";
+
+const rootRoute = new RootRoute();
+
+const loginRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: Login,
+});
+
+const dashboardRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/dashboard",
+  component: Dashboard,
+});
+
+const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute]);
+
+const router = createRouter({ routeTree });
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = 
-  useState(TokenStorage.get() !== null);
-
-  if (!isLoggedIn) {
-    return (
-      <Login onLoggedIn={() => setIsLoggedIn(true)} />
-    );
-  }
-
-  return <h1>LOGIN OK</h1>;
+  return <RouterProvider router={router} />;
 }
