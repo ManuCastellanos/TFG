@@ -1,1 +1,62 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* 1) Paletas + tokens (sin selectores) */
+@theme inline {
+  /* Brand - primary (#39D196) */
+  --pr-50: #ecfdf5;
+  --pr-100: #d2f9e4;
+  --pr-200: #a8f2ce;
+  --pr-300: #70e5b4;
+  --pr-400: #39d196;
+  --pr-500: #13b67c;
+  --pr-600: #079465;
+  --pr-700: #067653;
+  --pr-800: #075e43;
+  --pr-900: #074d38;
+  --pr-950: #032b21;
+
+  /* Brand - secondary (#DBB351) */
+  --scd-50: #faf7ec;
+  --scd-100: #f4eccd;
+  --scd-200: #ebd89d;
+  --scd-300: #dbb351;
+  --scd-400: #d4a23b;
+  --scd-500: #c58c2d;
+  --scd-600: #a96e25;
+  --scd-700: #884f20;
+  --scd-800: #714222;
+  --scd-900: #613822;
+  --scd-950: #381c10;
+
+  /* Tokens de marca (semánticos) */
+  --color-pr: var(--pr-500);
+  --color-pr-hover: var(--pr-600);
+  --color-scd: var(--scd-300);
+
+  /* Ring */
+  --color-ring: var(--pr-200);
+  --color-ring-strong: var(--pr-300);
+
+  /* Neutros (light por defecto) */
+  --bg: var(--pr-50);
+  --surface: #ffffff;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --muted-2: #94a3b8;
+  --border: #cbd5e1;
+}
+
+/* 2) Dark mode: solo overrides */
+.dark {
+  --bg: #0b1220;
+  --surface: #0f172a;
+  --fg: #e5e7eb;
+  --muted: #94a3b8;
+  --muted-2: #64748b;
+  --border: #1e293b;
+
+  --color-ring: var(--pr-700);
+  --color-ring-strong: var(--pr-600);
+}

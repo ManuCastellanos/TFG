@@ -1,6 +1,11 @@
-import {createRouter, RouterProvider, Route, RootRoute} from "@tanstack/react-router";
-import Login from "./components/login/Login";
-import Dashboard from "./components/dashboard/Dashboard";
+import {
+  createRouter,
+  RouterProvider,
+  Route,
+  RootRoute,
+} from "@tanstack/react-router";
+import Login from "./features/login/Login";
+import Dashboard from "./features/dashboard/Dashboard";
 
 const rootRoute = new RootRoute();
 
