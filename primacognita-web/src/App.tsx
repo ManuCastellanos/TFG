@@ -6,6 +6,8 @@ import {
 } from "@tanstack/react-router";
 import Login from "./features/login/Login";
 import Dashboard from "./features/dashboard/Dashboard";
+import Signup from "./features/signup/Signup";
+import ForgotPassword from "./features/forgot-password/ForgotPassword";
 
 const rootRoute = new RootRoute();
 
@@ -21,7 +23,19 @@ const dashboardRoute = new Route({
   component: Dashboard,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute]);
+const signupRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/signup",
+  component: Signup,
+});
+
+const forgotPasswordRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/forgot_password",
+  component: ForgotPassword,
+});
+
+const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, signupRoute, forgotPasswordRoute]);
 
 const router = createRouter({ routeTree });
 

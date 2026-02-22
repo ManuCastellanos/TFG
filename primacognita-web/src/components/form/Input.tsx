@@ -24,25 +24,29 @@ export const Input = ({
           px-4 pt-7 pb-3 outline-none
           focus:border-(--color-pr)
           focus:ring-2 focus:ring-(--color-ring)
-          disabled:opacity-60 disabled:cursor-not-allowed
           transition-colors duration-200
           `,
           rightAdornment ? "pr-12" : "",
           className
         )}
       />
-
+      
       <label
-        className={`
-          absolute left-4 top-2 text-sm transition-all duration-200
-          text-[--muted-2]
-          peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
-          peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-sm
-          peer-focus:text-[--color-pr]
-        `}
+        className="
+          absolute left-4 top-1/2 -translate-y-1/2 text-base transition-all duration-200
+          text-gray-500
+      
+          peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:text-(--color-pr)
+      
+          peer-[:not(:placeholder-shown)]:top-2
+          peer-[:not(:placeholder-shown)]:translate-y-0
+          peer-[:not(:placeholder-shown)]:text-sm
+          peer-[:not(:placeholder-shown)]:text-pr-hover
+        "
       >
         {placeholder}
       </label>
+
 
       {rightAdornment && (
         <div className="absolute inset-y-0 right-3 flex items-center">

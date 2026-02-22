@@ -31,7 +31,7 @@ export default function Login() {
           Acceder a Prima Cognita
         </Text>
 
-        {error && <Banner variant="success">{error}</Banner>}
+        {error && <Banner variant="error">{error}</Banner>}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <Input
@@ -57,7 +57,7 @@ export default function Login() {
             <Button
               type="button"
               className="w-fit bg-transparent p-0 hover:bg-transparent"
-              onClick={() => navigate({ to: "/forgot-password" })}
+              onClick={() => navigate({ to: "/forgot_password" })}
             >
               <p className="w-full text-center text-sm text-(--pr-700) hover:underline">
                 ¿Olvidó su contraseña?
@@ -72,8 +72,8 @@ export default function Login() {
           <Text className="text-xl font-semibold text-(--fg)">
             Registrarse como usuario
           </Text>
-          <Text className="text-sm text-(--muted)">
-            Para acceder al campus virtual, debes crear una cuenta primero.
+          <Text className="max-w-xs text-sm text-(--muted)">
+            Crea tu cuenta para acceder al campus virtual.
           </Text>
 
           <Button
@@ -84,7 +84,7 @@ export default function Login() {
               "hover:border-[--muted-2] hover:bg-[--surface]",
               "focus:ring-2 focus:ring-[--color-ring]"
             )}
-            onClick={() => navigate({ to: "/register" })}
+            onClick={() => navigate({ to: "/signup" })}
           >
             Crear nueva cuenta
           </Button>
