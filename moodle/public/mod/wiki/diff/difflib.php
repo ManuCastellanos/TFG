@@ -322,6 +322,16 @@ class ouwiki_line {
     }
 
     /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function ouwiki_line($data, $linepos) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($data, $linepos);
+    }
+
+    /**
      * @return string Normalised string representation of this line object
      */
     function get_as_string() {
@@ -372,6 +382,16 @@ class ouwiki_word {
     public function __construct($word,$start) {
         $this->word=$word;
         $this->start=$start;
+    }
+
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function ouwiki_word($word, $start) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($word, $start);
     }
 }
 
@@ -512,6 +532,16 @@ class ouwiki_changes {
             $this->changes[$lastrange]->file2count=$count2
                 -$this->changes[$lastrange]->file2start+1;
         }
+    }
+
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function ouwiki_changes($diff, $count2) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($diff, $count2);
     }
 
     /**
@@ -732,3 +762,4 @@ function ouwiki_diff_html($html1,$html2) {
         '<strong class="accesshide">'.get_string('addedends','wiki').'</strong>');
     return array($result1,$result2);
 }
+

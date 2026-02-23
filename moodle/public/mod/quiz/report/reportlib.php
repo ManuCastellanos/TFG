@@ -111,7 +111,6 @@ function quiz_report_get_significant_questions($quiz) {
         $slotreport->slot = $slot->slot;
         $slotreport->id = $slot->questionid;
         $slotreport->qtype = $slot->qtype;
-        $slotreport->random = $slot->random;
         $slotreport->length = $slot->length;
         $slotreport->number = $number;
         $slotreport->displaynumber = $slot->displaynumber ?? $number;

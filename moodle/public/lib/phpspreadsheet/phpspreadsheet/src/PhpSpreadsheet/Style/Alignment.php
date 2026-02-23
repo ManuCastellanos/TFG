@@ -92,8 +92,6 @@ class Alignment extends Supervisor
     const TEXTROTATION_STACK_EXCEL = 255;
     const TEXTROTATION_STACK_PHPSPREADSHEET = -165; // 90 - 255
 
-    public const INDENT_UNITS_TO_PIXELS = 9;
-
     /**
      * Horizontal alignment.
      */
@@ -170,10 +168,6 @@ class Alignment extends Supervisor
 
     /**
      * Build style array from subcomponents.
-     *
-     * @param mixed[] $array
-     *
-     * @return array{alignment: mixed[]}
      */
     public function getStyleArray(array $array): array
     {
@@ -194,7 +188,7 @@ class Alignment extends Supervisor
      * );
      * </code>
      *
-     * @param mixed[] $styleArray Array containing style information
+     * @param array $styleArray Array containing style information
      *
      * @return $this
      */
@@ -204,7 +198,6 @@ class Alignment extends Supervisor
             $this->getActiveSheet()->getStyle($this->getSelectedCells())
                 ->applyFromArray($this->getStyleArray($styleArray));
         } else {
-            /** @var array{horizontal?: string, vertical?: string, justifyLastLine?: bool, textRotation?: int, wrapText?: bool, shrinkToFit?: bool, readOrder?: int, indent?: int} $styleArray */
             if (isset($styleArray['horizontal'])) {
                 $this->setHorizontal($styleArray['horizontal']);
             }
@@ -530,7 +523,6 @@ class Alignment extends Supervisor
         );
     }
 
-    /** @return mixed[] */
     protected function exportArray1(): array
     {
         $exportedArray = [];

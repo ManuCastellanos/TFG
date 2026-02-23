@@ -34,7 +34,7 @@ abstract class moodleform_mod extends moodleform {
 
     use \core_completion\form\form_trait;
 
-    /** @var stdClass Current data */
+    /** Current data */
     protected $current;
     /**
      * Instance of the module that is being updated. This is the id of the {prefix}{modulename}
@@ -67,7 +67,7 @@ abstract class moodleform_mod extends moodleform {
     protected $_course;
 
     /**
-     * @var stdClass List of modform features
+     * List of modform features
      */
     protected $_features;
     /**
@@ -78,10 +78,10 @@ abstract class moodleform_mod extends moodleform {
      * @var string name of module.
      */
     protected $_modname;
-    /** @var context current context, course or module depends if already exists*/
+    /** current context, course or module depends if already exists*/
     protected $context;
 
-    /** @var bool a flag indicating whether outcomes are being used*/
+    /** a flag indicating whether outcomes are being used*/
     protected $_outcomesused;
 
     /**
@@ -125,6 +125,16 @@ abstract class moodleform_mod extends moodleform {
         }
         $this->init_features();
         parent::__construct('modedit.php');
+    }
+
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function moodleform_mod($current, $section, $cm, $course) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($current, $section, $cm, $course);
     }
 
     /**
@@ -498,8 +508,6 @@ abstract class moodleform_mod extends moodleform {
 
     /**
      * Adds all the standard elements to a form to edit the settings for an activity module.
-     *
-     * @return bool|null
      */
     protected function standard_coursemodule_elements() {
         global $COURSE, $CFG, $DB, $OUTPUT;
@@ -1110,7 +1118,6 @@ abstract class moodleform_mod extends moodleform {
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
         $mform->setType('buttonar', PARAM_RAW);
-        $mform->set_sticky_footer('buttonar');
     }
 
     /**
@@ -1162,7 +1169,7 @@ abstract class moodleform_mod extends moodleform {
     /**
      * Get the list of admin settings for this module and apply any defaults/advanced/locked/required settings.
      *
-     * @param array $datetimeoffsets If passed, this is an array of fieldnames => times that the
+     * @param $datetimeoffsets array - If passed, this is an array of fieldnames => times that the
      *                         default date/time value should be relative to. If not passed, all
      *                         date/time fields are set relative to the users current midnight.
      * @return void

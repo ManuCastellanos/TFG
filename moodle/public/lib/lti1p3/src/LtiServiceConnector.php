@@ -20,7 +20,8 @@ class LtiServiceConnector implements ILtiServiceConnector
     public function __construct(
         private ICache $cache,
         private Client $client
-    ) {}
+    ) {
+    }
 
     public function setDebuggingMode(bool $enable): self
     {

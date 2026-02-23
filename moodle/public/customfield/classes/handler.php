@@ -98,7 +98,7 @@ abstract class handler {
      * Some areas may choose to use singleton/caching here
      *
      * @param int $itemid
-     * @return static
+     * @return handler
      */
     public static function create(int $itemid = 0): handler {
         return new static($itemid);

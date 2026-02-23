@@ -29,7 +29,6 @@ final class text_filter_test extends \advanced_testcase {
     public function test_link_to_entry_with_alias(): void {
         global $CFG;
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -76,7 +75,6 @@ final class text_filter_test extends \advanced_testcase {
     public function test_longest_link_used(): void {
         global $CFG;
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -116,7 +114,6 @@ final class text_filter_test extends \advanced_testcase {
     public function test_link_to_category(): void {
         global $CFG;
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -157,7 +154,6 @@ final class text_filter_test extends \advanced_testcase {
     public function test_ampersands(): void {
         global $CFG;
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -206,7 +202,6 @@ final class text_filter_test extends \advanced_testcase {
     public function test_brackets(): void {
         global $CFG;
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -253,7 +248,6 @@ final class text_filter_test extends \advanced_testcase {
         global $CFG, $GLOSSARY_EXCLUDEENTRY;
 
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);
@@ -298,7 +292,6 @@ final class text_filter_test extends \advanced_testcase {
     public function test_exclude_does_not_exclude_categories(): void {
         global $CFG, $GLOSSARY_EXCLUDEENTRY;
         $this->resetAfterTest(true);
-        $this->setAdminUser();
 
         // Enable glossary filter at top level.
         filter_set_global_state('glossary', TEXTFILTER_ON);

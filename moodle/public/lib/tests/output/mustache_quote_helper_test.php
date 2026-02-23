@@ -35,12 +35,12 @@ final class mustache_quote_helper_test extends \basic_testcase {
      * @covers ::quote
      */
     public function test_quote(): void {
-        $engine = new \Mustache\Engine();
-        $context = new \Mustache\Context([
+        $engine = new \Mustache_Engine();
+        $context = new \Mustache_Context([
             'world' => '{{planet}}',
             'planet' => '<earth>'
         ]);
-        $lambdahelper = new \Mustache\LambdaHelper($engine, $context);
+        $lambdahelper = new \Mustache_LambdaHelper($engine, $context);
 
         $quotehelper = new mustache_quote_helper();
 

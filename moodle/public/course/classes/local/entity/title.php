@@ -30,8 +30,6 @@ interface title {
 
     /**
      * Get the value of this title.
-     *
-     * @return string
      */
     public function get_value(): string;
 }

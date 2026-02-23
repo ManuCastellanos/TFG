@@ -39,7 +39,6 @@ class ExcelArrayPseudoFunctions
         return $result;
     }
 
-    /** @return array<mixed>|string */
     public static function anchorArray(string $cellReference, Cell $cell): array|string
     {
         //$coordinate = $cell->getCoordinate();

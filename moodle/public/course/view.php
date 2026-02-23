@@ -200,11 +200,7 @@ if ($PAGE->user_allowed_editing()) {
                 'The hide param in course view is deprecated. Please use course/format/update.php instead.',
                 DEBUG_DEVELOPER
             );
-            $sectioninfo = get_fast_modinfo($course->id)->get_section_info($hide);
-            if ($sectioninfo) {
-                \core_courseformat\formatactions::section($course->id)->set_visibility($sectioninfo, false);
-            }
-
+            set_section_visible($course->id, $hide, '0');
             if ($sectionid) {
                 redirect(course_get_url($course, $section, ['navigation' => true]));
             } else {
@@ -217,10 +213,7 @@ if ($PAGE->user_allowed_editing()) {
                 'The show param in course view is deprecated. Please use course/format/update.php instead.',
                 DEBUG_DEVELOPER
             );
-            $sectioninfo = get_fast_modinfo($course->id)->get_section_info($show);
-            if ($sectioninfo) {
-                \core_courseformat\formatactions::section($courseid)->set_visibility($sectioninfo, true);
-            }
+            set_section_visible($course->id, $show, '1');
             if ($sectionid) {
                 redirect(course_get_url($course, $section, ['navigation' => true]));
             } else {
@@ -235,13 +228,7 @@ if ($PAGE->user_allowed_editing()) {
             'The marker param in course view is deprecated. Please use course/format/update.php instead.',
             DEBUG_DEVELOPER
         );
-        if ($marker == 0) {
-            \core_courseformat\formatactions::section($course->id)->remove_all_markers();
-        } else {
-            $sectioninfo = get_fast_modinfo($course->id)->get_section_info($marker);
-            \core_courseformat\formatactions::section($course->id)->set_marker($sectioninfo, true);
-        }
-
+        course_set_marker($course->id, $marker);
         if ($sectionid) {
             redirect(course_get_url($course, $section, ['navigation' => true]));
         } else {
@@ -272,18 +259,15 @@ if ($PAGE->user_allowed_editing()) {
             'The move param is deprecated. Please use the standard move modal instead.',
             DEBUG_DEVELOPER
         );
-        $destsectionnum = $section + $move;
-        $sectionactions = \core_courseformat\formatactions::section($course);
-        $modinfo = get_fast_modinfo($course);
-        $sectioninfo = $modinfo->get_section_info($section);
-        if ($sectionactions->move_at($sectioninfo, $destsectionnum)) {
+        $destsection = $section + $move;
+        if (move_section_to($course, $section, $destsection)) {
             if ($course->id == SITEID) {
                 redirect($CFG->wwwroot . '/?redirect=0');
             } else {
                 if ($format->get_course_display() == COURSE_DISPLAY_MULTIPAGE) {
                     redirect(course_get_url($course));
                 } else {
-                    redirect(course_get_url($course, $destsectionnum));
+                    redirect(course_get_url($course, $destsection));
                 }
             }
         } else {

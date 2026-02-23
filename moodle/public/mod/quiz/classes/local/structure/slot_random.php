@@ -16,10 +16,7 @@
 
 namespace mod_quiz\local\structure;
 
-use core\context\module;
-use core\exception\coding_exception;
-use mod_quiz\event\slot_created;
-use mod_quiz\event\slot_filtercondition_updated;
+use context_module;
 
 /**
  * Class slot_random, represents a random question slot type.
@@ -112,6 +109,22 @@ class slot_random {
     }
 
     /**
+     * @deprecated since Moodle 4.3
+     */
+    #[\core\attribute\deprecated(null, since: '4.3', mdl: 'MDL-72321', final: true)]
+    public function set_tags($tags) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
+     * @deprecated since Moodle 4.3
+     */
+    #[\core\attribute\deprecated(null, since: '4.3', mdl: 'MDL-72321', final: true)]
+    public function set_tags_by_id($tagids) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
      * Set filter condition.
      *
      * @param \string $filters
@@ -183,61 +196,19 @@ class slot_random {
         $this->referencerecord->filtercondition = $this->filtercondition;
         $DB->insert_record('question_set_references', $this->referencerecord);
 
+        $trans->allow_commit();
+
         // Log slot created event.
         $cm = get_coursemodule_from_instance('quiz', $quiz->id);
-        slot_created::create([
-            'context' => module::instance($cm->id),
+        $event = \mod_quiz\event\slot_created::create([
+            'context' => context_module::instance($cm->id),
             'objectid' => $this->record->id,
             'other' => [
                 'quizid' => $quiz->id,
                 'slotnumber' => $this->record->slot,
-                'page' => $this->record->page,
-                'questionscontextid' => $this->referencerecord->questionscontextid,
-                'filtercondition' => $this->referencerecord->filtercondition,
-            ],
-        ])->trigger();
-
-        $trans->allow_commit();
-    }
-
-    /**
-     * Update the filter condition for an existing random slot.
-     *
-     * @param array $filtercondition
-     */
-    public function update_filtercondition(array $filtercondition): void {
-        global $DB;
-
-        if (!isset($this->record->id)) {
-            throw new coding_exception('Cannot update filtercondition without slot record ID.');
-        }
-
-        $cm = get_coursemodule_from_instance('quiz', $this->get_quiz()->id);
-        $transaction = $DB->start_delegated_transaction();
-        $filterconditionjson = json_encode($filtercondition);
-        $params = [
-            'component' => 'mod_quiz',
-            'questionarea' => 'slot',
-            'itemid' => $this->record->id,
-            'usingcontextid' => $this->referencerecord->usingcontextid ?? module::instance($cm->id)->id,
-        ];
-        $setreferenceid = $DB->get_field('question_set_references', 'id', $params, MUST_EXIST);
-        $DB->update_record('question_set_references', (object)[
-            'id' => $setreferenceid,
-            'filtercondition' => $filterconditionjson,
-            'questionscontextid' => $this->referencerecord->questionscontextid,
+                'page' => $this->record->page
+            ]
         ]);
-        slot_filtercondition_updated::create([
-            'context' => module::instance($cm->id),
-            'objectid' => $this->record->id,
-            'other' => [
-                'quizid' => $this->get_quiz()->id,
-                'slotnumber' => $this->record->slot,
-                'page' => $this->record->page,
-                'questionscontextid' => $this->referencerecord->questionscontextid,
-                'filtercondition' => $filterconditionjson,
-            ],
-        ])->trigger();
-        $transaction->allow_commit();
+        $event->trigger();
     }
 }

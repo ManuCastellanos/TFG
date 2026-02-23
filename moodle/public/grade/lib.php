@@ -1129,6 +1129,16 @@ class grade_plugin_return {
     }
 
     /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function grade_plugin_return($params = null) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($params);
+    }
+
+    /**
      * Returns return parameters as options array suitable for buttons.
      * @return array options
      */
@@ -1452,6 +1462,38 @@ class grade_structure {
     public $items;
 
     /**
+     * @deprecated since Moodle 4.4 - please use {@see grade_helper::get_element_icon()}
+     */
+    #[\core\attribute\deprecated('grade_helper::get_element_icon', since: '4.4', mdl: 'MDL-77326', final: true)]
+    public function get_element_icon(): void {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
+     * @deprecated since Moodle 4.4 - please use {@see grade_helper::get_element_type_string()}
+     */
+    #[\core\attribute\deprecated('grade_helper::get_element_type_string', since: '4.4', mdl: 'MDL-77326', final: true)]
+    public function get_element_type_string(): void {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
+     * @deprecated since Moodle 4.4 - please use {@see grade_helper::get_element_header()}
+     */
+    #[\core\attribute\deprecated('grade_helper::get_element_header', since: '4.4', mdl: 'MDL-77326', final: true)]
+    public function get_element_header(): void {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
+     * @deprecated since Moodle 4.4 - please use {@see grade_helper::get_activity_link()}
+     */
+    #[\core\attribute\deprecated('grade_helper::get_activity_link', since: '4.4', mdl: 'MDL-77326', final: true)]
+    private function get_activity_link(): void {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
      * Returns URL of a page that is supposed to contain detailed grade analysis
      *
      * At the moment, only activity modules are supported. The method generates link
@@ -1511,6 +1553,14 @@ class grade_structure {
         ));
 
         return $url;
+    }
+
+    /**
+     * @deprecated since Moodle 4.2 - The row is not shown anymore - we have {@see core\output\action_menu}.
+     */
+    #[\core\attribute\deprecated('core\output\action_menu', since: '4.2', mdl: 'MDL-77033', final: true)]
+    public function get_grade_analysis_icon(grade_grade $grade) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
     }
 
     /**
@@ -1622,6 +1672,14 @@ class grade_structure {
     }
 
     /**
+     * @deprecated since Moodle 4.2 - The row is not shown anymore - we have {@see core\output\action_menu}.
+     */
+    #[\core\attribute\deprecated('core\output\action_menu', since: '4.2', mdl: 'MDL-77033', final: true)]
+    public function get_reset_icon($element, $gpr, $returnactionmenulink = false) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
      * Returns a link to reset weights for the given element.
      *
      * @param array  $element An array representing an element in the grade_tree
@@ -1715,6 +1773,14 @@ class grade_structure {
             }
         }
         return null;
+    }
+
+    /**
+     * @deprecated since Moodle 4.2 - The row is not shown anymore - we have {@see core\output\action_menu}.
+     */
+    #[\core\attribute\deprecated('core\output\action_menu', since: '4.2', mdl: 'MDL-77033', final: true)]
+    public function get_edit_icon($element, $gpr, $returnactionmenulink = false) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
     }
 
     /**
@@ -1844,6 +1910,14 @@ class grade_structure {
     }
 
     /**
+     * @deprecated since Moodle 4.2 - The row is not shown anymore - we have {@see core\output\action_menu}.
+     */
+    #[\core\attribute\deprecated('core\output\action_menu', since: '4.2', mdl: 'MDL-77033', final: true)]
+    public function get_hiding_icon($element, $gpr, $returnactionmenulink = false) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
      * Returns a link with url to hide/unhide grade/grade item/grade category
      *
      * @param array  $element An array representing an element in the grade_tree
@@ -1883,6 +1957,14 @@ class grade_structure {
         }
 
         return $url;
+    }
+
+    /**
+     * @deprecated since Moodle 4.2 - The row is not shown anymore - we have {@see core\output\action_menu}.
+     */
+    #[\core\attribute\deprecated('core\output\action_menu', since: '4.2', mdl: 'MDL-77033', final: true)]
+    public function get_locking_icon($element, $gpr) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
     }
 
     /**
@@ -1949,6 +2031,14 @@ class grade_structure {
         } else {
             return null;
         }
+    }
+
+    /**
+     * @deprecated since Moodle 4.2 - The row is not shown anymore - we have {@see core\output\action_menu}.
+     */
+    #[\core\attribute\deprecated('core\output\action_menu', since: '4.2', mdl: 'MDL-77033', final: true)]
+    public function get_calculation_icon($element, $gpr, $returnactionmenulink = false) {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
     }
 
     /**
@@ -2257,6 +2347,16 @@ class grade_seq extends grade_structure {
     }
 
     /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function grade_seq($courseid, $category_grade_last=false, $nooutcomes=false) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($courseid, $category_grade_last, $nooutcomes);
+    }
+
+    /**
      * Static recursive helper - makes the grade_item for category the last children
      *
      * @param array &$element The seed of the recursion
@@ -2440,6 +2540,17 @@ class grade_tree extends grade_structure {
 
         grade_tree::fill_levels($this->levels, $this->top_element, 0);
 
+    }
+
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function grade_tree($courseid, $fillers=true, $category_grade_last=false,
+                               $collapsed=null, $nooutcomes=false) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($courseid, $fillers, $category_grade_last, $collapsed, $nooutcomes);
     }
 
     /**
@@ -3027,6 +3138,14 @@ abstract class grade_helper {
      * @var array
      */
     protected static $aggregationstrings = null;
+
+    /**
+     * @deprecated since 4.3
+     */
+    #[\core\attribute\deprecated('get_string', since: '4.3', mdl: 'MDL-78561', final: true)]
+    public static function get_lang_string(): void {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
 
     /**
      * Gets strings commonly used by the describe plugins

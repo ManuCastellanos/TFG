@@ -16,9 +16,6 @@
 
 namespace core_badges;
 
-use core_badges\local\backpack\helper;
-use core_badges\local\backpack\ob_factory;
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/lib/badgeslib.php');
@@ -27,6 +24,7 @@ use context_system;
 use context_course;
 use context_user;
 use moodle_exception;
+use moodle_url;
 use core_text;
 use award_criteria;
 use core_php_time_limit;
@@ -939,11 +937,14 @@ class badge {
      * @return array Issuer informations of the badge.
      */
     public function get_badge_issuer(?int $obversion = null) {
-        $issuerexporter = ob_factory::create_issuer_exporter_from_id(
-            $this->id,
-            helper::convert_apiversion($obversion),
-        );
-        return $issuerexporter->export();
+        return [
+            'name' => $this->issuername,
+            'url' => $this->issuerurl,
+            'email' => $this->issuercontact,
+            '@context' => OPEN_BADGES_V2_CONTEXT,
+            'id' => (new moodle_url('/badges/issuer_json.php', ['id' => $this->id]))->out(false),
+            'type' => OPEN_BADGES_V2_TYPE_ISSUER,
+        ];
     }
 
     /**

@@ -170,8 +170,7 @@ class import_processor {
 
         if (!$instanceid) {
             // Something has gone wrong - undo everything we can.
-            $coursecontext = \context_module::instance($cmid)->get_course_context();
-            \core_courseformat\formatactions::cm($coursecontext->instanceid)->delete($cmid);
+            course_delete_module($cmid);
             throw new \moodle_exception('errorcreatingactivity', 'moodle', '', $this->handlerinfo->get_module_name());
         }
 
@@ -194,7 +193,7 @@ class import_processor {
         $info = get_fast_modinfo($this->course, $this->user->id);
         if (!isset($info->cms[$cmid])) {
             // The course module has not been properly created in the course - undo everything.
-            \core_courseformat\formatactions::cm($this->course->id)->delete($cmid);
+            course_delete_module($cmid);
             throw new \moodle_exception('errorcreatingactivity', 'moodle', '', $this->handlerinfo->get_module_name());
         }
         $mod = $info->get_cm($cmid);
@@ -204,3 +203,4 @@ class import_processor {
         $event->trigger();
     }
 }
+

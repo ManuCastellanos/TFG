@@ -47,7 +47,8 @@ class ServiceRequest implements IServiceRequest
         private string $method,
         private string $url,
         private string $type = self::TYPE_UNSUPPORTED
-    ) {}
+    ) {
+    }
 
     public function getMethod(): string
     {

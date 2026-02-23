@@ -58,7 +58,6 @@ Options:
 --shortname=STRING    Name of the site
 --summary=STRING      The summary to be displayed on the front page
 --supportemail=STRING Email address for support and help.
---noreplyemail=STRING Email address used for noreply.
 -h, --help            Print out this help
 
 Example:
@@ -101,7 +100,6 @@ list($options, $unrecognized) = cli_get_params(
         'shortname'         => '',
         'summary'           => '',
         'supportemail'      => '',
-        'noreplyemail'      => '',
         'agree-license'     => false,
         'help'              => false
     ),
@@ -146,12 +144,6 @@ if (!empty($options['supportemail']) && !validate_email($options['supportemail']
         'option' => 'supportemail',
         'value' => $options['supportemail']
     ];
-    cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
-}
-
-// Validate that the noreply address provided is valid.
-if (!empty($options['noreplyemail']) && !validate_email($options['noreplyemail'])) {
-    $a = (object)['option' => 'noreplyemail', 'value' => $options['noreplyemail']];
     cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
 }
 

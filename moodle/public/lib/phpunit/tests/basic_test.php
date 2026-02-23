@@ -16,7 +16,7 @@
 
 namespace core;
 
-use core\test\phpunit\phpunit_util;
+use phpunit_util;
 
 /**
  * Test basic_testcase extra features and PHPUnit Moodle integration.
@@ -27,7 +27,7 @@ use core\test\phpunit\phpunit_util;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(\basic_testcase::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(phpunit_util::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\phpunit_util::class)]
 final class basic_test extends \basic_testcase {
     /** @var bool */
     protected bool $testassertexecuted = false;
@@ -233,7 +233,7 @@ STRING;
         global $DB;
         $DB->set_field('user', 'confirmed', 1, ['id' => -1]);
 
-        $this->expectException(\core\test\phpunit\exception\test_exception::class);
+        $this->expectException(\core_phpunit\exception\test_exception::class);
         $this->expectExceptionMessage('Warning: unexpected database modification');
         phpunit_util::reset_all_data(true);
     }

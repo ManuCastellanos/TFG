@@ -36,24 +36,20 @@
     }} data-close-on-resize="{{$drawercloseonresize}}0{{/drawercloseonresize}}"{{!
     }}>
     <div class="drawerheader">
-        <div class="drawerheading">
-            {{$drawerheading}}{{/drawerheading}}
-        </div>
-        <div class="draweractions">
-            <div class="drawerheadercontent">
-                {{$drawerheadercontent}}{{/drawerheadercontent}}
-            </div>
-            <button
-                class="btn btn-icon drawertoggle"
-                data-toggler="drawers"
-                data-action="closedrawer"
-                data-target="{{$id}}{{/id}}"
-                data-bs-toggle="tooltip"
-                data-bs-placement="{{$tooltipplacement}}right{{/tooltipplacement}}"
-                title="{{$closebuttontext}}{{#str}}closedrawer, core{{/str}}{{/closebuttontext}}"
-            >
-                {{#pix}} e/cancel, core {{/pix}}
-            </button>
+        <button
+            class="btn btn-icon drawertoggle hidden"
+            data-toggler="drawers"
+            data-action="closedrawer"
+            data-target="{{$id}}{{/id}}"
+            data-bs-toggle="tooltip"
+            data-bs-placement="{{$tooltipplacement}}right{{/tooltipplacement}}"
+            title="{{$closebuttontext}}{{#str}}closedrawer, core{{/str}}{{/closebuttontext}}"
+        >
+            {{#pix}} e/cancel, core {{/pix}}
+        </button>
+        {{$drawerheading}}{{/drawerheading}}
+        <div class="drawerheadercontent hidden">
+            {{$drawerheadercontent}}{{/drawerheadercontent}}
         </div>
     </div>
     <div class="drawercontent drag-container" data-usertour="scroller">

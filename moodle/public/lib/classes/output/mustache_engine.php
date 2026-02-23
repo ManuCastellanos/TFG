@@ -31,7 +31,7 @@ namespace core\output;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package core
  */
-class mustache_engine extends \Mustache\Engine {
+class mustache_engine extends \Mustache_Engine {
     /**
      * @var mustache_helper_collection
      */
@@ -45,7 +45,7 @@ class mustache_engine extends \Mustache\Engine {
     /**
      * Mustache engine constructor.
      *
-     * This provides an additional option to the parent \Mustache\Engine implementation:
+     * This provides an additional option to the parent \Mustache_Engine implementation:
      * $options = [
      *      // A list of helpers (by name) to prevent from executing within the rendering
      *      // of other helpers.
@@ -70,9 +70,9 @@ class mustache_engine extends \Mustache\Engine {
     /**
      * Get the current set of Mustache helpers.
      *
-     * @see \Mustache\Engine::setHelpers
+     * @see \Mustache_Engine::setHelpers
      *
-     * @return \Mustache\HelperCollection
+     * @return \Mustache_HelperCollection
      */
     public function gethelpers() {
         if (!isset($this->helpers)) {

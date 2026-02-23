@@ -500,6 +500,12 @@ define('MOD_PURPOSE_CONTENT', 'content');
 define('MOD_PURPOSE_INTERACTIVECONTENT', 'interactivecontent');
 /** Module purpose other */
 define('MOD_PURPOSE_OTHER', 'other');
+/**
+ * Module purpose interface
+ * @deprecated since Moodle 4.4
+ * @todo MDL-80701 Remove in Moodle 4.8
+*/
+define('MOD_PURPOSE_INTERFACE', 'interface');
 
 /** True if module can be quickly created without filling a previous form. */
 define('FEATURE_QUICKCREATE', 'quickcreate');
@@ -1259,7 +1265,7 @@ function purge_caches($options = []) {
  * Purge all non-MUC caches not otherwise purged in purge_caches.
  *
  * IMPORTANT - If you are adding anything here to do with the cache directory you should also have a look at
- * {@link \core\test\phpunit\phpunit_util::reset_dataroot()}
+ * {@link phpunit_util::reset_dataroot()}
  */
 function purge_other_caches() {
     global $DB, $CFG;
@@ -2645,7 +2651,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
     }
 
     // Check visibility of activity to current user; includes visible flag, conditional availability, etc.
-    if ($cm && !$cm->uservisible && !$cm->is_visible_on_course_page()) {
+    if ($cm && !$cm->uservisible) {
         if ($preventredirect) {
             throw new require_login_exception('Activity is hidden');
         }
@@ -2656,35 +2662,24 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         redirect(course_get_url($course), $message, null, \core\output\notification::NOTIFY_ERROR);
     }
 
-    if ($cm && !$cm->uservisible) {
-        if ($cm->is_visible_on_course_page()) {
-            $url = \core\router\util::get_path_for_callable(
-                [\core_course\route\controller\restricted_module::class, 'restricted_module_page'],
-                ['cm' => $cm->id],
-            );
-            redirect($url, '', null);
-        }
-    } else {
-        // Set the global $COURSE.
-        if ($cm) {
-            $PAGE->set_cm($cm, $course);
-            $PAGE->set_pagelayout('incourse');
-        } else if (!empty($courseorid)) {
-            $PAGE->set_course($course);
-        }
+    // Set the global $COURSE.
+    if ($cm) {
+        $PAGE->set_cm($cm, $course);
+        $PAGE->set_pagelayout('incourse');
+    } else if (!empty($courseorid)) {
+        $PAGE->set_course($course);
+    }
 
-        foreach ($afterlogins as $plugintype => $plugins) {
-            foreach ($plugins as $pluginfunction) {
-                $pluginfunction($courseorid, $autologinguest, $cm, $setwantsurltome, $preventredirect);
-            }
+    foreach ($afterlogins as $plugintype => $plugins) {
+        foreach ($plugins as $pluginfunction) {
+            $pluginfunction($courseorid, $autologinguest, $cm, $setwantsurltome, $preventredirect);
         }
+    }
 
-        // Finally access granted, update lastaccess times.
-        // Do not update access time for webservice or ajax requests.
-        if (!WS_SERVER && !AJAX_SCRIPT) {
-            user_accesstime_log($course->id);
-        }
-
+    // Finally access granted, update lastaccess times.
+    // Do not update access time for webservice or ajax requests.
+    if (!WS_SERVER && !AJAX_SCRIPT) {
+        user_accesstime_log($course->id);
     }
 }
 
@@ -4858,7 +4853,7 @@ function remove_course_contents($courseid, $showfeedback = true, ?array $options
 
             if ($instances) {
                 foreach ($instances as $cm) {
-                    // Warning! there is very similar code in cmactions::delete.
+                    // Warning! there is very similar code in course_delete_module.
                     // If you are changing this code, you probably need to change that too.
                     if (function_exists($moddelete)) {
                         // This purges all module data in related tables, extra user prefs, settings, etc.

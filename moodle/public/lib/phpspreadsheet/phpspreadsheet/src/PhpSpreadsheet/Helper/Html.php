@@ -557,7 +557,6 @@ class Html
     /** @var callable[] */
     protected array $endTagCallbacks;
 
-    /** @var mixed[] */
     private array $stack = [];
 
     public string $stringData = '';
@@ -712,15 +711,12 @@ class Html
 
     public static function colourNameLookup(string $colorName): string
     {
-        /** @var string[] */
-        $temp = static::COLOUR_MAP;
-
-        return $temp[$colorName] ?? '';
+        return static::COLOUR_MAP[$colorName] ?? '';
     }
 
     protected function startFontTag(DOMElement $tag): void
     {
-        $attrs = $tag->attributes ?? [];
+        $attrs = $tag->attributes;
         /** @var DOMAttr $attribute */
         foreach ($attrs as $attribute) {
             $attributeName = strtolower($attribute->name);

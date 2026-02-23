@@ -463,7 +463,10 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
             'class' => 'btn btn-primary mx-1'
         ]);
         $actionbuttons .= html_writer::end_div();
-        echo $actionbuttons;
+
+        $stickyfooter = new core\output\sticky_footer($actionbuttons);
+        echo $OUTPUT->render($stickyfooter);
+
         echo '</form>';
 
         echo $OUTPUT->box_end();

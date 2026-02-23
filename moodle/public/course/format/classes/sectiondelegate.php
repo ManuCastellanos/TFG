@@ -49,7 +49,7 @@ abstract class sectiondelegate {
      * Get the section info instance if available.
      *
      * @param section_info $sectioninfo
-     * @return sectiondelegate|null
+     * @return section_info|null
      */
     public static function instance(section_info $sectioninfo): ?self {
         if (empty($sectioninfo->component)) {

@@ -7,7 +7,6 @@
         "aiprovider": [
             "azureai",
             "deepseek",
-            "gemini",
             "ollama",
             "openai"
         ],
@@ -47,6 +46,7 @@
         ],
         "block": [
             "accessreview",
+            "activity_modules",
             "activity_results",
             "admin_bookmarks",
             "badges",
@@ -373,6 +373,7 @@
             "multichoice",
             "numerical",
             "ordering",
+            "random",
             "randomsamatch",
             "shortanswer",
             "truefalse"
@@ -584,7 +585,6 @@
             "radius"
         ],
         "block": [
-            "activity_modules",
             "community",
             "course_overview",
             "messages",
@@ -641,9 +641,6 @@
             "examview",
             "learnwise",
             "webct"
-        ],
-        "qtype": [
-            "random"
         ],
         "quizaccess": [
             "safebrowser"

@@ -35,7 +35,6 @@ class Helpers
         }
     }
 
-    /** @return array{string, ?string, string} */
     public static function extractCellAddresses(string $cellAddress, bool $a1, Worksheet $sheet, string $sheetName = '', ?int $baseRow = null, ?int $baseCol = null): array
     {
         $cellAddress1 = $cellAddress;
@@ -58,7 +57,6 @@ class Helpers
         return [$cellAddress1, $cellAddress2, $cellAddress];
     }
 
-    /** @return array{string, ?Worksheet, string} */
     public static function extractWorksheet(string $cellAddress, Cell $cell): array
     {
         $sheetName = '';

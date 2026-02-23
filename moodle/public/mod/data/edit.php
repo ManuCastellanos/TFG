@@ -198,35 +198,29 @@ if (empty($redirectbackto)) {
     $redirectbackto = new \moodle_url('/mod/data/view.php', ['id' => $cm->id]);
 }
 
-$actionbuttons = '';
-if (
-    !$rid && (
-        (!$data->maxentries) ||
-        has_capability('mod/data:manageentries', $context) ||
-        (data_numentries($data) < ($data->maxentries - 1))
-    )
-) {
-    $actionbuttons .= html_writer::empty_tag('input', [
-        'type' => 'submit',
-        'name' => 'saveandadd',
-        'value' => get_string('saveandadd', 'data'),
-        'class' => 'btn btn-primary mx-1',
-    ]);
-}
-$actionbuttons .= html_writer::empty_tag('input', [
-    'type' => 'submit',
-    'name' => 'saveandview',
-    'value' => get_string('save'),
-    'class' => 'btn btn-primary mx-1',
-]);
-
-$actionbuttons .= html_writer::link(
+$actionbuttons = html_writer::link(
     $redirectbackto,
     get_string('cancel'),
     ['class' => 'btn btn-secondary mx-1', 'role' => 'button']
 );
+$actionbuttons .= html_writer::empty_tag('input', [
+    'type' => 'submit',
+    'name' => 'saveandview',
+    'value' => get_string('save'),
+    'class' => 'btn btn-primary mx-1'
+]);
 
-echo html_writer::div($actionbuttons, 'mt-2');
+if (!$rid && ((!$data->maxentries) ||
+    has_capability('mod/data:manageentries', $context) ||
+    (data_numentries($data) < ($data->maxentries - 1)))) {
+    $actionbuttons .= html_writer::empty_tag('input', [
+        'type' => 'submit', 'name' => 'saveandadd',
+        'value' => get_string('saveandadd', 'data'), 'class' => 'btn btn-primary mx-1'
+    ]);
+}
+
+$stickyfooter = new core\output\sticky_footer($actionbuttons);
+echo $OUTPUT->render($stickyfooter);
 
 echo $OUTPUT->box_end();
 echo '</div></form>';

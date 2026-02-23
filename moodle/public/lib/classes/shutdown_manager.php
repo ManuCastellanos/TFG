@@ -14,9 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core;
+/**
+ * Shutdown management class.
+ *
+ * @package    core
+ * @copyright  2013 Petr Skoda {@link http://skodak.org}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-use Throwable;
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Shutdown management class.
@@ -25,13 +31,13 @@ use Throwable;
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class shutdown_manager {
+class core_shutdown_manager {
     /** @var array list of custom callbacks */
-    protected static array $callbacks = [];
+    protected static $callbacks = [];
     /** @var array list of custom signal callbacks */
-    protected static array $signalcallbacks = [];
+    protected static $signalcallbacks = [];
     /** @var bool is this manager already registered? */
-    protected static bool $registered = false;
+    protected static $registered = false;
 
     /** @var array A list of pcntl handlers */
     protected static array $pcntlhandlers = [];
@@ -39,15 +45,15 @@ class shutdown_manager {
     /**
      * Register self as main shutdown handler.
      *
-     * Note: This method should _only_ be called from lib/setup.php.
+     * @private to be called from lib/setup.php only!
      */
-    public static function initialize(): void {
+    public static function initialize() {
         if (self::$registered) {
             debugging('Shutdown manager is already initialised!');
             return;
         }
         self::$registered = true;
-        register_shutdown_function(['core_shutdown_manager', 'shutdown_handler']);
+        register_shutdown_function(array('core_shutdown_manager', 'shutdown_handler'));
 
         // Signal handlers are recommended for the best possible shutdown handling.
         // They require the 'pcntl' extension to be loaded and the following functions to be available:
@@ -81,7 +87,7 @@ class shutdown_manager {
      *
      * @param   int     $signo The signal being handled
      */
-    public static function signal_handler(int $signo): void {
+    public static function signal_handler(int $signo) {
         // Note: There is no need to manually call the shutdown handler.
         // The fact that we are calling exit() in this script means that the standard shutdown handling is performed
         // anyway.
@@ -103,19 +109,19 @@ class shutdown_manager {
             default:
                 // The signal handler was called with a signal it was not expecting.
                 // We should exit and complain.
-                echo "Warning: \core\shutdown_manager::signal_handler() was called with an unexpected signal ({$signo}).\n";
+                echo "Warning: \core_shutdown_manager::signal_handler() was called with an unexpected signal ({$signo}).\n";
                 $exitcode = 1;
         }
 
         // Normally we should exit unless a callback tells us to wait.
         $shouldexit = true;
         foreach (self::$signalcallbacks as $data) {
-            [$callback, $params] = $data;
+            list($callback, $params) = $data;
             try {
                 array_unshift($params, $signo);
                 $shouldexit = call_user_func_array($callback, $params) && $shouldexit;
             } catch (Throwable $e) {
-                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
+                // phpcs:ignore
                 error_log('Exception ignored in signal function ' . get_callable_name($callback) . ': ' . $e->getMessage());
             }
         }
@@ -125,7 +131,7 @@ class shutdown_manager {
         }
 
         if ($shouldexit) {
-            exit($exitcode);
+            exit ($exitcode);
         }
     }
 
@@ -138,9 +144,8 @@ class shutdown_manager {
      * @param array $params
      * @return void
      */
-    public static function register_signal_handler(callable $callback, ?array $params = null): void {
+    public static function register_signal_handler($callback, ?array $params = null): void {
         if (!is_callable($callback)) {
-            // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
             error_log('Invalid custom signal function detected ' . var_export($callback, true)); // phpcs:ignore
         }
         self::$signalcallbacks[] = [$callback, $params ?? []];
@@ -153,20 +158,17 @@ class shutdown_manager {
      * @param array $params
      * @return void
      */
-    public static function register_function(callable $callback, ?array $params = null): void {
+    public static function register_function($callback, ?array $params = null): void {
         if (!is_callable($callback)) {
-            // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
             error_log('Invalid custom shutdown function detected '.var_export($callback, true)); // phpcs:ignore
         }
         self::$callbacks[] = [$callback, $params ? array_values($params) : []];
     }
 
     /**
-     * This is the main shutdown handler.
-     *
-     * Note: DO NOT call this method directly. It will be called automatically on shutdown.
+     * @private - do NOT call directly.
      */
-    public static function shutdown_handler(): void {
+    public static function shutdown_handler() {
         global $DB;
 
         // In case we caught an out of memory shutdown we increase memory limit to unlimited, so we can gracefully shut down.
@@ -178,28 +180,23 @@ class shutdown_manager {
 
         // Custom stuff first.
         foreach (self::$callbacks as $data) {
-            [$callback, $params] = $data;
+            list($callback, $params) = $data;
             try {
                 call_user_func_array($callback, $params);
             } catch (Throwable $e) {
-                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
-                error_log('Exception ignored in shutdown function ' . get_callable_name($callback) . ': ' . $e->getMessage());
+                // phpcs:ignore
+                error_log('Exception ignored in shutdown function '.get_callable_name($callback).': '.$e->getMessage());
             }
         }
 
         // Handle DB transactions, session need to be written afterwards
         // in order to maintain consistency in all session handlers.
         if ($DB->is_transaction_started()) {
-            if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+            if (!defined('PHPUNIT_TEST') or !PHPUNIT_TEST) {
                 // This should not happen, it usually indicates wrong catching of exceptions,
                 // because all transactions should be finished manually or in default exception handler.
                 $backtrace = $DB->get_transaction_start_backtrace();
-                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
-                error_log(
-                    'Potential coding error - active database transaction detected during request shutdown:'
-                        . "\n"
-                        . format_backtrace($backtrace, true),
-                );
+                error_log('Potential coding error - active database transaction detected during request shutdown:'."\n".format_backtrace($backtrace, true));
             }
             $DB->force_transaction_rollback();
         }
@@ -223,13 +220,13 @@ class shutdown_manager {
     /**
      * Standard shutdown sequence.
      */
-    protected static function request_shutdown(): void {
+    protected static function request_shutdown() {
         global $CFG, $OUTPUT, $PERF;
 
         // Help apache server if possible.
         $apachereleasemem = false;
         if (function_exists('apache_child_terminate') && function_exists('memory_get_usage') && ini_get_bool('child_terminate')) {
-            $limit = (empty($CFG->apachemaxmem) ? 64 * 1024 * 1024 : $CFG->apachemaxmem); // 64MB default.
+            $limit = (empty($CFG->apachemaxmem) ? 64*1024*1024 : $CFG->apachemaxmem); // 64MB default.
             if (memory_get_usage() > get_real_size($limit)) {
                 $apachereleasemem = $limit;
                 @apache_child_terminate();
@@ -239,12 +236,10 @@ class shutdown_manager {
         // Deal with perf logging.
         if (MDL_PERF || (!empty($CFG->perfdebug) && $CFG->perfdebug > 7)) {
             if ($apachereleasemem) {
-                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
-                error_log('Mem usage over ' . $apachereleasemem . ': marking Apache child for reaping.');
+                error_log('Mem usage over '.$apachereleasemem.': marking Apache child for reaping.');
             }
             if (MDL_PERFTOLOG) {
                 $perf = get_performance_info();
-                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                 error_log("PERF: " . $perf['txt']);
             }
             if (!empty($PERF->perfdebugdeferred)) {
@@ -259,16 +254,13 @@ class shutdown_manager {
                         $fs = filesize($f);
                         $ts += $fs;
                         $hfs = display_size($fs);
-                        // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                         error_log(substr($f, strlen($CFG->dirroot)) . " size: $fs ($hfs)");
                     } else {
-                        // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                         error_log($f);
                     }
                 }
-                if ($ts > 0) {
+                if ($ts > 0 ) {
                     $hts = display_size($ts);
-                    // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                     error_log("Total size of files included: $ts ($hts)");
                 }
             }
@@ -285,8 +277,3 @@ class shutdown_manager {
         }
     }
 }
-
-// Alias this class to the old name.
-// This file will be autoloaded by the legacyclasses autoload system.
-// In future all uses of this class will be corrected and the legacy references will be removed.
-class_alias(shutdown_manager::class, \core_shutdown_manager::class);

@@ -91,7 +91,6 @@ final class entities_forum_test extends \advanced_testcase {
         $duedate = 0;
         $cutoffdate = 0;
         $sendnotification = false;
-        $showimmediately = false;
         $forum = new forum_entity(
             $context,
             $coursemodule,
@@ -125,8 +124,7 @@ final class entities_forum_test extends \advanced_testcase {
             $displaywordcount,
             $lockdiscussionafter,
             $duedate,
-            $cutoffdate,
-            $showimmediately
+            $cutoffdate
         );
 
         $this->assertEquals($context, $forum->get_context());

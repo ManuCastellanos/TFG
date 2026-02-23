@@ -87,11 +87,6 @@ class activityname_exporter extends exporter {
                 'multiple' => true,
                 'default' => [],
             ],
-            'available' => [
-                'type' => PARAM_BOOL,
-                'null' => NULL_NOT_ALLOWED,
-                'description' => 'Whether the activity is available.',
-            ],
         ];
     }
 
@@ -107,7 +102,6 @@ class activityname_exporter extends exporter {
             'hidden' => $templatedata->hidden,
             'stealth' => $templatedata->stealth,
             'sectiontitle' => $templatedata->sectiontitle ?? null,
-            'available' => $templatedata->available,
             'errormessages' => $source->get_error_messages(),
         ];
     }

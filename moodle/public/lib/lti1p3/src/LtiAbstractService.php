@@ -12,7 +12,8 @@ abstract class LtiAbstractService
         private ILtiServiceConnector $serviceConnector,
         private ILtiRegistration $registration,
         private array $serviceData
-    ) {}
+    ) {
+    }
 
     public function getServiceData(): array
     {

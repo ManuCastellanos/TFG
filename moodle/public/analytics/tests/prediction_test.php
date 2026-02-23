@@ -16,8 +16,6 @@
 
 namespace core_analytics;
 
-use core_analytics\tests\mlbackend_helper_trait;
-
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -30,7 +28,10 @@ require_once(__DIR__ . '/fixtures/test_indicator_multiclass.php');
 require_once(__DIR__ . '/fixtures/test_target_shortname.php');
 require_once(__DIR__ . '/fixtures/test_target_shortname_multiclass.php');
 require_once(__DIR__ . '/fixtures/test_static_target_shortname.php');
+
 require_once(__DIR__ . '/../../course/lib.php');
+
+use core_analytics\tests\mlbackend_helper_trait;
 
 /**
  * Unit tests for evaluation, training and prediction.
@@ -744,12 +745,8 @@ final class prediction_test extends \advanced_testcase {
             $samples,
             $ranges
         );
-        $dataset = \core\test\phpunit\phpunit_util::call_internal_method(
-            $analysis,
-            'calculate_indicators',
-            $params,
-            \core_analytics\analysis::class,
-        );
+        $dataset = \phpunit_util::call_internal_method($analysis, 'calculate_indicators', $params,
+            '\core_analytics\analysis');
         $this->assertArrayHasKey('123-0', $dataset);
         $this->assertArrayHasKey('123-1', $dataset);
         $this->assertArrayHasKey('321-0', $dataset);
@@ -772,12 +769,8 @@ final class prediction_test extends \advanced_testcase {
             $samples,
             $ranges
         );
-        $dataset = \core\test\phpunit\phpunit_util::call_internal_method(
-            $analysis,
-            'calculate_indicators',
-            $params,
-            \core_analytics\analysis::class,
-        );
+        $dataset = \phpunit_util::call_internal_method($analysis, 'calculate_indicators', $params,
+            '\core_analytics\analysis');
         $this->assertArrayNotHasKey('123-0', $dataset);
         $this->assertArrayNotHasKey('123-1', $dataset);
         $this->assertArrayNotHasKey('321-0', $dataset);

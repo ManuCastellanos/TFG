@@ -31,7 +31,7 @@ class provider implements
     // This system has some sitewide user preferences to export.
     \core_privacy\local\request\user_preference_provider {
 
-    /** @var string The user preference for the navigation drawer. */
+    /** The user preference for the navigation drawer. */
     public const SECTION_PREFERENCES_PREFIX = 'coursesectionspreferences';
 
     /**

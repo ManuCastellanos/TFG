@@ -37,7 +37,6 @@ final class userlib_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->setAdminUser();
 
         // Create user and modify user profile.
         $user1 = $this->getDataGenerator()->create_user();
@@ -938,7 +937,6 @@ final class userlib_test extends \advanced_testcase {
         global $CFG;
 
         $this->resetAfterTest();
-        $this->setAdminUser();
 
         // Create user and modify user profile.
         $teacher = $this->getDataGenerator()->create_user();

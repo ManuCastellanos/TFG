@@ -74,7 +74,6 @@ final class sectiondelegate_test extends \advanced_testcase {
             get_string('move'),
             get_string('delete'),
             get_string('sectionlink', 'course'),
-            get_string('duplicate'),
         ];
 
         // The default section menu should be different for the delegated section menu.

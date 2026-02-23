@@ -580,7 +580,7 @@ function forum_print_recent_activity($course, $viewfullnames, $timestart) {
                                               f.scale, f.grade_forum, f.maxbytes, f.maxattachments, f.forcesubscribe,
                                               f.trackingtype, f.rsstype, f.rssarticles, f.timemodified, f.warnafter, f.blockafter,
                                               f.blockperiod, f.completiondiscussions, f.completionreplies, f.completionposts,
-                                              f.displaywordcount, f.lockdiscussionafter, f.grade_forum_notify, f.showimmediately,
+                                              f.displaywordcount, f.lockdiscussionafter, f.grade_forum_notify,
                                               d.name AS discussionname, d.firstpost, d.userid AS discussionstarter,
                                               d.assessed AS discussionassessed, d.timemodified, d.usermodified, d.forum, d.groupid,
                                               d.timestart, d.timeend, d.pinned, d.timelocked,
@@ -672,8 +672,7 @@ function forum_print_recent_activity($course, $viewfullnames, $timestart) {
                 'completionposts' => $post->completionposts,
                 'displaywordcount' => $post->displaywordcount,
                 'lockdiscussionafter' => $post->lockdiscussionafter,
-                'grade_forum_notify' => $post->grade_forum_notify,
-                'showimmediately' => $post->showimmediately,
+                'grade_forum_notify' => $post->grade_forum_notify
             ];
             // Build the forum entity from the factory.
             $forumentity = $entityfactory->get_forum_from_stdclass($forumrecord, $context, $coursemodule, $course);
@@ -3902,7 +3901,7 @@ function forum_user_can_see_post($forum, $discussion, $post, $user = null, $cm =
             return true;
         }
         $userfirstpost = forum_get_user_posted_time($discussion->id, $user->id);
-        return ($userfirstpost !== false && (time() - $userfirstpost >= $CFG->maxeditingtime || $forum->showimmediately));
+        return (($userfirstpost !== false && (time() - $userfirstpost >= $CFG->maxeditingtime)));
     }
     return true;
 }

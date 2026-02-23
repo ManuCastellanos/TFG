@@ -203,15 +203,8 @@ final class curl_security_helper_test extends \advanced_testcase {
         $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
         set_config('curlsecurityblockedhosts', $blockedhosts);
-        $this->assertEquals(
-            $expected,
-            \core\test\phpunit\phpunit_util::call_internal_method(
-                $helper,
-                'host_is_blocked',
-                [$host],
-                \core\files\curl_security_helper::class,
-            ),
-        );
+        $this->assertEquals($expected, \phpunit_util::call_internal_method($helper, 'host_is_blocked', [$host],
+                                                                          '\core\files\curl_security_helper'));
     }
 
     /**
@@ -264,15 +257,8 @@ final class curl_security_helper_test extends \advanced_testcase {
         $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
         set_config('curlsecurityallowedport', $allowedports);
-        $this->assertEquals(
-            $expected,
-            \core\test\phpunit\phpunit_util::call_internal_method(
-                $helper,
-                'port_is_blocked',
-                [$port],
-                \core\files\curl_security_helper::class,
-            ),
-        );
+        $this->assertEquals($expected, \phpunit_util::call_internal_method($helper, 'port_is_blocked', [$port],
+                                                                          '\core\files\curl_security_helper'));
     }
 
     /**

@@ -15,6 +15,7 @@ YUI.add('moodle-core-notification', function (Y, NAME) {
  * <dl>
  *  <dt> moodle-core-notification-dialogue</dt>
  *  <dt> moodle-core-notification-alert</dt>
+ *  <dt> moodle-core-notification-confirm</dt>
  *  <dt> moodle-core-notification-exception</dt>
  *  <dt> moodle-core-notification-ajaxexception</dt>
  * </dl>
@@ -30,6 +31,7 @@ Y.log("The moodle-core-notification parent module has been deprecated. " +
     "requires": [
         "moodle-core-notification-dialogue",
         "moodle-core-notification-alert",
+        "moodle-core-notification-confirm",
         "moodle-core-notification-exception",
         "moodle-core-notification-ajaxexception"
     ]

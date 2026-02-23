@@ -16,7 +16,8 @@
 
 namespace qtype_ordering;
 
-use core\test\phpunit\phpunit_util;
+use core_question_generator;
+use phpunit_util;
 use qtype_ordering;
 use qtype_ordering_test_helper;
 use qtype_ordering_edit_form;

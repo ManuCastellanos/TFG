@@ -128,6 +128,7 @@ class audience {
         global $DB;
 
         $allowedreports = self::get_allowed_reports($userid);
+
         if (empty($allowedreports)) {
             return ['1=0', []];
         }
@@ -176,7 +177,7 @@ class audience {
         ?int $userid = null,
         ?context $context = null
     ): array {
-        global $USER;
+        global $DB, $USER;
 
         if ($context === null) {
             $context = context_system::instance();
@@ -187,7 +188,15 @@ class audience {
         }
 
         // Limit the returned list to those reports the user can see, by selecting based on report audience.
-        [$where, $params] = self::user_reports_list_sql($reporttablealias, $userid);
+        [$reportselect, $params] = $DB->get_in_or_equal(
+            self::user_reports_list($userid),
+            SQL_PARAMS_NAMED,
+            database::generate_param_name('_'),
+            true,
+            null,
+        );
+
+        $where = "{$reporttablealias}.id {$reportselect}";
 
         // User can also see any reports that they can edit.
         if (has_capability('moodle/reportbuilder:edit', $context, $userid)) {
@@ -287,5 +296,13 @@ class audience {
         }
 
         return false;
+    }
+
+    /**
+     * @deprecated since Moodle 4.1 - please do not use this function any more, {@see custom_report_audience_cards_exporter}
+     */
+    #[\core\attribute\deprecated('custom_report_audience_cards_exporter', since: '4.1', final: true)]
+    public static function get_all_audiences_menu_types() {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
     }
 }

@@ -286,11 +286,12 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $wrongcategory = $categories['B1'];
         $generator->enrol_user($user->id, $course->id);
+
+        $this->setUser($user);
 
         // Viewing the site as a whole.
         // Should see all courses that this user is enrolled in, and their
@@ -321,12 +322,12 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $wrongcategory = $categories['B1'];
         $generator->enrol_user($user->id, $course->id);
 
+        $this->setUser($user);
         $time = time();
 
         // Viewing the course calendar.
@@ -370,10 +371,11 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $generator->enrol_user($user->id, $course->id);
+
+        $this->setUser($user);
 
         // Viewing the category calendar.
         // Should see all courses that this user is enrolled in within this
@@ -410,10 +412,11 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $generator->enrol_user($user->id, $course->id);
+
+        $this->setUser($user);
 
         // Viewing the category calendar.
         // Should see all courses that this user is enrolled in within this
@@ -453,10 +456,11 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $course = $courses['A1.1'];
         $category = $categories['A2'];
         $generator->enrol_user($user->id, $course->id);
+
+        $this->setUser($user);
 
         // Viewing the category calendar.
         // Should see all courses that this user is enrolled in within this
@@ -492,11 +496,12 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $wrongcategory = $categories['B1'];
         $generator->enrol_user($user->id, $course->id);
+
+        $this->setUser($user);
 
         // Viewing the category calendar for a category the user doesn't have any enrolments in.
         // Should see that category, and all categories underneath it.
@@ -527,13 +532,14 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['A.2'];
         $category = \core_course_category::get($coursea->category);
         $wrongcategory = $categories['B1'];
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
+
+        $this->setUser($user);
 
         // Viewing the site azs a whole.
         // Should see all courses that this user is enrolled in.
@@ -562,7 +568,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['A.2'];
         $category = \core_course_category::get($coursea->category);
@@ -570,6 +575,7 @@ final class calendar_information_test extends \advanced_testcase {
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
 
+        $this->setUser($user);
         $time = time();
 
         // Viewing the course calendar.
@@ -608,7 +614,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['A.2'];
         $category = \core_course_category::get($coursea->category);
@@ -616,6 +621,7 @@ final class calendar_information_test extends \advanced_testcase {
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
 
+        $this->setUser($user);
         $time = time();
 
         // Viewing the other course calendar.
@@ -655,13 +661,14 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['A.2'];
         $category = \core_course_category::get($coursea->category);
         $wrongcategory = $categories['B1'];
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
+
+        $this->setUser($user);
 
         // Viewing the category calendar.
         // Should see all courses that this user is enrolled in.
@@ -690,13 +697,14 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['A.2'];
         $category = \core_course_category::get($coursea->category);
         $wrongcategory = $categories['B1'];
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
+
+        $this->setUser($user);
 
         // Viewing the category calendar for a category the user doesn't have any enrolments in.
         // Should see that category, and all categories underneath it.
@@ -723,7 +731,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['B.1'];
         $categorya = \core_course_category::get($coursea->category);
@@ -731,6 +738,8 @@ final class calendar_information_test extends \advanced_testcase {
         $wrongcategory = $categories['C'];
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
+
+        $this->setUser($user);
 
         // Viewing the site azs a whole.
         // Should see all courses that this user is enrolled in.
@@ -759,7 +768,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['B.1'];
         $categorya = \core_course_category::get($coursea->category);
@@ -768,6 +776,7 @@ final class calendar_information_test extends \advanced_testcase {
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
 
+        $this->setUser($user);
         $time = time();
 
         // Viewing the course calendar.
@@ -806,7 +815,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['B.1'];
         $categorya = \core_course_category::get($coursea->category);
@@ -815,6 +823,7 @@ final class calendar_information_test extends \advanced_testcase {
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
 
+        $this->setUser($user);
         $time = time();
 
         // Viewing the other course calendar.
@@ -854,7 +863,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['B.1'];
         $categorya = \core_course_category::get($coursea->category);
@@ -862,6 +870,8 @@ final class calendar_information_test extends \advanced_testcase {
         $wrongcategory = $categories['C'];
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
+
+        $this->setUser($user);
 
         // Viewing the categorya calendar.
         // Should see all courses that this user is enrolled in.
@@ -894,7 +904,6 @@ final class calendar_information_test extends \advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
-        $this->setUser($user);
         $coursea = $courses['A.1'];
         $courseb = $courses['B.1'];
         $categorya = \core_course_category::get($coursea->category);
@@ -903,6 +912,7 @@ final class calendar_information_test extends \advanced_testcase {
         $generator->enrol_user($user->id, $coursea->id);
         $generator->enrol_user($user->id, $courseb->id);
 
+        $this->setUser($user);
         // Viewing the categorya calendar for a categorya the user doesn't have any enrolments in.
         // Should see that categorya, and all categories underneath it.
         $calendar = \calendar_information::create(time(), SITEID, $wrongcategory->id);
@@ -951,12 +961,12 @@ final class calendar_information_test extends \advanced_testcase {
         global $USER;
 
         $this->resetAfterTest();
-        $this->setAdminUser();
         list ($courses, $categories) = $this->mock_structure();
 
         $generator = $this->getDataGenerator();
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
+        $this->setAdminUser();
         $generator->enrol_user($USER->id, $course->id);
 
         $calendar = \calendar_information::create(time(), SITEID, null);
@@ -982,13 +992,13 @@ final class calendar_information_test extends \advanced_testcase {
         global $USER;
 
         $this->resetAfterTest();
-        $this->setAdminUser();
         list ($courses, $categories) = $this->mock_structure();
 
         $generator = $this->getDataGenerator();
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $wrongcategory = $categories['B1'];
+        $this->setAdminUser();
         $generator->enrol_user($USER->id, $course->id);
 
         $time = time();
@@ -1029,13 +1039,13 @@ final class calendar_information_test extends \advanced_testcase {
         global $USER;
 
         $this->resetAfterTest();
-        $this->setAdminUser();
         list ($courses, $categories) = $this->mock_structure();
 
         $generator = $this->getDataGenerator();
         $course = $courses['A1.1'];
         $category = \core_course_category::get($course->category);
         $wrongcategory = $categories['B1'];
+        $this->setAdminUser();
         $generator->enrol_user($USER->id, $course->id);
 
         $calendar = \calendar_information::create(time(), SITEID, $category->id);

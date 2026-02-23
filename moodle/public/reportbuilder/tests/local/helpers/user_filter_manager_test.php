@@ -33,6 +33,17 @@ use core_user\reportbuilder\datasource\users;
  */
 final class user_filter_manager_test extends advanced_testcase {
     /**
+     * Helper method to return all user preferences for filters - based on the current storage backend using the same
+     *
+     * @return array
+     */
+    private function get_filter_preferences(): array {
+        return array_filter(get_user_preferences(), static function(string $key): bool {
+            return strpos($key, 'reportbuilder-report-') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
      * Data provider for {@see test_get}
      *
      * @return array
@@ -82,11 +93,11 @@ final class user_filter_manager_test extends advanced_testcase {
     }
 
     /**
-     * Data provider for {@see test_reset}
+     * Data provider for {@see test_reset_all}
      *
      * @return array
      */
-    public static function reset_provider(): array {
+    public static function reset_all_provider(): array {
         return [
             'Small value' => ['foo'],
             'Large value' => [str_repeat('A', 4000)],
@@ -99,9 +110,9 @@ final class user_filter_manager_test extends advanced_testcase {
      *
      * @param string $value
      *
-     * @dataProvider reset_provider
+     * @dataProvider reset_all_provider
      */
-    public function test_reset(string $value): void {
+    public function test_reset_all(string $value): void {
         $this->resetAfterTest();
 
         /** @var core_reportbuilder_generator $generator */
@@ -112,7 +123,7 @@ final class user_filter_manager_test extends advanced_testcase {
             'entity:filter_name' => $value,
         ]);
 
-        $reset = user_filter_manager::reset($report->get('id'));
+        $reset = user_filter_manager::reset_all($report->get('id'));
         $this->assertTrue($reset);
 
         // We should get an empty array back.
@@ -140,7 +151,6 @@ final class user_filter_manager_test extends advanced_testcase {
         ]);
 
         $reset = user_filter_manager::reset_single($report->get('id'), 'entity:other');
-        $this->assertDebuggingCalled();
         $this->assertTrue($reset);
 
         $this->assertEquals([
@@ -171,7 +181,7 @@ final class user_filter_manager_test extends advanced_testcase {
             'entity:filter_name' => 'twotimesfoo',
             'entity:filter_value' => 'twotimesbar',
         ]);
-        $this->assertDebuggingCalled();
+
         $this->assertEqualsCanonicalizing([
             'entity:filter_name' => 'twotimesfoo',
             'entity:filter_value' => 'twotimesbar',

@@ -8,7 +8,8 @@ Feature: User must accept policy when logging in and signing up
     Given the following config values are set as admin:
       | registerauth    | email |
       | passwordpolicy  | 0     |
-    And I am on homepage
+    And I am on site homepage
+    And I follow "Log in"
     When I click on "Create new account" "link"
     Then I should not see "I understand and agree"
     And I set the following fields to these values:
@@ -37,7 +38,8 @@ Feature: User must accept policy when logging in and signing up
       | registerauth    | email              |
       | passwordpolicy  | 0                  |
       | sitepolicy      | https://moodle.org |
-    And I am on homepage
+    And I am on site homepage
+    And I follow "Log in"
     When I click on "Create new account" "link"
     Then the field "I understand and agree" matches value "0"
     And I set the following fields to these values:
@@ -70,7 +72,8 @@ Feature: User must accept policy when logging in and signing up
     And the following "users" exist:
       | username | firstname | lastname | email          |
       | s1       | John      | Doe      | s1@example.com |
-    And I am on homepage
+    And I am on site homepage
+    And I follow "Log in"
     When I click on "Create new account" "link"
     And I set the following fields to these values:
       | Username      | s2      |

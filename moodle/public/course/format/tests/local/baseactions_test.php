@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace core_courseformat\local;
-use core_courseformat\formatactions;
 use ReflectionMethod;
 use section_info;
 use cm_info;
@@ -26,8 +25,8 @@ use cm_info;
  * @package    core_courseformat
  * @copyright  2023 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \core_courseformat\local\baseactions
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(baseactions::class)]
 final class baseactions_test extends \advanced_testcase {
     /**
      * Setup to ensure that fixtures are loaded.
@@ -52,6 +51,7 @@ final class baseactions_test extends \advanced_testcase {
 
     /**
      * Test for get_instance static method.
+     * @covers ::get_format
      */
     public function test_get_format(): void {
         global $DB;
@@ -77,6 +77,7 @@ final class baseactions_test extends \advanced_testcase {
 
     /**
      * Test for get_instance static method.
+     * @covers ::get_section_info
      */
     public function test_get_section_info(): void {
         $this->resetAfterTest();
@@ -99,8 +100,7 @@ final class baseactions_test extends \advanced_testcase {
 
         // Section info should be always the most updated one.
         course_update_section($course, $originalsection, (object)['name' => 'New name']);
-        $sectionactions  = formatactions::section($course);
-        $sectionactions->move_at($sectioninfo, 3);
+        move_section_to($course, 1, 3);
 
         $sectioninfo = $method->invoke($baseactions, $originalsection->id);
         $this->assertInstanceOf(section_info::class, $sectioninfo);
@@ -112,6 +112,7 @@ final class baseactions_test extends \advanced_testcase {
 
     /**
      * Test for get_instance static method.
+     * @covers ::get_cm_info
      */
     public function test_get_cm_info(): void {
         global $DB;
@@ -138,8 +139,7 @@ final class baseactions_test extends \advanced_testcase {
         $this->assertEquals($originalcm->name, $cm->name);
 
         // CM info should be always the most updated one.
-        $formatactions = formatactions::cm($course);
-        $formatactions->move_end_section($originalcm->id, $destinationsection->id);
+        moveto_module($originalcm, $destinationsection);
 
         $cm = $method->invoke($baseactions, $originalcm->id);
         $this->assertInstanceOf(cm_info::class, $cm);

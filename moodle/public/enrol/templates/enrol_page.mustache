@@ -25,10 +25,6 @@
     {
         "enrol": "self",
         "instanceid": 1,
-        "extraattributes": [{
-            "name": "data-action",
-            "value": "remove-enrolment-option"
-        }],
         "header": "Self-enrolment",
         "body": "You can enrol yourself in this course.",
         "hasbuttons": true,
@@ -41,22 +37,10 @@
         }]
     }
 }}
-<div class="box generalbox enrol-instance"
-    data-enrol="{{enrol}}"
-    data-instanceid="{{instanceid}}"
-    {{#extraattributes}}{{name}}="{{value}}" {{/extraattributes}}
->
+<div class="box generalbox mb-3 enrol-instance" data-enrol="{{enrol}}" data-instanceid="{{instanceid}}">
     <div class="card">
-        {{#header}}
-        <div class="card-header">
-            <span class="mb-0 fs-6 fw-bold">{{{header}}}</span>
-        </div>
-        {{/header}}
-        {{#body}}
-        <div class="card-body">
-            {{{body}}}
-        </div>
-        {{/body}}
+        {{#header}}<div class="card-header"><h3 class="mb-0">{{{header}}}</h3></div>{{/header}}
+        <div class="card-body">{{{body}}}</div>
         {{#hasbuttons}}
         <div class="card-footer">
             {{#buttons}}

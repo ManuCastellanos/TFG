@@ -176,9 +176,9 @@ abstract class section_renderer extends core_course_renderer {
      * If the format is not compatible with the course index, this method will return an empty string.
      *
      * @param course_format $format the course format
-     * @return string the course index HTML.
+     * @return String the course index HTML.
      */
-    public function course_index_drawer(course_format $format): ?string {
+    public function course_index_drawer(course_format $format): ?String {
         if ($format->uses_course_index()) {
             include_course_editor($format);
             return $this->render_from_template('core_courseformat/local/courseindex/drawer', []);

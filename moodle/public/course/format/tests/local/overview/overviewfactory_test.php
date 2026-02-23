@@ -37,7 +37,6 @@ final class overviewfactory_test extends \advanced_testcase {
      * Test create method on resource activities.
      *
      * @param string $resourcetype
-     * @param string|null $expected
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('create_resource_provider')]
     public function test_create_resource(

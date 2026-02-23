@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -22,14 +23,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['algebraicexpression'] = 'Algebraic expression';
-$string['configconvertformat'] = 'If <i>latex</i> and <i>dvips</i> are present in addition to <i>convert</i> or <i>dvisvgm</i>, select the preferred image type (<i>convert</i> produces PNG or GIF; <i>dvisvgm</i> produces SVG).';
-$string['convertformat'] = 'Output image format';
 $string['filtername'] = 'Algebra notation';
-$string['latexpreamble'] = 'LaTeX preamble';
-$string['latexsettings'] = 'LaTeX renderer Settings';
-$string['pathconvert'] = 'Path of <i>convert</i> binary';
-$string['pathdvips'] = 'Path of <i>dvips</i> binary';
-$string['pathdvisvgm'] = 'Path of <i>dvisvgm</i> binary';
-$string['pathlatex'] = 'Path of <i>latex</i> binary';
+$string['algebraicexpression'] = 'Algebraic expression';
 $string['privacy:metadata'] = 'The Algebra notation plugin does not store any personal data.';

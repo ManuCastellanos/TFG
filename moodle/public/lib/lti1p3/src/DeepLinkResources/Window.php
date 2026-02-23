@@ -13,11 +13,12 @@ class Window
         private ?int $width = null,
         private ?int $height = null,
         private ?string $window_features = null
-    ) {}
+    ) {
+    }
 
     public static function new(): self
     {
-        return new Window;
+        return new Window();
     }
 
     public function getArray(): array

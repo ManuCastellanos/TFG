@@ -27,11 +27,11 @@ declare(strict_types=1);
 namespace core_reportbuilder;
 
 use advanced_testcase;
-use core\lang_string;
 use core_reportbuilder_generator;
 use core_reportbuilder\local\entities\base;
 use core_reportbuilder\local\filters\text;
 use core_reportbuilder\local\report\{column, filter};
+use lang_string;
 use ReflectionClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -45,6 +45,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class datasource_test extends advanced_testcase {
+
     /**
      * Data provider for {@see test_add_columns_from_entity}
      *
@@ -55,31 +56,17 @@ final class datasource_test extends advanced_testcase {
             'All columns' => [
                 [],
                 [],
-                [
-                    'dummy:test',
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+                4,
             ],
             'Include columns (first, extra1, extra2)' => [
                 ['first', 'extra*'],
                 [],
-                [
-                    'dummy:test',
-                    'entityone:first',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+                3,
             ],
             'Exclude columns (first, extra1, extra2)' => [
                 [],
                 ['first', 'extra*'],
-                [
-                    'dummy:test',
-                    'entityone:second',
-                ],
+                1,
             ],
         ];
     }
@@ -89,7 +76,7 @@ final class datasource_test extends advanced_testcase {
      *
      * @param string[] $include
      * @param string[] $exclude
-     * @param string[] $expectedcolumns
+     * @param int $expectedcount
      *
      * @covers ::add_columns_from_entity
      *
@@ -98,21 +85,21 @@ final class datasource_test extends advanced_testcase {
     public function test_add_columns_from_entity(
         array $include,
         array $exclude,
-        array $expectedcolumns,
+        int $expectedcount,
     ): void {
         $instance = $this->get_datasource_test_source();
 
         $method = (new ReflectionClass($instance))->getMethod('add_columns_from_entity');
-        $method->invoke($instance, 'entityone', $include, $exclude);
+        $method->invoke($instance, 'datasource_test_entity', $include, $exclude);
 
         // Get all our entity columns.
-        $this->assertEquals(
-            $expectedcolumns,
-            array_map(
-                fn(column $column) => $column->get_unique_identifier(),
-                array_values($instance->get_columns()),
-            ),
+        $columns = array_filter(
+            $instance->get_columns(),
+            fn(string $columnname) => strpos($columnname, 'datasource_test_entity:') === 0,
+            ARRAY_FILTER_USE_KEY,
         );
+
+        $this->assertCount($expectedcount, $columns);
     }
 
     /**
@@ -125,28 +112,17 @@ final class datasource_test extends advanced_testcase {
             'All filters' => [
                 [],
                 [],
-                [
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+                4,
             ],
             'Include filters (first, extra1, extra2)' => [
                 ['first', 'extra*'],
                 [],
-                [
-                    'entityone:first',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+                3,
             ],
             'Exclude filters (first, extra1, extra2)' => [
                 [],
                 ['first', 'extra*'],
-                [
-                    'entityone:second',
-                ],
+                1,
             ],
         ];
     }
@@ -156,7 +132,7 @@ final class datasource_test extends advanced_testcase {
      *
      * @param string[] $include
      * @param string[] $exclude
-     * @param string[] $expectedfilters
+     * @param int $expectedcount
      *
      * @covers ::add_filters_from_entity
      *
@@ -165,21 +141,21 @@ final class datasource_test extends advanced_testcase {
     public function test_add_filters_from_entity(
         array $include,
         array $exclude,
-        array $expectedfilters,
+        int $expectedcount,
     ): void {
         $instance = $this->get_datasource_test_source();
 
         $method = (new ReflectionClass($instance))->getMethod('add_filters_from_entity');
-        $method->invoke($instance, 'entityone', $include, $exclude);
+        $method->invoke($instance, 'datasource_test_entity', $include, $exclude);
 
         // Get all our entity filters.
-        $this->assertEquals(
-            $expectedfilters,
-            array_map(
-                fn(filter $filter) => $filter->get_unique_identifier(),
-                array_values($instance->get_filters()),
-            ),
+        $filters = array_filter(
+            $instance->get_filters(),
+            fn(string $filtername) => strpos($filtername, 'datasource_test_entity:') === 0,
+            ARRAY_FILTER_USE_KEY,
         );
+
+        $this->assertCount($expectedcount, $filters);
     }
 
     /**
@@ -192,28 +168,17 @@ final class datasource_test extends advanced_testcase {
             'All conditions' => [
                 [],
                 [],
-                [
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+                4,
             ],
             'Include conditions (first, extra1, extra2)' => [
                 ['first', 'extra*'],
                 [],
-                [
-                    'entityone:first',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+                3,
             ],
             'Exclude conditions (first, extra1, extra2)' => [
                 [],
                 ['first', 'extra*'],
-                [
-                    'entityone:second',
-                ],
+                1,
             ],
         ];
     }
@@ -223,7 +188,7 @@ final class datasource_test extends advanced_testcase {
      *
      * @param string[] $include
      * @param string[] $exclude
-     * @param string[] $expectedconditions
+     * @param int $expectedcount
      *
      * @covers ::add_conditions_from_entity
      *
@@ -232,21 +197,21 @@ final class datasource_test extends advanced_testcase {
     public function test_add_conditions_from_entity(
         array $include,
         array $exclude,
-        array $expectedconditions,
+        int $expectedcount,
     ): void {
         $instance = $this->get_datasource_test_source();
 
         $method = (new ReflectionClass($instance))->getMethod('add_conditions_from_entity');
-        $method->invoke($instance, 'entityone', $include, $exclude);
+        $method->invoke($instance, 'datasource_test_entity', $include, $exclude);
 
         // Get all our entity conditions.
-        $this->assertEquals(
-            $expectedconditions,
-            array_map(
-                fn(filter $condition) => $condition->get_unique_identifier(),
-                array_values($instance->get_conditions()),
-            ),
+        $conditions = array_filter(
+            $instance->get_conditions(),
+            fn(string $conditionname) => strpos($conditionname, 'datasource_test_entity:') === 0,
+            ARRAY_FILTER_USE_KEY,
         );
+
+        $this->assertCount($expectedcount, $conditions);
     }
 
     /**
@@ -258,19 +223,19 @@ final class datasource_test extends advanced_testcase {
         $instance = $this->get_datasource_test_source();
 
         $method = (new ReflectionClass($instance))->getMethod('add_all_from_entity');
-        $method->invoke($instance, 'entityone', ['first'], ['second'], ['extra1']);
+        $method->invoke($instance, 'datasource_test_entity', ['first'], ['second'], ['extra1']);
 
         // Assert the column we added (plus one we didn't).
-        $this->assertInstanceOf(column::class, $instance->get_column('entityone:first'));
-        $this->assertNull($instance->get_column('entitytwo:second'));
+        $this->assertInstanceOf(column::class, $instance->get_column('datasource_test_entity:first'));
+        $this->assertNull($instance->get_column('datasource_test_entity:second'));
 
         // Assert the filter we added (plus one we didn't).
-        $this->assertInstanceOf(filter::class, $instance->get_filter('entityone:second'));
-        $this->assertNull($instance->get_filter('entitytwo:first'));
+        $this->assertInstanceOf(filter::class, $instance->get_filter('datasource_test_entity:second'));
+        $this->assertNull($instance->get_filter('datasource_test_entity:first'));
 
         // Assert the condition we added (plus one we didn't).
-        $this->assertInstanceOf(filter::class, $instance->get_condition('entityone:extra1'));
-        $this->assertNull($instance->get_condition('entitytwo:extra2'));
+        $this->assertInstanceOf(filter::class, $instance->get_condition('datasource_test_entity:extra1'));
+        $this->assertNull($instance->get_condition('datasource_test_entity:extra2'));
     }
 
     /**
@@ -282,105 +247,15 @@ final class datasource_test extends advanced_testcase {
         return [
             'All' => [
                 [],
-                [
-                    'dummy:test',
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                    'entitytwo:first',
-                    'entitytwo:second',
-                    'entitytwo:extra1',
-                    'entitytwo:extra2',
-                    'entitythree:first',
-                    'entitythree:second',
-                    'entitythree:extra1',
-                    'entitythree:extra2',
-                ],
-                [
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                    'entitytwo:first',
-                    'entitytwo:second',
-                    'entitytwo:extra1',
-                    'entitytwo:extra2',
-                    'entitythree:first',
-                    'entitythree:second',
-                    'entitythree:extra1',
-                    'entitythree:extra2',
-                ],
-                [
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                    'entitytwo:first',
-                    'entitytwo:second',
-                    'entitytwo:extra1',
-                    'entitytwo:extra2',
-                    'entitythree:first',
-                    'entitythree:second',
-                    'entitythree:extra1',
-                    'entitythree:extra2',
-                ],
+                9,
+                8,
+                8,
             ],
-            'Multiple entities' => [
-                ['entitythree', 'entityone'],
-                [
-                    'dummy:test',
-                    'entitythree:first',
-                    'entitythree:second',
-                    'entitythree:extra1',
-                    'entitythree:extra2',
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
-                [
-                    'entitythree:first',
-                    'entitythree:second',
-                    'entitythree:extra1',
-                    'entitythree:extra2',
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
-                [
-                    'entitythree:first',
-                    'entitythree:second',
-                    'entitythree:extra1',
-                    'entitythree:extra2',
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
-            ],
-            'Single entity' => [
-                ['entityone'],
-                [
-                    'dummy:test',
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
-                [
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
-                [
-                    'entityone:first',
-                    'entityone:second',
-                    'entityone:extra1',
-                    'entityone:extra2',
-                ],
+            'Entity' => [
+                ['datasource_test_entity'],
+                5,
+                4,
+                4,
             ],
         ];
     }
@@ -389,9 +264,9 @@ final class datasource_test extends advanced_testcase {
      * Test adding from all entities
      *
      * @param string[] $entitynames
-     * @param string[] $expectedcolumns
-     * @param string[] $expectedfilters
-     * @param string[] $expectedconditions
+     * @param int $expectedcountcolumns
+     * @param int $expectedcountfilters
+     * @param int $expectedcountconditions
      *
      * @covers ::add_all_from_entities
      *
@@ -399,41 +274,18 @@ final class datasource_test extends advanced_testcase {
      */
     public function test_add_all_from_entities(
         array $entitynames,
-        array $expectedcolumns,
-        array $expectedfilters,
-        array $expectedconditions,
+        int $expectedcountcolumns,
+        int $expectedcountfilters,
+        int $expectedcountconditions,
     ): void {
         $instance = $this->get_datasource_test_source();
 
         $method = (new ReflectionClass($instance))->getMethod('add_all_from_entities');
         $method->invoke($instance, $entitynames);
 
-        // Get all our entity columns.
-        $this->assertEquals(
-            $expectedcolumns,
-            array_map(
-                fn(column $column) => $column->get_unique_identifier(),
-                array_values($instance->get_columns()),
-            ),
-        );
-
-        // Get all our entity filters.
-        $this->assertEquals(
-            $expectedfilters,
-            array_map(
-                fn(filter $filter) => $filter->get_unique_identifier(),
-                array_values($instance->get_filters()),
-            ),
-        );
-
-        // Get all our entity conditions.
-        $this->assertEquals(
-            $expectedconditions,
-            array_map(
-                fn(filter $condition) => $condition->get_unique_identifier(),
-                array_values($instance->get_conditions()),
-            ),
-        );
+        $this->assertCount($expectedcountcolumns, $instance->get_columns());
+        $this->assertCount($expectedcountfilters, $instance->get_filters());
+        $this->assertCount($expectedcountconditions, $instance->get_conditions());
     }
 
     /**
@@ -445,28 +297,28 @@ final class datasource_test extends advanced_testcase {
         $instance = $this->get_datasource_test_source();
 
         $method = (new ReflectionClass($instance))->getMethod('add_conditions_from_entity');
-        $method->invoke($instance, 'entityone');
+        $method->invoke($instance, 'datasource_test_entity');
 
         /** @var core_reportbuilder_generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('core_reportbuilder');
 
         $reportid = $instance->get_report_persistent()->get('id');
-        $generator->create_condition(['reportid' => $reportid, 'uniqueidentifier' => 'entityone:first']);
-        $generator->create_condition(['reportid' => $reportid, 'uniqueidentifier' => 'entityone:second']);
+        $generator->create_condition(['reportid' => $reportid, 'uniqueidentifier' => 'datasource_test_entity:first']);
+        $generator->create_condition(['reportid' => $reportid, 'uniqueidentifier' => 'datasource_test_entity:second']);
 
         // Set the second condition as unavailable.
-        $instance->get_condition('entityone:second')->set_is_available(false);
+        $instance->get_condition('datasource_test_entity:second')->set_is_available(false);
 
         $this->assertEquals([
-            'entityone:first',
+            'datasource_test_entity:first',
         ], array_keys($instance->get_active_conditions(true)));
 
         // Ensure report elements are reloaded.
         $instance::report_elements_modified($reportid);
 
         $this->assertEquals([
-            'entityone:first',
-            'entityone:second',
+            'datasource_test_entity:first',
+            'datasource_test_entity:second',
         ], array_keys($instance->get_active_conditions(false)));
     }
 
@@ -492,6 +344,7 @@ final class datasource_test extends advanced_testcase {
  * Simple implementation of the base datasource
  */
 class datasource_test_source extends datasource {
+
     protected function initialise(): void {
         $this->set_main_table('user', 'u');
 
@@ -500,9 +353,8 @@ class datasource_test_source extends datasource {
         $this->add_column(new column('test', null, 'dummy'));
 
         // These are the entities from which we'll add additional report elements.
-        $this->add_entity((new datasource_test_entity())->set_entity_name('entityone'));
-        $this->add_entity((new datasource_test_entity())->set_entity_name('entitytwo'));
-        $this->add_entity((new datasource_test_entity())->set_entity_name('entitythree'));
+        $this->add_entity(new datasource_test_entity());
+        $this->add_entity((new datasource_test_entity())->set_entity_name('datasource_test_entity_second'));
     }
 
     public static function get_name(): string {
@@ -526,6 +378,7 @@ class datasource_test_source extends datasource {
  * Simple implementation of the base entity
  */
 class datasource_test_entity extends base {
+
     protected function get_default_tables(): array {
         return ['course'];
     }

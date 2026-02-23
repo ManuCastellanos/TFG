@@ -16,7 +16,7 @@
 
 namespace core\output;
 
-use Mustache\LambdaHelper;
+use Mustache_LambdaHelper;
 
 /**
  * This class will call shorten_text with the section content.
@@ -34,18 +34,18 @@ class mustache_shorten_text_helper {
      * Both args are required. The length must come first.
      *
      * @param string $args The text to parse for arguments.
-     * @param LambdaHelper $helper Used to render nested mustache variables.
+     * @param Mustache_LambdaHelper $helper Used to render nested mustache variables.
      * @return string
      */
-    public function shorten($args, LambdaHelper $helper) {
+    public function shorten($args, Mustache_LambdaHelper $helper) {
         // Split the text into an array of variables.
         [$length, $text] = explode(',', $args, 2);
         $length = trim($length);
         $text = trim($text);
 
         // Allow mustache tags in the length and text.
-        $text = (string) $helper->render($text);
-        $length = (int) (string) $helper->render($length);
+        $text = $helper->render($text);
+        $length = $helper->render($length);
 
         return shorten_text($text, $length);
     }

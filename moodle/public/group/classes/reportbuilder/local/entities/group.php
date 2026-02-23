@@ -42,9 +42,6 @@ require_once("{$CFG->libdir}/grouplib.php");
  */
 class group extends base {
 
-    /** @var custom_fields $customfields */
-    private custom_fields $customfields;
-
     /**
      * Database tables that this entity uses
      *
@@ -74,7 +71,7 @@ class group extends base {
     public function initialise(): base {
         $groupsalias = $this->get_table_alias('groups');
 
-        $this->customfields = (new custom_fields(
+        $customfields = (new custom_fields(
             "{$groupsalias}.id",
             $this->get_entity_name(),
             'core_group',
@@ -82,7 +79,20 @@ class group extends base {
         ))
             ->add_joins($this->get_joins());
 
-        return parent::initialise();
+        $columns = array_merge($this->get_all_columns(), $customfields->get_columns());
+        foreach ($columns as $column) {
+            $this->add_column($column);
+        }
+
+        // All the filters defined by the entity can also be used as conditions.
+        $filters = array_merge($this->get_all_filters(), $customfields->get_filters());
+        foreach ($filters as $filter) {
+            $this
+                ->add_filter($filter)
+                ->add_condition($filter);
+        }
+
+        return $this;
     }
 
     /**
@@ -90,7 +100,7 @@ class group extends base {
      *
      * @return column[]
      */
-    protected function get_available_columns(): array {
+    protected function get_all_columns(): array {
         $contextalias = $this->get_table_alias('context');
         $groupsalias = $this->get_table_alias('groups');
 
@@ -244,8 +254,7 @@ class group extends base {
             ->set_is_sortable(true)
             ->set_callback([format::class, 'userdate']);
 
-        // Merge with custom field columns.
-        return array_merge($columns, $this->customfields->get_columns());
+        return $columns;
     }
 
     /**
@@ -253,7 +262,7 @@ class group extends base {
      *
      * @return filter[]
      */
-    protected function get_available_filters(): array {
+    protected function get_all_filters(): array {
         $groupsalias = $this->get_table_alias('groups');
 
         // Name filter.
@@ -312,7 +321,6 @@ class group extends base {
         ))
             ->add_joins($this->get_joins());
 
-        // Merge with custom field filters.
-        return array_merge($filters, $this->customfields->get_filters());
+        return $filters;
     }
 }

@@ -48,7 +48,6 @@ class content_item {
      * @param bool $branded whether or not this item is branded.
      * @param bool $gradable whether or not this item is gradable.
      * @param string|null $otherpurpose the alternative purpose type of this component.
-     * @param string|null $summary a brief summary of this content item.
      */
     public function __construct(
         /** @var int $id the id. */
@@ -75,8 +74,6 @@ class content_item {
         private bool $gradable = false,
         /** @var string|null $otherpurpose the alternative purpose type of this component. */
         private ?string $otherpurpose = null,
-        /** @var string|null $summary a brief summary of this content item. */
-        private ?string $summary = null,
     ) {
     }
 
@@ -185,14 +182,5 @@ class content_item {
      */
     public function is_gradable(): bool {
         return $this->gradable;
-    }
-
-    /**
-     * Get a brief summary for this content item.
-     *
-     * @return string|null
-     */
-    public function get_summary(): ?string {
-        return $this->summary;
     }
 }

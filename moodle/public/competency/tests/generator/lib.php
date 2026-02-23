@@ -28,6 +28,7 @@ use core_competency\competency_framework;
 use core_competency\course_competency;
 use core_competency\course_module_competency;
 use core_competency\evidence;
+use core_competency\external;
 use core_competency\plan;
 use core_competency\plan_competency;
 use core_competency\related_competency;
@@ -39,6 +40,7 @@ use core_competency\user_competency_course;
 use core_competency\user_competency_plan;
 use core_competency\user_evidence;
 use core_competency\user_evidence_competency;
+
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -137,7 +139,7 @@ class core_competency_generator extends component_generator_base {
         if (defined('BEHAT_TEST') && BEHAT_TEST) {
             $generator = behat_util::get_data_generator();
         } else {
-            $generator = \core\test\phpunit\phpunit_util::get_data_generator();
+            $generator = phpunit_util::get_data_generator();
         }
         $this->frameworkcount++;
         $i = $this->frameworkcount;

@@ -30,32 +30,34 @@
         "name": "Folder",
         "icon": "<img src='icon' alt='alt'>",
         "hassubdirs": true,
-        "isroot": true,
         "subdirs": [
             {
                 "name": "File1",
                 "icon": "<img src='icon' alt='alt'>",
                 "hassubdirs": false,
                 "subdirs": null
-            }
+             }
         ]
     }
 }}
 
-<p>
-    {{{icon}}}
-
-    {{#url}}
-        <a href="{{url}}">{{{name}}}</a>
-    {{/url}}
-    {{^url}}
-        {{{name}}}{{#isroot}} <span class="visually-hidden">{{#str}} topleveldirectory, mod_folder {{/str}}</span>{{/isroot}}
-    {{/url}}
-</p>
+<div class="fp-filename-icon">
+    <span class="fp-icon">
+        {{{icon}}}
+    </span>
+    <span class="fp-filename">
+        {{#url}}
+            <a href="{{url}}">{{{name}}}</a>
+        {{/url}}
+        {{^url}}
+            {{{name}}}
+        {{/url}}
+    </span>
+</div>
 {{#hassubdirs}}
-    <ul role="group">
+    <ul>
         {{#subdirs}}
-            <li role="treeitem" tabindex="-1" {{#hassubdirs}}aria-expanded="{{#showexpanded}}true{{/showexpanded}}{{^showexpanded}}false{{/showexpanded}}"{{/hassubdirs}}>
+            <li>
                 {{>mod_folder/tree}}
             </li>
         {{/subdirs}}

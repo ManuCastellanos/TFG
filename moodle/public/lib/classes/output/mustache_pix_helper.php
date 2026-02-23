@@ -16,7 +16,7 @@
 
 namespace core\output;
 
-use Mustache\LambdaHelper;
+use Mustache_LambdaHelper;
 
 /**
  * This class will call pix_icon with the section content.
@@ -45,21 +45,21 @@ class mustache_pix_helper {
      * The args are comma separated and only the first is required.
      *
      * @param string $text The text to parse for arguments.
-     * @param LambdaHelper $helper Used to render nested mustache variables.
+     * @param Mustache_LambdaHelper $helper Used to render nested mustache variables.
      * @return string
      */
-    public function pix($text, LambdaHelper $helper) {
+    public function pix($text, Mustache_LambdaHelper $helper) {
         // Split the text into an array of variables.
         $key = strtok($text, ",");
-        $key = trim((string) $helper->render($key));
+        $key = trim($helper->render($key));
         $component = strtok(",");
-        $component = trim((string) $helper->render($component));
+        $component = trim($helper->render($component));
         if (!$component) {
             $component = '';
         }
         $text = strtok("");
         // Allow mustache tags in the last argument.
-        $text = trim((string) $helper->render($text));
+        $text = trim($helper->render($text));
         // The $text has come from a template, so HTML special
         // chars have been escaped. However, render_pix_icon
         // assumes the alt arrives with no escaping. So we need

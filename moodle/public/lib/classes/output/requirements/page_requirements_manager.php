@@ -476,6 +476,10 @@ class page_requirements_manager {
      * @param bool $inhead initialise in head
      */
     public function js($url, $inhead = false) {
+        if ($url == '/question/qengine.js') {
+            debugging('The question/qengine.js has been deprecated. ' .
+                'Please use core_question/question_engine', DEBUG_DEVELOPER);
+        }
         $url = $this->js_fix_url($url);
         $where = $inhead ? 'head' : 'footer';
         $this->jsincludes[$where][$url->out()] = $url;
@@ -823,7 +827,6 @@ class page_requirements_manager {
                             ['renameto', 'repository'],
                             ['referencesexist', 'repository'],
                             ['select', 'repository'],
-                            ['invalidfiletypetitle', 'repository'],
                         ],
                     ];
                     break;
@@ -858,6 +861,13 @@ class page_requirements_manager {
                         'requires' => ['node', 'overlay', 'event-mouseenter'],
                     ];
                     break;
+                case 'core_question_engine':
+                    $module = [
+                        'name' => 'core_question_engine',
+                        'fullpath' => '/question/qengine.js',
+                        'requires' => ['node', 'event'],
+                    ];
+                    break;
                 case 'core_rating':
                     $module = [
                         'name' => 'core_rating',
@@ -876,7 +886,6 @@ class page_requirements_manager {
                             ['sizegb', 'moodle'], ['sizemb', 'moodle'], ['sizekb', 'moodle'], ['sizeb', 'moodle'],
                             ['maxareabytesreached', 'moodle'], ['serverconnection', 'error'],
                             ['changesmadereallygoaway', 'moodle'], ['complete', 'moodle'],
-                            ['invalidfiletypetitle', 'repository'],
                         ],
                     ];
                     break;

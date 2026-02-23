@@ -1,30 +1,6 @@
 # core_question (subsystem) Upgrade notes
 
-## 5.2dev
-
-### Deprecated
-
-- `get_next_version()` from questionlib.php is now deprecated. Use `\core_question\versions::get_next_version()` instead.
-
-  For more information see [MDL-86798](https://tracker.moodle.org/browse/MDL-86798)
-
-### Removed
-
-- core_question:
-      - message: |
-          Final deprecation of `moodle-question-chooser` YUI module.
-        type: removed
-      - message: |
-          Final deprecation of `core_question/qbank_chooser` template.
-        type: removed
-
-  For more information see [MDL-81961](https://tracker.moodle.org/browse/MDL-81961)
-- - The following methods have been removed from `public/question/renderer.php`:
-    - `\core_question_bank_renderer::render_category_condition()`
-    - `\core_question_bank_renderer::render_category_condition_advanced()`
-    - `\core_question_bank_renderer::render_hidden_condition_advanced()`
-
-  For more information see [MDL-87425](https://tracker.moodle.org/browse/MDL-87425)
+## 5.1.2
 
 ### Fixed
 

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Event mock class.
+ * Event mock.
  *
  * @package    core
  * @category   phpunit
@@ -23,9 +23,35 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-debugging(
-    'The event_mock.php file is deprecated and will be removed in Moodle 6.0. ' .
-    'It should not be manually included. ' .
-    'The class can now be autoloaded from \core\test\phpunit\event_mock.',
-    DEBUG_DEVELOPER
-);
+require_once(__DIR__ . '/../../classes/event/base.php');
+
+/**
+ * Event mock class.
+ *
+ * @package    core
+ * @category   phpunit
+ * @copyright  2013 Frédéric Massart
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+abstract class phpunit_event_mock extends \core\event\base {
+
+    /**
+     * Returns event context.
+     *
+     * @param \core\event\base $event event to get context for.
+     * @return context event context
+     */
+    public static function testable_get_event_context($event) {
+        return $event->context;
+    }
+
+    /**
+     * Sets event context.
+     *
+     * @param \core\event\base $event event to set context for.
+     * @param context $context context to set.
+     */
+    public static function testable_set_event_context($event, $context) {
+        $event->context = $context;
+    }
+}

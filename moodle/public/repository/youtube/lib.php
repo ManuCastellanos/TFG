@@ -22,10 +22,6 @@
  * @copyright  2010 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-use Google\Client;
-use Google\Service\YouTube;
-
 require_once($CFG->dirroot . '/repository/lib.php');
 
 /**
@@ -49,13 +45,13 @@ class repository_youtube extends repository {
 
     /**
      * Google Client.
-     * @var Client
+     * @var Google_Client
      */
     private $client = null;
 
     /**
      * YouTube Service.
-     * @var YouTube
+     * @var Google_Service_YouTube
      */
     private $service = null;
 
@@ -94,10 +90,11 @@ class repository_youtube extends repository {
         global $CFG;
 
         if (!isset($this->service)) {
-            $this->client = new core\google_api_client();
+            require_once($CFG->libdir . '/google/lib.php');
+            $this->client = get_google_client();
             $this->client->setDeveloperKey($this->apikey);
-            $this->client->setScopes([YouTube::YOUTUBE_READONLY]);
-            $this->service = new YouTube($this->client);
+            $this->client->setScopes(array(Google_Service_YouTube::YOUTUBE_READONLY));
+            $this->service = new Google_Service_YouTube($this->client);
         }
     }
 
@@ -231,7 +228,7 @@ class repository_youtube extends repository {
                     'source' => $source,
                 );
             }
-        } catch (\Google\Service\Exception $e) {
+        } catch (Google_Service_Exception $e) {
             // If we throw the google exception as-is, we may expose the apikey
             // to end users. The full message in the google exception includes
             // the apikey param, so we take just the part pertaining to the

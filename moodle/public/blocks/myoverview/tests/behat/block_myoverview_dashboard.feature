@@ -196,14 +196,6 @@ Feature: The my overview block allows users to easily access their courses
     Then I should see "Sort by short name" in the "Course overview" "block"
     And "[data-sort='shortname']" "css_element" in the "Course overview" "block" should be visible
 
-  Scenario: Course start date sort persistence
-    Given I am on the "My courses" page logged in as "student1"
-    And I click on "sortingdropdown" "button" in the "Course overview" "block"
-    And I click on "Sort by start date" "link" in the "Course overview" "block"
-    And I reload the page
-    Then I should see "Sort by start date" in the "Course overview" "block"
-    And "[data-sort='startdate']" "css_element" in the "Course overview" "block" should be visible
-
   Scenario: View inprogress courses with hide persistent functionality
     Given I am on the "My courses" page logged in as "student1"
     And I click on "All" "button" in the "Course overview" "block"
@@ -289,7 +281,7 @@ Feature: The my overview block allows users to easily access their courses
     When I click on "List" "link" in the "Course overview" "block"
     Then I should see "Category 1" in the "Course overview" "block"
 
-  Scenario: Show course category in summary display with displaycategories on
+  Scenario: Show course category in summary display
     Given the following config values are set as admin:
       | displaycategories | 1 | block_myoverview |
     And I am on the "My courses" page logged in as "student1"
@@ -313,7 +305,7 @@ Feature: The my overview block allows users to easily access their courses
     When I click on "List" "link" in the "Course overview" "block"
     Then I should not see "Category 1" in the "Course overview" "block"
 
-  Scenario: Show course category in summary display with displaycategories off
+  Scenario: Show course category in summary display
     Given the following config values are set as admin:
       | displaycategories | 0 | block_myoverview |
     And I am on the "My courses" page logged in as "student1"

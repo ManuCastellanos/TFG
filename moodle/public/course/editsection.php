@@ -31,7 +31,6 @@ $id = required_param('id', PARAM_INT);    // course_sections.id
 $sectionreturn = optional_param('sr', null, PARAM_INT);
 $deletesection = optional_param('delete', 0, PARAM_BOOL);
 $showonly = optional_param('showonly', 0, PARAM_TAGLIST);
-$returnurl = optional_param('returnurl', null, PARAM_LOCALURL);
 
 $returnparams = [];
 $params = ['id' => $id];
@@ -68,7 +67,7 @@ if ($deletesection) {
         if ($confirm) {
             course_delete_section($course, $sectioninfo, true, true);
             $courseurl = course_get_url($course, $sectioninfo->section - 1, $returnparams);
-            redirect($returnurl ?? $courseurl);
+            redirect($courseurl);
         } else {
             if (get_string_manager()->string_exists('deletesection', 'format_' . $course->format)) {
                 $strdelete = get_string('deletesection', 'format_' . $course->format);
@@ -117,7 +116,6 @@ $customdata = [
     'editoroptions' => $editoroptions,
     'defaultsectionname' => $defaultsectionname,
     'showonly' => $showonly,
-    'returnurl' => $returnurl,
 ];
 
 $mform = $courseformat->editsection_form($PAGE->url, $customdata);
@@ -135,7 +133,7 @@ if (!empty($showonly)) {
 
 if ($mform->is_cancelled()){
     // Form cancelled, return to course.
-    redirect($returnurl ?? course_get_url($course, $section, $returnparams));
+    redirect(course_get_url($course, $section, $returnparams));
 } else if ($data = $mform->get_data()) {
     // Data submitted and validated, update and return to course.
 
@@ -151,7 +149,7 @@ if ($mform->is_cancelled()){
     course_update_section($course, $section, $data);
 
     $PAGE->navigation->clear_cache();
-    redirect($returnurl ?? course_get_url($course, $section, $returnparams));
+    redirect(course_get_url($course, $section, $returnparams));
 }
 
 // The edit form is displayed for the first time or if there was validation error on the previous step.

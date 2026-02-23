@@ -39,10 +39,7 @@ Feature: Anonymous feedback
     And I log out
 
   Scenario: Guests can see anonymous feedback on front page but can not complete
-    Given the following config values are set as admin:
-      | forcelogin | 0 |
-    When I am on site homepage
-    And I follow "Site feedback"
+    When I follow "Site feedback"
     Then I should not see "Answer the questions"
     And I should not see "Preview questions"
 
@@ -105,10 +102,8 @@ Feature: Anonymous feedback
   Scenario: Complete fully anonymous feedback on the front page as a guest
     Given the following config values are set as admin:
       | feedback_allowfullanonymous | 1 |
-      | forcelogin | 0 |
-    When I am on site homepage
-    And I follow "Site feedback"
-    Then I should not see "Preview questions"
+    When I follow "Site feedback"
+    And I should not see "Preview questions"
     And I follow "Answer the questions"
     And I should see "Do you like our site?"
     And I set the following fields to these values:
@@ -121,13 +116,11 @@ Feature: Anonymous feedback
   Scenario: Complete fully anonymous feedback and view analyze on the front page as a guest
     Given the following config values are set as admin:
       | feedback_allowfullanonymous | 1 |
-      | forcelogin | 0 |
     And the following "role capability" exists:
       | role                         | guest |
       | mod/feedback:viewanalysepage | allow |
-    When I am on site homepage
-    And I follow "Site feedback"
-    Then I should not see "Preview questions"
+    When I follow "Site feedback"
+    And I should not see "Preview questions"
     And I follow "Answer the questions"
     And I should see "Do you like our site?"
     And I set the following fields to these values:

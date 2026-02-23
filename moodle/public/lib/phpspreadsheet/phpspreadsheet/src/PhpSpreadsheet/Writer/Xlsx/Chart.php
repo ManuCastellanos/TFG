@@ -13,7 +13,6 @@ use PhpOffice\PhpSpreadsheet\Chart\Properties;
 use PhpOffice\PhpSpreadsheet\Chart\Title;
 use PhpOffice\PhpSpreadsheet\Chart\TrendLine;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx\Namespaces;
-use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 use PhpOffice\PhpSpreadsheet\Shared\XMLWriter;
 use PhpOffice\PhpSpreadsheet\Style\Font;
 use PhpOffice\PhpSpreadsheet\Writer\Exception as WriterException;
@@ -97,9 +96,11 @@ class Chart extends WriterPart
         $objWriter->writeAttribute('val', (string) (int) $chart->getPlotVisibleOnly());
         $objWriter->endElement();
 
-        $objWriter->startElement('c:dispBlanksAs');
-        $objWriter->writeAttribute('val', $chart->getDisplayBlanksAs());
-        $objWriter->endElement();
+        if ($chart->getDisplayBlanksAs() !== '') {
+            $objWriter->startElement('c:dispBlanksAs');
+            $objWriter->writeAttribute('val', $chart->getDisplayBlanksAs());
+            $objWriter->endElement();
+        }
 
         $objWriter->startElement('c:showDLblsOverMax');
         $objWriter->writeAttribute('val', '0');
@@ -1313,12 +1314,12 @@ class Chart extends WriterPart
                     }
                     if ($trendLineType == TrendLine::TRENDLINE_POLYNOMIAL) {
                         $objWriter->startElement('c:order');
-                        $objWriter->writeAttribute('val', "$order");
+                        $objWriter->writeAttribute('val', $order);
                         $objWriter->endElement(); // order
                     }
                     if ($trendLineType == TrendLine::TRENDLINE_MOVING_AVG) {
                         $objWriter->startElement('c:period');
-                        $objWriter->writeAttribute('val', "$period");
+                        $objWriter->writeAttribute('val', $period);
                         $objWriter->endElement(); // period
                     }
                     $objWriter->startElement('c:dispRSqr');
@@ -1435,7 +1436,6 @@ class Chart extends WriterPart
         $objWriter->endElement();
 
         foreach (($plotSeriesLabel->getDataValues() ?? []) as $plotLabelKey => $plotLabelValue) {
-            /** @var string $plotLabelValue */
             $objWriter->startElement('c:pt');
             $objWriter->writeAttribute('idx', $plotLabelKey);
 
@@ -1478,7 +1478,6 @@ class Chart extends WriterPart
                 $objWriter->startElement('c:lvl');
 
                 foreach (($plotSeriesValues->getDataValues() ?? []) as $plotSeriesKey => $plotSeriesValue) {
-                    /** @var string[] $plotSeriesValue */
                     if (isset($plotSeriesValue[$level])) {
                         $objWriter->startElement('c:pt');
                         $objWriter->writeAttribute('idx', $plotSeriesKey);
@@ -1506,7 +1505,7 @@ class Chart extends WriterPart
             $count = $plotSeriesValues->getPointCount();
             $source = $plotSeriesValues->getDataSource();
             $values = $plotSeriesValues->getDataValues();
-            if ($count > 1 || ($count === 1 && is_array($values) && array_key_exists(0, $values) && "=$source" !== StringHelper::convertToString($values[0], false))) {
+            if ($count > 1 || ($count === 1 && is_array($values) && array_key_exists(0, $values) && "=$source" !== (string) $values[0])) {
                 $objWriter->startElement('c:' . $dataType . 'Cache');
 
                 if (($groupType != DataSeries::TYPE_PIECHART) && ($groupType != DataSeries::TYPE_PIECHART_3D) && ($groupType != DataSeries::TYPE_DONUTCHART)) {
@@ -1521,7 +1520,6 @@ class Chart extends WriterPart
                 $objWriter->writeAttribute('val', (string) $plotSeriesValues->getPointCount());
                 $objWriter->endElement();
 
-                /** @var array<string, string> */
                 $dataValues = $plotSeriesValues->getDataValues();
                 if (!empty($dataValues)) {
                     foreach ($dataValues as $plotSeriesKey => $plotSeriesValue) {

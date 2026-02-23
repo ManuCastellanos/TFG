@@ -110,11 +110,15 @@
         </div>
     </div>
     {{/disableeditor}}
-    <div>
-        <input
-                class="btn btn-primary mt-2"
+    {{< core/sticky_footer }}
+        {{$ stickycontent }}
+        <div>
+            <input
+                class="btn btn-primary mx-1"
                 type="submit"
                 value="{{#str}} save {{/str}}"
-        />
-    </div>
+            />
+        </div>
+        {{/ stickycontent }}
+    {{/ core/sticky_footer }}
 </form>

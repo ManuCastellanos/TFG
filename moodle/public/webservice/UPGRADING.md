@@ -1,9 +1,9 @@
 # core_webservice (subsystem / plugintype) Upgrade notes
 
-## 5.2dev
+## 4.5rc1
 
-### Changed
+### Deprecated
 
-- The WebService core_webservice_get_site_info now returns three new fields: "usercanviewconfig" indicating whether the current user can see the administration tree, "usercanchangeconfig" indicating whether the current user can change the site configuration, and site secret.
+- The `token_table` and `token_filter` classes have been deprecated, in favour of new report builder implementation.
 
-  For more information see [MDL-87034](https://tracker.moodle.org/browse/MDL-87034)
+  For more information see [MDL-79496](https://tracker.moodle.org/browse/MDL-79496)

@@ -88,7 +88,9 @@ final class tags_test extends \advanced_testcase {
         $this->assertNotFalse($tag3);
 
         $slottags = $this->get_tags_for_slot($question->slotid);
-        $this->assertEquals($tag2->id, $slottags[0]);
+        $slottags = reset($slottags);
+        $slottags = explode(',', $slottags);
+        $this->assertEquals("{$tag2->id},{$tag2->name}", "{$slottags[0]},{$slottags[1]}");
 
         // Course context question cats get restored to a default qbank module instance.
         $modinfo = get_fast_modinfo($newcourseid);
@@ -101,7 +103,7 @@ final class tags_test extends \advanced_testcase {
         $randomincludingsubcategories = $DB->get_record('question_set_references',
             ['itemid' => reset($slots)->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']);
         $filtercondition = json_decode($randomincludingsubcategories->filtercondition);
-        $this->assertEquals(0, $filtercondition->filter->category->filteroptions->includesubcategories);
+        $this->assertEquals(0, $filtercondition->includingsubcategories);
     }
 
     /**
@@ -116,8 +118,8 @@ final class tags_test extends \advanced_testcase {
                 ['itemid' => $slotid, 'component' => 'mod_quiz', 'questionarea' => 'slot']);
         if (isset($referencedata->filtercondition)) {
             $filtercondition = json_decode($referencedata->filtercondition);
-            if (isset($filtercondition->filter->qtagids)) {
-                return $filtercondition->filter->qtagids->values;
+            if (isset($filtercondition->tags)) {
+                return $filtercondition->tags;
             }
         }
         return [];

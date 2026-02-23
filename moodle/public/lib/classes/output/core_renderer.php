@@ -462,6 +462,14 @@ class core_renderer extends renderer_base {
     }
 
     /**
+     * @deprecated since Moodle 4.3 MDL-78744
+     */
+    #[\core\attribute\deprecated(null, since: '4.3', mdl: 'MDL-78744', final: true)]
+    public function activity_information() {
+        \core\deprecation::emit_deprecation([self::class, __FUNCTION__]);
+    }
+
+    /**
      * Returns standard navigation between activities in a course.
      *
      * @return string the navigation HTML.
@@ -568,7 +576,7 @@ class core_renderer extends renderer_base {
         // for now. This will be replaced with the real content in {@see core_renderer::footer()}.
         $output = '';
         if ($this->page->pagelayout !== 'embedded' && !empty($CFG->additionalhtmlfooter)) {
-            $output .= "\n" . format_string($CFG->additionalhtmlfooter, false, ['context' => $this->page->context]);
+            $output .= "\n" . $CFG->additionalhtmlfooter;
         }
         $output .= $this->unique_end_html_token;
         return $output;
@@ -2385,6 +2393,13 @@ class core_renderer extends renderer_base {
         }
 
         return html_writer::tag('a', $output, $attributes);
+    }
+
+    /**
+     * @deprecated since Moodle 4.3
+     */
+    public function htmllize_file_tree() {
+        throw new coding_exception('This function is deprecated and no longer relevant.');
     }
 
     /**

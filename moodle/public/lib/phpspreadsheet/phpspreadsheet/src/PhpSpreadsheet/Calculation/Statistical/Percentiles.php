@@ -45,7 +45,6 @@ class Percentiles
         $mValueCount = count($mArgs);
         if ($mValueCount > 0) {
             sort($mArgs);
-            /** @var float[] $mArgs */
             $count = Counts::COUNT($mArgs);
             $index = $entry * ($count - 1);
             $indexFloor = floor($index);
@@ -103,7 +102,6 @@ class Percentiles
 
         $pos = array_search($value, $valueSet);
         if ($pos === false) {
-            /** @var float[] $valueSet */
             $pos = 0;
             $testValue = $valueSet[0];
             while ($testValue < $value) {
@@ -187,11 +185,6 @@ class Percentiles
         return ++$pos;
     }
 
-    /**
-     * @param mixed[] $dataSet
-     *
-     * @return mixed[]
-     */
     protected static function percentileFilterValues(array $dataSet): array
     {
         return array_filter(
@@ -200,11 +193,6 @@ class Percentiles
         );
     }
 
-    /**
-     * @param mixed[] $dataSet
-     *
-     * @return mixed[]
-     */
     protected static function rankFilterValues(array $dataSet): array
     {
         return array_filter(

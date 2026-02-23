@@ -47,7 +47,7 @@ final class data_provider_finished_subscriber implements DataProviderMethodFinis
         }
 
         if ($resetall) {
-            \core\test\phpunit\phpunit_util::reset_all_data();
+            \phpunit_util::reset_all_data();
             $this->update_db_writes();
         }
     }

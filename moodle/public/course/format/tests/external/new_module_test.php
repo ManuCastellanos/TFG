@@ -28,8 +28,8 @@ use stdClass;
  * @category   test
  * @copyright  2024 Mikel Martín <mikel@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \core_courseformat\external\new_module
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(new_module::class)]
 final class new_module_test extends \core_external\tests\externallib_testcase {
     #[\Override]
     public static function setUpBeforeClass(): void {
@@ -43,6 +43,8 @@ final class new_module_test extends \core_external\tests\externallib_testcase {
 
     /**
      * Test the webservice can execute the new_module action.
+     *
+     * @covers ::execute
      */
     public function test_execute(): void {
         $this->resetAfterTest();
@@ -73,6 +75,8 @@ final class new_module_test extends \core_external\tests\externallib_testcase {
 
     /**
      * Test the webservice can execute the new_module action with a format override.
+     *
+     * @covers ::execute
      */
     public function test_execute_with_format_override(): void {
         $this->resetAfterTest();
@@ -101,6 +105,8 @@ final class new_module_test extends \core_external\tests\externallib_testcase {
 
     /**
      * Test the webservice can execute the new_module action with an invalid module.
+     *
+     * @covers ::execute
      */
     public function test_execute_with_invalid_module(): void {
         $this->resetAfterTest();

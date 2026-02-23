@@ -85,8 +85,6 @@ class format_theunittest extends core_courseformat\base {
 
     /**
      * Returns true if this course format uses sections
-     *
-     * @return bool
      */
     public function uses_sections() {
         return true;

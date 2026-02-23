@@ -25,12 +25,13 @@ Feature: Statistics calculations with random questions
       | questioncategory | qtype  | template | name                    | questiontext |
       | Test questions   | essay  | plain    | Test question 1         |              |
       | Test questions   | essay  | plain    | Test question 2         |              |
+      | Test questions   | random |          | Random (Test questions) | 0            |
     And the following "activities" exist:
       | activity   | name   | course | idnumber |
       | quiz       | Quiz 1 | C1     | quiz1    |
     And quiz "Quiz 1" contains the following questions:
-      | question                | page | randomcategory |
-      | Random (Test questions) | 1    | Test questions |
+      | question                | page |
+      | Random (Test questions) | 1    |
     And user "student" has attempted "Quiz 1" with responses:
       | slot | response                   |
       |   1  | Here is my wonderful essay |
@@ -42,12 +43,13 @@ Feature: Statistics calculations with random questions
       | questioncategory | qtype       | template    | name                    | questiontext |
       | Test questions   | multichoice | one_of_four | Test question 1         |              |
       | Test questions   | multichoice | one_of_four | Test question 2         |              |
+      | Test questions   | random      |             | Random (Test questions) | 0            |
     And the following "activities" exist:
       | activity   | name   | course | idnumber |
       | quiz       | Quiz 1 | C1     | quiz1    |
     And quiz "Quiz 1" contains the following questions:
-      | question                | page | randomcategory |
-      | Random (Test questions) | 1    | Test questions |
+      | question                | page |
+      | Random (Test questions) | 1    |
     And user "student" has attempted "Quiz 1" with responses:
       | slot | response |
       |   1  | One      |

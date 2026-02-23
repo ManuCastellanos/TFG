@@ -101,7 +101,7 @@ export default class Component extends BaseComponent {
             log.debug('Init component with id is deprecated, use a query selector instead.');
             element = document.getElementById(target);
         }
-        return new this({
+        return new Component({
             element,
             reactive: getCurrentCourseEditor(),
             selectors,
@@ -527,35 +527,19 @@ export default class Component extends BaseComponent {
         this._scanIndex(
             this.selectors.SECTION,
             this.sections,
-            this._newSection
+            (item) => {
+                return new Section(item);
+            }
         );
 
         // Find unindexed cms.
         this._scanIndex(
             this.selectors.CM,
             this.cms,
-            this._newCmItem
+            (item) => {
+                return new CmItem(item);
+            }
         );
-    }
-
-    /**
-     * Create a new Section object.
-     *
-     * @param {Object} item the constructor data
-     * @return {Section} the new object
-     */
-    _newSection(item) {
-        return new Section(item);
-    }
-
-    /**
-     * Create a new CM object.
-     *
-     * @param {Object} item the constructor data
-     * @return {CmItem} the new object
-     */
-    _newCmItem(item) {
-        return new CmItem(item);
     }
 
     /**

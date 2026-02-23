@@ -13,7 +13,6 @@ class Delimiter
 
     protected string $enclosure;
 
-    /** @var array<string, int[]> */
     protected array $counts = [];
 
     protected int $numberLines = 0;
@@ -54,7 +53,6 @@ class Delimiter
         }
     }
 
-    /** @param array<string, int> $delimiterKeys */
     protected function countDelimiterValues(string $line, array $delimiterKeys): void
     {
         $splitString = mb_str_split($line, 1, 'UTF-8');
@@ -71,7 +69,7 @@ class Delimiter
         // Calculate the mean square deviations for each delimiter
         //     (ignoring delimiters that haven't been found consistently)
         $meanSquareDeviations = [];
-        $middleIdx = (int) floor(($this->numberLines - 1) / 2);
+        $middleIdx = floor(($this->numberLines - 1) / 2);
 
         foreach (self::POTENTIAL_DELIMETERS as $delimiter) {
             $series = $this->counts[$delimiter];

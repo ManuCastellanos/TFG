@@ -114,11 +114,8 @@ class redis extends handler implements SessionHandlerInterface {
     /** @var clock A clock instance */
     protected clock $clock;
 
-    /** @var float $connectiontimeout The number of seconds to wait for a connection response from the Redis server. */
-    protected float $connectiontimeout = 3.0;
-
-    /** @var float $readtimeout The number of seconds to wait for a read from the Redis server. */
-    protected float $readtimeout = 3.0;
+    /** @var int $connectiontimeout The number of seconds to wait for a connection or response from the Redis server. */
+    protected int $connectiontimeout = 3;
 
     /**
      * Create new instance of handler.
@@ -208,15 +205,11 @@ class redis extends handler implements SessionHandlerInterface {
         }
 
         if (isset($CFG->session_redis_connection_timeout)) {
-            $this->connectiontimeout = (float)$CFG->session_redis_connection_timeout;
+            $this->connectiontimeout = (int)$CFG->session_redis_connection_timeout;
         }
 
         if (isset($CFG->session_redis_max_retries)) {
             $this->maxretries = (int)$CFG->session_redis_max_retries;
-        }
-
-        if (isset($CFG->session_redis_read_timeout)) {
-            $this->readtimeout = (float)$CFG->session_redis_read_timeout;
         }
 
         $this->clock = di::get(clock::class);
@@ -323,7 +316,7 @@ class redis extends handler implements SessionHandlerInterface {
                             name: null,
                             seeds: $trimmedservers,
                             timeout: $this->connectiontimeout, // Timeout.
-                            read_timeout: $this->readtimeout, // Read timeout.
+                            read_timeout: $this->connectiontimeout, // Read timeout.
                             persistent: true,
                             auth: $this->auth,
                             context: !empty($opts) ? $opts : null,
@@ -333,7 +326,7 @@ class redis extends handler implements SessionHandlerInterface {
                             null,
                             $trimmedservers,
                             $this->connectiontimeout,
-                            $this->readtimeout,
+                            $this->connectiontimeout,
                             true,
                             $this->auth,
                             !empty($opts) ? $opts : null
@@ -349,7 +342,7 @@ class redis extends handler implements SessionHandlerInterface {
                             port: $port,
                             timeout: $this->connectiontimeout, // Timeout.
                             retry_interval: $delay,
-                            read_timeout: $this->readtimeout, // Read timeout.
+                            read_timeout: $this->connectiontimeout, // Read timeout.
                             context: $opts,
                         );
                     } else {
@@ -359,7 +352,7 @@ class redis extends handler implements SessionHandlerInterface {
                             $this->connectiontimeout,
                             null,
                             $delay,
-                            $this->readtimeout,
+                            $this->connectiontimeout,
                             $opts
                         );
                     }

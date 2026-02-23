@@ -133,7 +133,7 @@ Feature: Users can use mod_data without editing the templates
       | Header         | New header!                  |
       | Repeated entry | This is the template content |
       | Footer         | New footer!                  |
-    And I click on "Save" "button"
+    And I click on "Save" "button" in the "sticky-footer" "region"
     And I navigate to "Database" in current page administration
     And I should see "New header!"
     And I should see "This is the template content"

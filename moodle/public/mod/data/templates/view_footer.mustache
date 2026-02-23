@@ -14,13 +14,26 @@
 {{!
     @template mod_data/view_footer
 
-    The mod_data footer content.
+    The mod_data sticky footer content.
 
     Example context (json):
     {
         "selectall": "<button>Select all</button>",
         "deleteselected": "<button>Cancel selection</button>",
-        "pagination": "1, 2, 3..."
+        "pagination": "1, 2, 3...",
+        "addentrybutton": {
+            "disabled": false,
+            "url": "#",
+            "id": "test-id",
+            "classes": "btn btn-link",
+            "attributes": [
+                {
+                    "name": "title",
+                    "value": "Add entry"
+                }
+            ],
+            "text": "Add"
+        }
     }
 }}
 {{#selectall}}
@@ -32,3 +45,8 @@
 <div class="navitem submit mx-auto">
     {{{pagination}}}
 </div>
+{{#addentrybutton}}
+<div class="navitem">
+    {{> core/action_link}}
+</div>
+{{/addentrybutton}}

@@ -13,7 +13,7 @@ class Mpdf extends Pdf
     /**
      * Gets the implementation of external PDF library that should be used.
      *
-     * @param mixed[] $config Configuration array
+     * @param array $config Configuration array
      *
      * @return \Mpdf\Mpdf implementation
      */
@@ -40,13 +40,6 @@ class Mpdf extends Pdf
 
         //  Create PDF
         $config = ['tempDir' => $this->tempDir . '/mpdf'];
-        $restoreHandler = false;
-        if (PHP_VERSION_ID >= self::$temporaryVersionCheck) {
-            // @codeCoverageIgnoreStart
-            set_error_handler(self::specialErrorHandler(...));
-            $restoreHandler = true;
-            // @codeCoverageIgnoreEnd
-        }
         $pdf = $this->createExternalWriterInstance($config);
         $ortmp = $orientation;
         $pdf->_setPageSize($paperSize, $ortmp);
@@ -86,32 +79,9 @@ class Mpdf extends Pdf
         }
 
         //  Write to file
-        /** @var string */
-        $str = $pdf->Output('', 'S');
-        fwrite($fileHandle, $str);
+        fwrite($fileHandle, $pdf->Output('', 'S'));
 
-        if ($restoreHandler) {
-            restore_error_handler(); // @codeCoverageIgnore
-        }
         parent::restoreStateAfterSave();
-    }
-
-    protected static int $temporaryVersionCheck = 80500;
-
-    /**
-     * Temporary handler for Php8.5 waiting for Dompdf release.
-     *
-     * @codeCoverageIgnore
-     */
-    public function specialErrorHandler(int $errno, string $errstr, string $filename, int $lineno): bool
-    {
-        if ($errno === E_DEPRECATED) {
-            if (preg_match('/Providing an empty string is deprecated/', $errstr) === 1) {
-                return true;
-            }
-        }
-
-        return false; // continue error handling
     }
 
     /**

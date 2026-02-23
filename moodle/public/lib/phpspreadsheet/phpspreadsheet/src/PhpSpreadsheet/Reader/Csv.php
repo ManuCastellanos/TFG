@@ -188,8 +188,7 @@ class Csv extends BaseReader
      */
     protected function inferSeparator(): void
     {
-        $temp = $this->delimiter;
-        if ($temp !== null) {
+        if ($this->delimiter !== null) {
             return;
         }
 
@@ -215,8 +214,6 @@ class Csv extends BaseReader
 
     /**
      * Return worksheet info (Name, Last Column Letter, Last Column Index, Total Rows, Total Columns).
-     *
-     * @return array<int, array{worksheetName: string, lastColumnLetter: string, lastColumnIndex: int, totalRows: int, totalColumns: int, sheetState: string}>
      */
     public function listWorksheetInfo(string $filename): array
     {
@@ -229,15 +226,12 @@ class Csv extends BaseReader
         $this->checkSeparator();
         $this->inferSeparator();
 
-        $worksheetInfo = [
-            [
-                'worksheetName' => 'Worksheet',
-                'lastColumnLetter' => 'A',
-                'lastColumnIndex' => 0,
-                'totalRows' => 0,
-                'totalColumns' => 0,
-            ],
-        ];
+        $worksheetInfo = [];
+        $worksheetInfo[0]['worksheetName'] = 'Worksheet';
+        $worksheetInfo[0]['lastColumnLetter'] = 'A';
+        $worksheetInfo[0]['lastColumnIndex'] = 0;
+        $worksheetInfo[0]['totalRows'] = 0;
+        $worksheetInfo[0]['totalColumns'] = 0;
         $delimiter = $this->delimiter ?? '';
 
         // Loop through each line of the file in turn
@@ -263,7 +257,8 @@ class Csv extends BaseReader
      */
     protected function loadSpreadsheetFromFile(string $filename): Spreadsheet
     {
-        $spreadsheet = $this->newSpreadsheet();
+        // Create new Spreadsheet
+        $spreadsheet = new Spreadsheet();
         $spreadsheet->setValueBinder($this->valueBinder);
 
         // Load into this instance
@@ -275,7 +270,8 @@ class Csv extends BaseReader
      */
     public function loadSpreadsheetFromString(string $contents): Spreadsheet
     {
-        $spreadsheet = $this->newSpreadsheet();
+        // Create new Spreadsheet
+        $spreadsheet = new Spreadsheet();
         $spreadsheet->setValueBinder($this->valueBinder);
 
         // Load into this instance
@@ -449,7 +445,7 @@ class Csv extends BaseReader
                     // Set cell value
                     $sheet->getCell($columnLetter . $outRow)->setValue($rowDatum);
                 }
-                StringHelper::stringIncrement($columnLetter);
+                ++$columnLetter;
             }
             $rowData = self::getCsv($fileHandle, 0, $delimiter, $this->enclosure, $this->escapeCharacter);
             ++$currentRow;
@@ -605,7 +601,6 @@ class Csv extends BaseReader
             'text/csv',
             'text/plain',
             'inode/x-empty',
-            'application/x-empty', // has now replaced previous
             'text/html',
         ];
 

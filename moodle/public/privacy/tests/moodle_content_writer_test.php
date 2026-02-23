@@ -14,8 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use core_privacy\local\request\moodle_content_writer;
-use core_privacy\local\request\writer;
+/**
+ * Unit Tests for the Moodle Content Writer.
+ *
+ * @package     core_privacy
+ * @category    test
+ * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
+use \core_privacy\local\request\writer;
+use \core_privacy\local\request\moodle_content_writer;
 
 /**
  * Tests for the \core_privacy API's moodle_content_writer functionality.
@@ -25,6 +38,7 @@ use core_privacy\local\request\writer;
  * @coversDefaultClass \core_privacy\local\request\moodle_content_writer
  */
 final class moodle_content_writer_test extends advanced_testcase {
+
     /**
      * Test that exported data is saved correctly within the system context.
      *
@@ -1359,12 +1373,8 @@ final class moodle_content_writer_test extends advanced_testcase {
         $file->storedfile = $fs->create_file_from_string($record, $file->content);
         $writer->set_context($context)->export_area_files([], 'core_privacy', 'tests', 0);
 
-        [$tree, $treelist, $indexdata] = \core\test\phpunit\phpunit_util::call_internal_method(
-            $writer,
-            'prepare_for_export',
-            [],
-            moodle_content_writer::class,
-            );
+        list($tree, $treelist, $indexdata) = phpunit_util::call_internal_method($writer, 'prepare_for_export', [],
+                '\core_privacy\local\request\moodle_content_writer');
 
         $expectedtreeoutput = [
             'System _.1' => [
@@ -1412,12 +1422,8 @@ final class moodle_content_writer_test extends advanced_testcase {
         ];
         $this->assertEquals($expectedindex, $indexdata);
 
-        $richtree = \core\test\phpunit\phpunit_util::call_internal_method(
-            $writer,
-            'make_tree_object',
-            [$tree, $treelist],
-            moodle_content_writer::class,
-        );
+        $richtree = phpunit_util::call_internal_method($writer, 'make_tree_object', [$tree, $treelist],
+                '\core_privacy\local\request\moodle_content_writer');
 
         // This is a big one.
         $expectedrichtree = [

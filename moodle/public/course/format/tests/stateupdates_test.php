@@ -25,16 +25,18 @@ use stdClass;
  * @category   test
  * @copyright  2021 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \core_courseformat\stateupdates
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(stateupdates::class)]
 final class stateupdates_test extends \advanced_testcase {
 
     /**
      * Test for add_course_put.
      *
+     * @dataProvider add_course_put_provider
+     * @covers ::add_course_put
+     *
      * @param string $role the user role in the course
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('add_course_put_provider')]
     public function test_add_course_put(string $role): void {
         global $PAGE;
 
@@ -77,17 +79,19 @@ final class stateupdates_test extends \advanced_testcase {
     /**
      * Data provider for test_add_course_put.
      *
-     * @return \Generator testing scenarios
+     * @return array testing scenarios
      */
-    public static function add_course_put_provider(): \Generator {
-        yield 'Admin role' => [
-            'admin',
-        ];
-        yield 'Teacher role' => [
-            'editingteacher',
-        ];
-        yield 'Student role' => [
-            'student',
+    public static function add_course_put_provider(): array {
+        return [
+            'Admin role' => [
+                'admin',
+            ],
+            'Teacher role' => [
+                'editingteacher',
+            ],
+            'Student role' => [
+                'student',
+            ],
         ];
     }
 
@@ -123,11 +127,15 @@ final class stateupdates_test extends \advanced_testcase {
     /**
      * Add track about a section state update.
      *
+     * @dataProvider add_section_provider
+     * @covers ::add_section_create
+     * @covers ::add_section_remove
+     * @covers ::add_section_put
+     *
      * @param string $action the action name
      * @param string $role the user role name
      * @param array $expected the expected results
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('add_section_provider')]
     public function test_add_section(string $action, string $role, array $expected): void {
         global $PAGE, $DB;
 
@@ -136,8 +144,7 @@ final class stateupdates_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['numsections' => 2, 'format' => 'topics']);
 
         // Set section 2 hidden.
-        $sectioninfo = get_fast_modinfo($course->id)->get_section_info(2);
-        \core_courseformat\formatactions::section($course->id)->set_visibility($sectioninfo, false);
+        set_section_visible($course->id, 2, 0);
 
         // Create and enrol user using given role.
         if ($role == 'admin') {
@@ -237,11 +244,15 @@ final class stateupdates_test extends \advanced_testcase {
     /**
      * Add track about a course module state update.
      *
+     * @dataProvider add_cm_provider
+     * @covers ::add_cm_put
+     * @covers ::add_cm_create
+     * @covers ::add_cm_remove
+     *
      * @param string $action the action name
      * @param string $role the user role name
      * @param array $expected the expected results
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('add_cm_provider')]
     public function test_add_cm(string $action, string $role, array $expected): void {
         global $PAGE, $DB;
 
@@ -250,8 +261,7 @@ final class stateupdates_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['numsections' => 2, 'format' => 'topics']);
 
         // Set section 2 hidden.
-        $sectioninfo = get_fast_modinfo($course->id)->get_section_info(2);
-        \core_courseformat\formatactions::section($course->id)->set_visibility($sectioninfo, false);
+        set_section_visible($course->id, 2, 0);
 
         // Create 2 activities on each section.
         $activities = [];
@@ -376,11 +386,11 @@ final class stateupdates_test extends \advanced_testcase {
 
     /**
      * Test components can add data to delegated section state updates.
+     * @covers ::add_section_put
      */
     public function test_put_section_state_extra_updates(): void {
         global $DB, $CFG;
         $this->resetAfterTest();
-        $this->setAdminUser();
 
         require_once($CFG->libdir . '/tests/fixtures/sectiondelegatetest.php');
 

@@ -35,7 +35,6 @@
             data-toggletype="manual:undo"
             data-cmid="{{cmid}}"
             data-activityname="{{activityname}}"
-            data-completion="manual"
             data-withavailability="{{withavailability}}" {{!
             }}{{#accessibledescription}}{{!
                 }}title="{{.}}" {{!
@@ -56,7 +55,6 @@
             data-toggletype="manual:mark-done"
             data-cmid="{{cmid}}"
             data-activityname="{{activityname}}"
-            data-completion="manual"
             data-withavailability="{{withavailability}}" {{!
             }}{{#accessibledescription}}{{!
                 }}title="{{.}}" {{!
@@ -74,8 +72,6 @@
 {{^istrackeduser}}
     <button
         class="btn btn-subtle-body {{^normalbutton}}btn-sm{{/normalbutton}} text-nowrap"
-        data-activityname="{{activityname}}"
-        data-completion="manual"
         disabled
     >
         {{#str}} completion_manual:markdone, core_course {{/str}}

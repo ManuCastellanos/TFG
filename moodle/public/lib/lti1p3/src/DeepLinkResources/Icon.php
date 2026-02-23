@@ -12,7 +12,8 @@ class Icon
         private string $url,
         private int $width,
         private int $height
-    ) {}
+    ) {
+    }
 
     public static function new(string $url, int $width, int $height): self
     {

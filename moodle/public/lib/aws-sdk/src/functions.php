@@ -1,8 +1,9 @@
 <?php
 namespace Aws;
 
-use GuzzleHttp\Utils;
+use GuzzleHttp\Client;
 use Psr\Http\Message\RequestInterface;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\FulfilledPromise;
 
 //-----------------------------------------------------------------------------
@@ -272,7 +273,7 @@ function describe_type($input)
  */
 function default_http_handler()
 {
-    return new \Aws\Handler\Guzzle\GuzzleHandler();
+    return new \Aws\Handler\GuzzleV6\GuzzleHandler();
 }
 
 /**
@@ -282,7 +283,7 @@ function default_http_handler()
  */
 function default_user_agent()
 {
-    return Utils::defaultUserAgent();
+    return \GuzzleHttp\default_user_agent();
 }
 
 /**
@@ -564,5 +565,10 @@ function is_associative(array $array): bool
         return false;
     }
 
-    return !array_is_list($array);
+    if (function_exists('array_is_list')) {
+        return !array_is_list($array);
+    }
+
+    return array_keys($array) !== range(0, count($array) - 1);
 }
+

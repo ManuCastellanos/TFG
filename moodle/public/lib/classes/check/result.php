@@ -16,8 +16,6 @@
 
 namespace core\check;
 
-use core\output\action_link;
-
 /**
  * A check object returns a result object
  *
@@ -31,6 +29,7 @@ use core\output\action_link;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class result implements \renderable {
+
     /**
      * This is used to notify if a check does not apply.
      *
@@ -100,14 +99,7 @@ class result implements \renderable {
      * This may be a large amount of preformatted html text, possibly describing all the
      * different states and actions to address them.
      */
-    protected string $details = '';
-
-    /**
-     * @var null|action_link An action link which is more specific than the general check link, if relvant
-     *
-     * If no specific check link is specified, then the check link will be used.
-     */
-    protected ?action_link $actionlink = null;
+    protected $details = '';
 
     /**
      * Constructor
@@ -115,18 +107,11 @@ class result implements \renderable {
      * @param string $status code
      * @param string $summary a 1 liner summary
      * @param string $details as a html chunk
-     * @param ?action_link $details An action link which is more specific than the general check link, if relevant
      */
-    public function __construct(
-        string $status,
-        string $summary,
-        string $details = '',
-        ?action_link $actionlink = null,
-    ) {
+    public function __construct($status, $summary, $details = '') {
         $this->status = $status;
         $this->summary = $summary;
         $this->details = $details;
-        $this->actionlink = $actionlink;
     }
 
     /**
@@ -181,13 +166,5 @@ class result implements \renderable {
     public function get_template_name(): string {
         return 'core/check/result';
     }
-
-    /**
-     * Get an action link if a more specific one was specified.
-     *
-     * @return null|action_link
-     */
-    public function get_action_link(): ?action_link {
-        return $this->actionlink;
-    }
 }
+

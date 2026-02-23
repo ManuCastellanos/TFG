@@ -119,33 +119,24 @@ class behat_command {
             }
         }
 
-        $command = [];
-
+        // If relative path then prefix relative path.
         if ($absolutepath) {
-            $command[] = realpath(\Composer\InstalledVersions::getRootPackage()['install_path']);
-        }
-        if ($parallerun) {
-            $command[] = rtrim(\core\test\testing_util::get_moodle_relative_to_root_package(), '/');
-        }
-
-        if ($parallerun) {
-            $command = [
-                ...$command,
-                'public',
-                'admin',
-                'tool',
-                'behat',
-                'cli',
-                'run.php',
-            ];
-            return 'php ' . implode($separator, $command);
+            $pathprefix = testing_cli_argument_path('/');
+            if (!empty($pathprefix)) {
+                $pathprefix .= $separator;
+            }
+        } else {
+            $pathprefix = '';
         }
 
-        // Not a parallel run.
-        // Return the vendor path without php command.
-        $command = [...$command, 'vendor', 'bin', $exec];
-        return implode($separator, $command);
+        if (!$parallerun) {
+            $command = $pathprefix . 'vendor' . $separator . 'bin' . $separator . $exec;
+        } else {
+            $command = 'php ' . $pathprefix . 'admin' . $separator . 'tool' . $separator . 'behat' . $separator . 'cli'
+                . $separator . 'run.php';
+        }
 
+        return $command;
     }
 
     /**
@@ -160,8 +151,7 @@ class behat_command {
         global $CFG;
 
         $currentcwd = getcwd();
-        $rootpath = realpath(\Composer\InstalledVersions::getRootPackage()['install_path']);
-        chdir($rootpath);
+        chdir(dirname($CFG->dirroot));
         exec(self::get_behat_command() . ' ' . $options, $output, $code);
         chdir($currentcwd);
 
@@ -247,7 +237,7 @@ class behat_command {
      * @return bool
      */
     public static function are_behat_dependencies_installed() {
-        if (!\Composer\InstalledVersions::isInstalled('behat/behat')) {
+        if (!is_dir(__DIR__ . '/../../../../vendor/behat')) {
             return false;
         }
         return true;

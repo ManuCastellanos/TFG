@@ -13,20 +13,24 @@
         /** @var bool To store value of supported_platform. */
         protected $supported_platform;
 
-        /** @var string Plugin name to use for configuration (e.g., 'filter_tex' or 'filter_algebra') */
-        protected $pluginname;
-
         /**
          * Constructor - create temporary directories and build paths to
          * external 'helper' binaries.
          * Other platforms could/should be added
-         *
-         * @param string $pluginname Plugin name to use for configuration (default: 'filter_tex')
          */
-        public function __construct($pluginname = 'filter_tex') {
+        public function __construct() {
             // Construct directory structure.
             $this->temp_dir = make_request_directory();
-            $this->pluginname = $pluginname;
+        }
+
+        /**
+         * Old syntax of class constructor. Deprecated in PHP7.
+         *
+         * @deprecated since Moodle 3.1
+         */
+        public function latex() {
+            debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+            self::__construct();
         }
 
         /**
@@ -46,7 +50,7 @@
         function construct_latex_document($formula, $fontsize = 12) {
             // $fontsize don't affects to formula's size. $density can change size
             $doc = "\\documentclass[{$fontsize}pt]{article}\n";
-            $doc .= get_config($this->pluginname, 'latexpreamble');
+            $doc .= get_config('filter_tex', 'latexpreamble');
             $doc .= "\\pagestyle{empty}\n";
             $doc .= "\\begin{document}\n";
             if (preg_match("/^[[:space:]]*\\\\begin\\{(gather|align|alignat|multline).?\\}/i", $formula)) {
@@ -82,21 +86,21 @@
         }
 
         /**
-         * Render TeX string into PNG, GIF, or SVG
+         * Render TeX string into gif/png
          * @param string $formula TeX formula
          * @param string $filename filename for output (including extension)
          * @param int $fontsize font size
-         * @param int $density density value for .ps to .png conversion
+         * @param int $density density value for .ps to .gif/.png conversion
          * @param string $background background color (e.g, #FFFFFF).
          * @param file $log valid open file handle for optional logging (debugging only)
-         * @return string|false path to image file if successful, false otherwise
+         * @return bool true if successful
          */
         function render($formula, $filename, $fontsize=12, $density=240, $background='', $log=null ) {
 
             global $CFG;
 
             // quick check - will this work?
-            $pathlatex = get_config($this->pluginname, 'pathlatex');
+            $pathlatex = get_config('filter_tex', 'pathlatex');
             if (empty($pathlatex)) {
                 return false;
             }
@@ -105,7 +109,7 @@
             $doc = $this->construct_latex_document( $formula, $fontsize );
 
             // construct some file paths
-            $convertformat = get_config($this->pluginname, 'convertformat');
+            $convertformat = get_config('filter_tex', 'convertformat');
             if (!strpos($filename, ".{$convertformat}")) {
                 $convertformat = 'png';
             }
@@ -131,23 +135,23 @@
             }
 
             // run dvips (.dvi to .ps)
-            $pathdvips = escapeshellarg(trim(get_config($this->pluginname, 'pathdvips'), " '\""));
+            $pathdvips = escapeshellarg(trim(get_config('filter_tex', 'pathdvips'), " '\""));
             $command = "$pathdvips -q -E $dvi -o $ps";
             if ($this->execute($command, $log )) {
                 return false;
             }
 
-            // Run convert on document (.ps to .png/.gif) or run dvisvgm (.ps to .svg).
+            // Run convert on document (.ps to .gif/.png) or run dvisvgm (.ps to .svg).
             if ($background) {
                 $bg_opt = '-transparent ' . escapeshellarg($background); // Makes transparent background
             } else {
                 $bg_opt = "";
             }
             if ($convertformat == 'svg') {
-                $pathdvisvgm = escapeshellarg(trim(get_config($this->pluginname, 'pathdvisvgm'), " '\""));
+                $pathdvisvgm = escapeshellarg(trim(get_config('filter_tex', 'pathdvisvgm'), " '\""));
                 $command = "$pathdvisvgm -E $ps -o $img";
             } else {
-                $pathconvert = escapeshellarg(trim(get_config($this->pluginname, 'pathconvert'), " '\""));
+                $pathconvert = escapeshellarg(trim(get_config('filter_tex', 'pathconvert'), " '\""));
                 $command = "$pathconvert -density $density -trim $bg_opt $ps $img";
             }
             if ($this->execute($command, $log )) {

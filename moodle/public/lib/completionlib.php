@@ -454,7 +454,6 @@ class completion_info {
         // If we are only after a specific criteria type.
         $criteria = [];
         foreach ($this->criteria as $criterion) {
-
             if ($criterion->criteriatype != $criteriatype) {
                 continue;
             }

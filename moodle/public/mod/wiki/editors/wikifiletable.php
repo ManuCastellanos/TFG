@@ -49,6 +49,16 @@ class MoodleQuickForm_wikifiletable extends HTML_QuickForm_element {
         $this->_format = $format;
     }
 
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    public function MoodleQuickForm_wikifiletable($elementName = null, $elementLabel = null, $attributes = null, $fileinfo = null, $format = null) {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct($elementName, $elementLabel, $attributes, $fileinfo, $format);
+    }
+
     function onQuickFormEvent($event, $arg, &$caller) {
         global $OUTPUT;
 
@@ -164,3 +174,5 @@ class MoodleQuickForm_wikifiletable extends HTML_QuickForm_element {
 
 //register wikieditor
 MoodleQuickForm::registerElementType('wikifiletable', $CFG->dirroot."/mod/wiki/editors/wikifiletable.php", 'MoodleQuickForm_wikifiletable');
+
+

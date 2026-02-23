@@ -32,8 +32,6 @@ namespace mod_quiz\event;
  *
  *      - int quizid: the id of the quiz.
  *      - int slotnumber: the slot number in quiz.
- *      - int questionreferenceid: (optional) the question reference id for the slot.
- *      - int questionsetreferenceid: (optional) the question set reference id for the slot (if added via random cat).
  * }
  *
  * @package    mod_quiz
@@ -81,10 +79,6 @@ class slot_deleted extends \core\event\base {
         if (!isset($this->other['slotnumber'])) {
             throw new \coding_exception('The \'slotnumber\' value must be set in other.');
         }
-        // At least one of questionreferenceid or questionsetreferenceid must be set.
-        if (!isset($this->other['questionreferenceid']) && !isset($this->other['questionsetreferenceid'])) {
-            throw new \coding_exception('Either \'questionreferenceid\' or \'questionsetreferenceid\' must be set in other.');
-        }
     }
 
     public static function get_objectid_mapping() {
@@ -94,8 +88,7 @@ class slot_deleted extends \core\event\base {
     public static function get_other_mapping() {
         $othermapped = [];
         $othermapped['quizid'] = ['db' => 'quiz', 'restore' => 'quiz'];
-        $othermapped['questionreferenceid'] = ['db' => 'question_references', 'restore' => 'question_references'];
-        $othermapped['questionsetreferenceid'] = ['db' => 'question_set_references', 'restore' => 'question_set_references'];
+
         return $othermapped;
     }
 }

@@ -19,7 +19,8 @@ class LtiOidcLogin
         public IDatabase $db,
         public ICache $cache,
         public ICookie $cookie
-    ) {}
+    ) {
+    }
 
     /**
      * Static function to allow for method chaining without having to assign to a variable first.

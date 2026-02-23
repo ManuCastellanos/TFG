@@ -69,7 +69,7 @@ const getFiltersetFromTable = tableRoot => {
  */
 export const refreshTableContent = (tableRoot, resetContent = false) => {
     const filterset = getFiltersetFromTable(tableRoot);
-    addIconToContainer(tableRoot, {overlay: true});
+    addIconToContainer(tableRoot);
 
     const pendingPromise = new Pending('core_table/dynamic:refreshTableContent');
 

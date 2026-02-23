@@ -225,8 +225,7 @@ final class lib_test extends \advanced_testcase {
                 \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
 
         // Set sections 0 as hidden.
-        $sectioninfo = get_fast_modinfo($course->id)->get_section_info(0);
-        \core_courseformat\formatactions::section($course->id)->set_visibility($sectioninfo, false);
+        set_section_visible($course->id, 0, 0);
 
         // Create an action factory.
         $factory = new \core_calendar\action_factory();

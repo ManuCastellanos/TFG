@@ -16,18 +16,28 @@ class FormattedNumber
     // preg_quoted string for major currency symbols, with a %s for locale currency
     private const CURRENCY_CONVERSION_LIST = '\$€£¥%s';
 
+    private const STRING_CONVERSION_LIST = [
+        [self::class, 'convertToNumberIfNumeric'],
+        [self::class, 'convertToNumberIfFraction'],
+        [self::class, 'convertToNumberIfPercent'],
+        [self::class, 'convertToNumberIfCurrency'],
+    ];
+
     /**
      * Identify whether a string contains a formatted numeric value,
      * and convert it to a numeric if it is.
      *
-     * @param float|string $operand string value to test
+     * @param string $operand string value to test
      */
-    public static function convertToNumberIfFormatted(float|string &$operand): bool
+    public static function convertToNumberIfFormatted(string &$operand): bool
     {
-        return self::convertToNumberIfNumeric($operand)
-            || self::convertToNumberIfFraction($operand)
-            || self::convertToNumberIfPercent($operand)
-            || self::convertToNumberIfCurrency($operand);
+        foreach (self::STRING_CONVERSION_LIST as $conversionMethod) {
+            if ($conversionMethod($operand) === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -58,15 +68,13 @@ class FormattedNumber
      *
      * @param string $operand string value to test
      */
-    public static function convertToNumberIfFraction(float|string &$operand): bool
+    public static function convertToNumberIfFraction(string &$operand): bool
     {
-        if (is_string($operand) && preg_match(self::STRING_REGEXP_FRACTION, $operand, $match)) {
+        if (preg_match(self::STRING_REGEXP_FRACTION, $operand, $match)) {
             $sign = ($match[1] === '-') ? '-' : '+';
             $wholePart = ($match[3] === '') ? '' : ($sign . $match[3]);
             $fractionFormula = '=' . $wholePart . $sign . $match[4];
-            /** @var string */
-            $operandx = Calculation::getInstance()->_calculateFormulaValue($fractionFormula);
-            $operand = $operandx;
+            $operand = Calculation::getInstance()->_calculateFormulaValue($fractionFormula);
 
             return true;
         }

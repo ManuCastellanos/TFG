@@ -24,8 +24,9 @@ use test_component\courseformat\sectiondelegate as testsectiondelegate;
  * @package    core_courseformat
  * @copyright  2023 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \core_courseformat\sectiondelegate
+ * @coversDefaultClass \core_courseformat\sectiondelegate
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(sectiondelegate::class)]
 final class sectiondelegate_test extends \advanced_testcase {
 
     /**
@@ -39,6 +40,7 @@ final class sectiondelegate_test extends \advanced_testcase {
 
     /**
      * Test that the instance method returns the correct class.
+     * @covers ::instance
      */
     public function test_instance(): void {
         global $DB;
@@ -76,6 +78,8 @@ final class sectiondelegate_test extends \advanced_testcase {
 
     /**
      * Test that the instance method returns null when the delegate class is disabled.
+     *
+     * @covers ::instance
      */
     public function test_instance_disabled(): void {
         global $DB;
@@ -101,6 +105,8 @@ final class sectiondelegate_test extends \advanced_testcase {
 
     /**
      * Test has_delegate_class().
+     *
+     * @covers ::has_delegate_class
      */
     public function test_has_delegate_class(): void {
         $this->assertFalse(sectiondelegate::has_delegate_class('missing_component'));
@@ -110,6 +116,8 @@ final class sectiondelegate_test extends \advanced_testcase {
 
     /**
      * Test get_section_action_menu().
+     *
+     * @covers ::get_section_action_menu
      */
     public function test_get_section_action_menu(): void {
         global $DB, $PAGE;
@@ -164,6 +172,8 @@ final class sectiondelegate_test extends \advanced_testcase {
 
     /**
      * Test get_parent_section().
+     *
+     * @covers ::get_parent_section
      */
     public function test_get_parent_section(): void {
         $this->resetAfterTest();

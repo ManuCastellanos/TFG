@@ -14,7 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * CLI script shutdown helper class.
+ *
+ * @package    core
+ * @copyright  2019 Brendan Heywood <brendan@catalyst-au.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace core\local\cli;
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * CLI script shutdown helper class.
@@ -24,6 +34,7 @@ namespace core\local\cli;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class shutdown {
+
     /** @var bool Should we exit gracefully at the next opportunity? */
     protected static $cligracefulexit = false;
 
@@ -33,7 +44,7 @@ class shutdown {
      * @return void
      */
     public static function script_supports_graceful_exit(): void {
-        \core\shutdown_manager::register_signal_handler('\core\local\cli\shutdown::signal_handler');
+        \core_shutdown_manager::register_signal_handler('\core\local\cli\shutdown::signal_handler');
     }
 
     /**
@@ -55,6 +66,7 @@ class shutdown {
      * @return bool true if we should exit
      */
     public static function signal_handler(int $signo): bool {
+
         if (self::$cligracefulexit) {
             cli_heading(get_string('cliexitnow', 'admin'));
             return true;
@@ -66,3 +78,4 @@ class shutdown {
     }
 
 }
+

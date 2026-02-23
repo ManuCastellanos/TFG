@@ -105,13 +105,10 @@ final class provider_test extends provider_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
-        // Set user context before creating comment objects,
-        // as permission checks require an authenticated user.
-        $this->setUser($user1);
-
         $comment1 = $this->get_comment_object($coursecontext1, $course1);
         $comment2 = $this->get_comment_object($coursecontext2, $course2);
 
+        $this->setUser($user1);
         $comment1->add('First comment for user 1 on comment 1');
         $comment2->add('First comment for user 1 on comment 2');
         $this->setUser($user2);
@@ -176,13 +173,10 @@ final class provider_test extends provider_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
-        // Set user context before creating comment objects,
-        // as permission checks require an authenticated user.
-        $this->setUser($user1);
-
         $comment1 = $this->get_comment_object($coursecontext1, $course1);
         $comment2 = $this->get_comment_object($coursecontext2, $course2);
 
+        $this->setUser($user1);
         $comment1->add('First comment for user 1 on comment 1');
         $comment2->add('First comment for user 1 on comment 2');
         $this->setUser($user2);
@@ -251,14 +245,11 @@ final class provider_test extends provider_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
-        // Set user context before creating comment objects,
-        // as permission checks require an authenticated user.
-        $this->setUser($user1);
-
         $comment1 = $this->get_comment_object($coursecontext1, $course1);
         $comment2 = $this->get_comment_object($coursecontext2, $course2);
         $comment3 = $this->get_comment_object($coursecontext3, $course3);
 
+        $this->setUser($user1);
         $comment1->add('First comment for user 1');
         $comment2->add('User 1 comment in second comment');
 
@@ -338,14 +329,11 @@ final class provider_test extends provider_testcase {
         $user2 = $this->getDataGenerator()->create_user();
         $user3 = $this->getDataGenerator()->create_user();
 
-        // Set user context before creating comment objects,
-        // as permission checks require an authenticated user.
-        $this->setUser($user1);
-
         $comment1 = $this->get_comment_object($coursecontext1, $course1);
         $comment2 = $this->get_comment_object($coursecontext2, $course2);
         $comment3 = $this->get_comment_object($coursecontext3, $course3);
 
+        $this->setUser($user1);
         $comment1->add('First comment for user 1');
         $comment2->add('User 1 comment in second comment');
 

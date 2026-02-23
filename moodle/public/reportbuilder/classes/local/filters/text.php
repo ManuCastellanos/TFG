@@ -28,6 +28,7 @@ use core_reportbuilder\local\helpers\database;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class text extends base {
+
     /** @var int */
     public const ANY_VALUE = 0;
 
@@ -70,7 +71,7 @@ class text extends base {
             self::STARTS_WITH => get_string('filterstartswith', 'core_reportbuilder'),
             self::ENDS_WITH => get_string('filterendswith', 'core_reportbuilder'),
             self::IS_EMPTY => get_string('filterisempty', 'core_reportbuilder'),
-            self::IS_NOT_EMPTY => get_string('filterisnotempty', 'core_reportbuilder'),
+            self::IS_NOT_EMPTY => get_string('filterisnotempty', 'core_reportbuilder')
         ];
 
         return $this->filter->restrict_limited_operators($operators);
@@ -79,21 +80,17 @@ class text extends base {
     /**
      * Adds controls specific to this filter in the form.
      *
+     * Operator selector use the "$this->name . '_operator'" naming convention and the fields to enter custom values should
+     * use "$this->name . '_value'" or _value1/_value2/... in case there is more than one field for their naming.
+     *
      * @param \MoodleQuickForm $mform
      */
     public function setup_form(\MoodleQuickForm $mform): void {
-        $elements[] = $mform->createElement(
-            'select',
-            "{$this->name}_operator",
-            get_string('filterfieldoperator', 'core_reportbuilder', $this->get_header()),
-            $this->get_operators(),
-        );
-
-        $elements[] = $mform->createElement(
-            'text',
-            "{$this->name}_value",
-            get_string('filterfieldvalue', 'core_reportbuilder', $this->get_header()),
-        );
+        $elements = [];
+        $elements['operator'] = $mform->createElement('select', $this->name . '_operator',
+            get_string('filterfieldoperator', 'core_reportbuilder', $this->get_header()), $this->get_operators());
+        $elements['value'] = $mform->createElement('text', $this->name . '_value',
+            get_string('filterfieldvalue', 'core_reportbuilder', $this->get_header()));
 
         $mform->addGroup($elements, $this->name . '_group', $this->get_header(), '', false)
             ->setHiddenLabel(true);
@@ -121,30 +118,21 @@ class text extends base {
 
         // Validate filter form values.
         if (!$this->validate_filter_values($operator, $value)) {
+            // Filter configuration is invalid. Ignore the filter.
             return ['', []];
         }
 
         $name = database::generate_param_name();
 
-        switch ($operator) {
+        switch($operator) {
             case self::CONTAINS:
                 $res = $DB->sql_like($fieldsql, ":$name", false, false);
-                // Replace unescaped multiple "*" and single "?" wildcards with SQL LIKE equivalents ("%" and "_").
-                $value = preg_replace(
-                    ['/(?<!\\\)\*+/', '/(?<!\\\)\?/'],
-                    ['%', '_'],
-                    $DB->sql_like_escape($value),
-                );
+                $value = $DB->sql_like_escape($value);
                 $params[$name] = "%$value%";
                 break;
             case self::DOES_NOT_CONTAIN:
                 $res = $DB->sql_like($fieldsql, ":$name", false, false, true);
-                // Replace unescaped multiple "*" and single "?" wildcards with SQL LIKE equivalents ("%" and "_").
-                $value = preg_replace(
-                    ['/(?<!\\\)\*+/', '/(?<!\\\)\?/'],
-                    ['%', '_'],
-                    $DB->sql_like_escape($value),
-                );
+                $value = $DB->sql_like_escape($value);
                 $params[$name] = "%$value%";
                 break;
             case self::IS_EQUAL_TO:
@@ -172,10 +160,10 @@ class text extends base {
                 $res = "COALESCE({$fieldsql}, '') != ''";
                 break;
             default:
+                // Filter configuration is invalid. Ignore the filter.
                 return ['', []];
         }
-
-        return [$res, $params];
+        return array($res, $params);
     }
 
     /**

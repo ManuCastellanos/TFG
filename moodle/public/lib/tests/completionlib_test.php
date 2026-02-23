@@ -2351,7 +2351,7 @@ final class completionlib_test extends advanced_testcase {
             ['course' => $course->id, 'completion_page' => COMPLETION_TRACKING_MANUAL],
         );
 
-        // Add the activities as course completion criteria.
+        // Add the activities as course completion criterias.
         $DB->insert_record(
             'course_completion_criteria',
             [

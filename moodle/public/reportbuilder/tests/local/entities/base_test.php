@@ -387,28 +387,19 @@ class base_test_entity extends base {
     }
 
     /**
-     * Entity available columns
+     * Initialise entity
      *
-     * @return column[]
+     * @return base
      */
-    protected function get_available_columns(): array {
-        $columns[] = (new column(
+    public function initialise(): base {
+        $column = (new column(
             'test',
             new lang_string('no'),
             $this->get_entity_name()
         ))
             ->add_field('no');
 
-        return $columns;
-    }
-
-    /**
-     * Entity available filters
-     *
-     * @return filter[]
-     */
-    protected function get_available_filters(): array {
-        $filters[] = (new filter(
+        $filter = (new filter(
             text::class,
             'test',
             new lang_string('no'),
@@ -416,7 +407,10 @@ class base_test_entity extends base {
         ))
             ->set_field_sql('no');
 
-        return $filters;
+        return $this
+            ->add_column($column)
+            ->add_filter($filter)
+            ->add_condition($filter);
     }
 }
 

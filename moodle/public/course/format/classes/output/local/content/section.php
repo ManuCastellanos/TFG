@@ -158,7 +158,6 @@ class section implements named_templatable, renderable {
             'displayonesection' => ($course->id != SITEID && $format->get_sectionid() == $section->id),
             // Section name is used as data attribute is to facilitate behat locators.
             'sectionname' => $format->get_section_name($section),
-            'isdelegated' => $section->is_delegated(),
         ];
 
         $haspartials = [];
@@ -214,7 +213,7 @@ class section implements named_templatable, renderable {
 
         $showsummary = ($section->section != 0 &&
             $section->section != $format->get_sectionnum() &&
-            ($format->get_course_display() == COURSE_DISPLAY_MULTIPAGE && !$section->is_delegated()) &&
+            $format->get_course_display() == COURSE_DISPLAY_MULTIPAGE &&
             !$format->show_editor()
         );
 
@@ -328,10 +327,7 @@ class section implements named_templatable, renderable {
         $section = $this->section;
         $format = $this->format;
 
-        $data->iscoursedisplaymultipage = (
-            $format->get_course_display() == COURSE_DISPLAY_MULTIPAGE &&
-            !$section->is_delegated()
-        );
+        $data->iscoursedisplaymultipage = ($format->get_course_display() == COURSE_DISPLAY_MULTIPAGE);
 
         if ($data->num === 0 && !$data->iscoursedisplaymultipage) {
             $data->collapsemenu = true;

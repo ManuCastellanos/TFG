@@ -16,10 +16,6 @@
 
 namespace core\output;
 
-use Mustache\HelperCollection;
-use Mustache\LambdaHelper;
-use Mustache\Tokenizer;
-
 /**
  * Custom Moodle helper collection for mustache.
  *
@@ -27,7 +23,7 @@ use Mustache\Tokenizer;
  * @copyright  2019 Ryan Wyllie <ryan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mustache_helper_collection extends HelperCollection {
+class mustache_helper_collection extends \Mustache_HelperCollection {
     /**
      * @var string[] Names of helpers that aren't allowed to be called within other helpers.
      */
@@ -38,7 +34,7 @@ class mustache_helper_collection extends HelperCollection {
      *
      * Optionally accepts an array (or Traversable) of `$name => $helper` pairs.
      *
-     * @throws \Mustache\Exception\InvalidArgumentException if the $helpers argument isn't an array or Traversable
+     * @throws \Mustache_Exception_InvalidArgumentException if the $helpers argument isn't an array or Traversable
      *
      * @param array|\Traversable $helpers (default: null)
      * @param string[] $disallowednestedhelpers Names of helpers that aren't allowed to be called within other helpers.
@@ -61,7 +57,7 @@ class mustache_helper_collection extends HelperCollection {
      * helper function. This prevents the disallowed helper functions from being
      * called by nested render functions from within other helpers.
      *
-     * @see \Mustache\HelperCollection::add()
+     * @see \Mustache_HelperCollection::add()
      * @param string $name
      * @param mixed  $helper
      */
@@ -70,7 +66,7 @@ class mustache_helper_collection extends HelperCollection {
         $disallowedlist = $this->disallowednestedhelpers;
 
         if (is_callable($helper) && !empty($disallowedlist)) {
-            $helper = function ($source, LambdaHelper $lambdahelper) use ($helper, $disallowedlist) {
+            $helper = function ($source, \Mustache_LambdaHelper $lambdahelper) use ($helper, $disallowedlist) {
 
                 // Temporarily override the disallowed helpers to return nothing
                 // so that they can't be executed from within other helpers.
@@ -81,14 +77,12 @@ class mustache_helper_collection extends HelperCollection {
                 // that this helper has finished executing so that the rest of
                 // the rendering process continues to work correctly.
                 $this->restore_helpers($disabledhelpers);
-                // Parse the returned string to strip out any unwanted helper
+                // Lastly parse the returned string to strip out any unwanted helper
                 // tags that were added through variable substitution (or other means).
                 // This is done because a secondary render is called on the result
                 // of a helper function if it still includes mustache tags. See
-                // the section function of \Mustache\Compiler for details.
-                $stripped = $this->strip_disallowed_helpers($disallowedlist, $result);
-                // Prevent re-rendering by wrapping in RenderedString.
-                return $lambdahelper->preventRender($stripped);
+                // the section function of Mustache_Compiler for details.
+                return $this->strip_disallowed_helpers($disallowedlist, $result);
             };
         }
 
@@ -148,8 +142,8 @@ class mustache_helper_collection extends HelperCollection {
      * @return string Parsed string
      */
     public function strip_disallowed_helpers($disallowedlist, $string) {
-        $starttoken = Tokenizer::T_SECTION;
-        $endtoken = Tokenizer::T_END_SECTION;
+        $starttoken = \Mustache_Tokenizer::T_SECTION;
+        $endtoken = \Mustache_Tokenizer::T_END_SECTION;
         if ($endtoken == '/') {
             $endtoken = '\/';
         }

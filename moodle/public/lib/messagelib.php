@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\url;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../message/lib.php');
@@ -354,7 +356,7 @@ function message_send(\core\message\message $eventdata) {
  */
 function message_handle_phpunit_redirection(\core\message\message $eventdata, string $table, \stdClass $tabledata) {
     global $DB;
-    if (PHPUNIT_TEST && class_exists(\core\test\phpunit\phpunit_util::class)) {
+    if (PHPUNIT_TEST and class_exists('phpunit_util')) {
         // Add some more tests to make sure the normal code can actually work.
         $componentdir = core_component::get_component_directory($eventdata->component);
         if (!$componentdir or !is_dir($componentdir)) {
@@ -372,7 +374,7 @@ function message_handle_phpunit_redirection(\core\message\message $eventdata, st
         unset($componentdir);
         unset($messageproviders);
         // Now ask phpunit if it wants to catch this message.
-        if (\core\test\phpunit\phpunit_util::is_redirecting_messages()) {
+        if (phpunit_util::is_redirecting_messages()) {
             $messageid = $DB->insert_record($table, $tabledata);
             $message = $DB->get_record($table, array('id' => $messageid));
 
@@ -400,7 +402,7 @@ function message_handle_phpunit_redirection(\core\message\message $eventdata, st
 
             // Unit tests need this detail.
             $message->notification = $eventdata->notification;
-            \core\test\phpunit\phpunit_util::message_sent($message);
+            phpunit_util::message_sent($message);
             return $messageid;
         }
     }

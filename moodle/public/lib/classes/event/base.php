@@ -16,6 +16,8 @@
 
 namespace core\event;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Base event class.
  *
@@ -784,9 +786,9 @@ abstract class base implements \IteratorAggregate {
 
         $this->triggered = true;
 
-        if (PHPUNIT_TEST && \core\test\phpunit\phpunit_util::is_redirecting_events()) {
+        if (PHPUNIT_TEST and \phpunit_util::is_redirecting_events()) {
             $this->dispatched = true;
-            \core\test\phpunit\phpunit_util::event_triggered($this);
+            \phpunit_util::event_triggered($this);
             return;
         }
 

@@ -16,6 +16,8 @@
 
 namespace core_analytics\tests;
 
+use phpunit_util;
+
 /**
  * A trait to check machine learning configurations.
  *
@@ -57,18 +59,18 @@ trait mlbackend_helper_trait {
         for ($i = 0; $i < $ncourses; $i++) {
             $name = 'a' . random_string(10);
             $courseparams = ['shortname' => $name, 'fullname' => $name] + $params;
-            \core\test\phpunit\phpunit_util::get_data_generator()->create_course($courseparams);
+            phpunit_util::get_data_generator()->create_course($courseparams);
         }
         for ($i = 0; $i < $ncourses; $i++) {
             $name = 'b' . random_string(10);
             $courseparams = ['shortname' => $name, 'fullname' => $name] + $params;
-            \core\test\phpunit\phpunit_util::get_data_generator()->create_course($courseparams);
+            phpunit_util::get_data_generator()->create_course($courseparams);
         }
         if ($ismulticlass) {
             for ($i = 0; $i < $ncourses; $i++) {
                 $name = 'c' . random_string(10);
                 $courseparams = ['shortname' => $name, 'fullname' => $name] + $params;
-                \core\test\phpunit\phpunit_util::get_data_generator()->create_course($courseparams);
+                phpunit_util::get_data_generator()->create_course($courseparams);
             }
         }
     }

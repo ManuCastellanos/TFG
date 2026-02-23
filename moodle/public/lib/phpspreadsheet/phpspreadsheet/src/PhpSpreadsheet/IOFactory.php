@@ -116,8 +116,6 @@ abstract class IOFactory
 
     /**
      * Identify file type using automatic IReader resolution.
-     *
-     * @param string[] $readers
      */
     public static function identify(string $filename, ?array $readers = null, bool $fullClassName = false): string
     {
@@ -227,8 +225,7 @@ abstract class IOFactory
      */
     public static function registerWriter(string $writerType, string $writerClass): void
     {
-        // We want phpstan to validate caller, but still need this test
-        if (!is_a($writerClass, IWriter::class, true)) { //* @phpstan-ignore-line
+        if (!is_a($writerClass, IWriter::class, true)) {
             throw new Writer\Exception('Registered writers must implement ' . IWriter::class);
         }
 
@@ -242,8 +239,7 @@ abstract class IOFactory
      */
     public static function registerReader(string $readerType, string $readerClass): void
     {
-        // We want phpstan to validate caller, but still need this test
-        if (!is_a($readerClass, IReader::class, true)) { //* @phpstan-ignore-line
+        if (!is_a($readerClass, IReader::class, true)) {
             throw new Reader\Exception('Registered readers must implement ' . IReader::class);
         }
 

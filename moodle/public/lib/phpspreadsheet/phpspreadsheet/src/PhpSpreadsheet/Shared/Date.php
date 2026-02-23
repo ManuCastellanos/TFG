@@ -172,7 +172,10 @@ class Date
             throw new Exception("Invalid string $value supplied for datatype Date");
         }
 
-        $newValue = self::dateTimeToExcel($date);
+        $newValue = self::PHPToExcel($date);
+        if ($newValue === false) {
+            throw new Exception("Invalid string $value supplied for datatype Date");
+        }
 
         if (preg_match('/^\s*\d?\d:\d\d(:\d\d([.]\d+)?)?\s*(am|pm)?\s*$/i', $value) == 1) {
             $newValue = fmod($newValue, 1.0);
@@ -211,13 +214,6 @@ class Date
             $baseDate = new DateTime('1899-12-30', $timeZone);
         }
 
-        if (is_int($excelTimestamp)) {
-            if ($excelTimestamp >= 0) {
-                return $baseDate->modify("+ $excelTimestamp days");
-            }
-
-            return $baseDate->modify("$excelTimestamp days");
-        }
         $days = floor($excelTimestamp);
         $partDay = $excelTimestamp - $days;
         $hms = 86400 * $partDay;
@@ -371,12 +367,7 @@ class Date
             $selected = $worksheet->getSelectedCells();
 
             try {
-                if ($value === null) {
-                    $value = Functions::flattenSingleValue(
-                        $cell->getCalculatedValue()
-                    );
-                }
-                $result = is_numeric($value)
+                $result = is_numeric($value ?? $cell->getCalculatedValue())
                     && self::isDateTimeFormat(
                         $worksheet->getStyle(
                             $cell->getCoordinate()
@@ -473,7 +464,7 @@ class Date
         if (strlen($dateValue) < 2) {
             return false;
         }
-        if (!preg_match('/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}(:\d{1,2}([.]\d+)?)?)?$/iu', $dateValue)) {
+        if (!preg_match('/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}(:\d{1,2})?)?$/iu', $dateValue)) {
             return false;
         }
 

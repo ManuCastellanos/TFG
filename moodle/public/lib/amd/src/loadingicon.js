@@ -25,16 +25,8 @@ define(['jquery', 'core/templates'], function($, Templates) {
         LOADING: 'core/loading',
     };
 
-    /**
-     * Get the loading icon template.
-     *
-     * @method  getIcon
-     * @param   {Object} [options] Options for the icon.
-     * @param   {boolean} [options.overlay=false] Whether to show the overlay.
-     * @return  {Promise} The Promise used to create the icon.
-     */
-    var getIcon = function({overlay = false} = {}) {
-        return Templates.render(TEMPLATES.LOADING, {overlay});
+    var getIcon = function() {
+        return Templates.render(TEMPLATES.LOADING, {});
     };
 
     /**
@@ -44,11 +36,10 @@ define(['jquery', 'core/templates'], function($, Templates) {
      *
      * @method  addIconToContainer
      * @param   {jQuery|HTMLElement}  container  The element to add the spinner to
-     * @param   {Object} [options] Options for the icon.
      * @return  {Promise} The Promise used to create the icon.
      */
-    var addIconToContainer = function(container, options = {}) {
-        return getIcon(options)
+    var addIconToContainer = function(container) {
+        return getIcon()
         .then(function(html) {
             var loadingIcon = $(html).hide();
             $(container).append(loadingIcon);
@@ -66,11 +57,10 @@ define(['jquery', 'core/templates'], function($, Templates) {
      * @method  addIconToContainerWithPromise
      * @param   {jQuery|HTMLElement}  container  The element to add the spinner to
      * @param   {Promise} loadingIconPromise The jQuery Promise which determines the removal of the icon
-     * @param   {Object} [options] Options for the icon.
      * @return  {jQuery}  The Promise used to create and then remove the icon.
      */
-    var addIconToContainerRemoveOnCompletion = function(container, loadingIconPromise, options = {}) {
-        return getIcon(options)
+    var addIconToContainerRemoveOnCompletion = function(container, loadingIconPromise) {
+        return getIcon()
         .then(function(html) {
             var loadingIcon = $(html).hide();
             $(container).append(loadingIcon);
@@ -98,13 +88,12 @@ define(['jquery', 'core/templates'], function($, Templates) {
      *
      * @method  addIconToContainerWithPromise
      * @param   {jQuery|HTMLElement}  container  The element to add the spinner to
-     * @param   {Object} [options] Options for the icon.
      * @return  {Promise} A jQuery Promise to resolve when ready
      */
-    var addIconToContainerWithPromise = function(container, options = {}) {
+    var addIconToContainerWithPromise = function(container) {
         var loadingIconPromise = $.Deferred();
 
-        addIconToContainerRemoveOnCompletion(container, loadingIconPromise, options);
+        addIconToContainerRemoveOnCompletion(container, loadingIconPromise);
 
         return loadingIconPromise;
     };

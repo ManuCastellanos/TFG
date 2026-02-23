@@ -191,16 +191,14 @@ class behat_mod_quiz extends behat_question_base {
      * Put the specified questions on the specified pages of a given quiz.
      *
      * The first row should be column names:
-     * | question | page | maxmark | requireprevious | randomcategory | includesubcategories |
+     * | question | page | maxmark | requireprevious |
      * The first two of those are required. The others are optional.
      *
-     * question        needs to uniquely match a question name, otherwise you must include randomcategory.
+     * question        needs to uniquely match a question name.
      * page            is a page number. Must start at 1, and on each following
      *                 row should be the same as the previous, or one more.
      * maxmark         What the question is marked out of. Defaults to question.defaultmark.
      * requireprevious The question can only be attempted after the previous one was completed.
-     * randomcategory  To add a random question, pass a non-existant name for "question", then a valid category name here.
-     * includesubcategories Option for the random question category filter, if randomcategory is specified.
      *
      * Then there should be a number of rows of data, one for each question you want to add.
      *
@@ -253,7 +251,7 @@ class behat_mod_quiz extends behat_question_base {
                       JOIN {question_versions} qv ON qv.questionid = q.id
                       JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
                      WHERE q.name = :name';
-            $question = $DB->get_record_sql($sql, ['name' => $questiondata['question']]);
+            $question = $DB->get_record_sql($sql, ['name' => $questiondata['question']], MUST_EXIST);
 
             // Page number.
             $page = clean_param($questiondata['page'], PARAM_INT);
@@ -282,14 +280,7 @@ class behat_mod_quiz extends behat_question_base {
                 }
             }
 
-            if (!$question) {
-                if (!array_key_exists('randomcategory', $questiondata) && $questiondata['randomcategory'] !== '') {
-                    throw new ExpectationException(
-                        'To add a random question, you must include a category name in the randomcategory column.',
-                        $this->getSession()->getDriver(),
-                    );
-                }
-                $categoryid = $DB->get_field('question_categories', 'id', ['name' => $questiondata['randomcategory']], MUST_EXIST);
+            if ($question->qtype == 'random') {
                 if (!array_key_exists('includingsubcategories', $questiondata) || $questiondata['includingsubcategories'] === '') {
                     $includingsubcategories = false;
                 } else {
@@ -299,7 +290,7 @@ class behat_mod_quiz extends behat_question_base {
                 $filter = [
                     'category' => [
                         'jointype' => \qbank_managecategories\category_condition::JOINTYPE_DEFAULT,
-                        'values' => [$categoryid],
+                        'values' => [$question->category],
                         'filteroptions' => ['includesubcategories' => $includingsubcategories],
                     ],
                 ];

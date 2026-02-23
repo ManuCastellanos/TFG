@@ -73,25 +73,15 @@ export default class extends DndSection {
             const sectionItem = this.getElement(this.selectors.SECTION_ITEM);
             if (sectionItem) {
                 // Init the inner dragable element.
-                const headerComponent = this._newHeader(sectionItem);
+                const headerComponent = new Header({
+                    ...this,
+                    element: sectionItem,
+                    fullregion: this.element,
+                });
                 this.configDragDrop(headerComponent);
             }
         }
         this._openSectionIfNecessary();
-    }
-
-    /**
-     * Create a new Header object.
-     *
-     * @param {Element} sectionItem the Header's element
-     * @return {Header} the new object
-     */
-    _newHeader(sectionItem) {
-        return new Header({
-            ...this,
-            element: sectionItem,
-            fullregion: this.element,
-        });
     }
 
     /**

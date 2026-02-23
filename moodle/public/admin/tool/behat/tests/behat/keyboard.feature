@@ -9,7 +9,7 @@ Feature: Verify that keyboard steps work as expected
     Given the following "users" exist:
       | username | email                        | firstname | lastname | password    |
       | saffronr | saffron.rutledge@example.com | Saffron   | Rutledge | flowerpower |
-    Given I am on homepage
+    Given I click on "Log in" "link"
     And I click on "Username" "field"
     When I type "saffronr"
     And I press the tab key
@@ -19,7 +19,7 @@ Feature: Verify that keyboard steps work as expected
 
   @javascript
   Scenario: Using tab changes focus to the next or previous field
-    Given I am on homepage
+    Given I click on "Log in" "link"
     And I click on "Username" "field"
     And the focused element is "Username" "field"
     When I press the tab key

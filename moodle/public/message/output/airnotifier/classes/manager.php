@@ -138,6 +138,7 @@ class message_airnotifier_manager {
         $params = [
             'url' => $CFG->wwwroot,
             'siteid' => md5(\core\hub\registration::get_secret()),
+            'contact' => $USER->email,
             'description' => $CFG->wwwroot,
         ];
         $resp = $curl->post($serverurl, $params);

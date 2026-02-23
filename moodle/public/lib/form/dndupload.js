@@ -652,20 +652,15 @@ M.form_dndupload.init = function(Y, options) {
         },
 
         /**
-         * Display a message in a popup dialog.
-         *
-         * @param {string} msg - The message text to display.
-         * @param {string} type - The message type, 'error' or 'info'.
-         * @param {string} errorCode - The associated error code (optional).
+         * Display a message in a popup
+         * @param string msg - the message to display
+         * @param string type - 'error' or 'info'
          */
-        print_msg: function(msg, type, errorCode) {
+        print_msg: function(msg, type) {
             var header = M.util.get_string('error', 'moodle');
             if (type != 'error') {
-                type = 'info'; // One of only two types excepted.
+                type = 'info'; // one of only two types excepted
                 header = M.util.get_string('info', 'moodle');
-            }
-            if (errorCode === 'invalidfiletypewithaccepted') {
-                header = M.util.get_string('invalidfiletypetitle', 'repository');
             }
             if (!this.msg_dlg) {
                 this.msg_dlg_node = Y.Node.create(M.core_filepicker.templates.message);
@@ -1056,7 +1051,7 @@ M.form_dndupload.init = function(Y, options) {
                         var result = JSON.parse(xhr.responseText);
                         if (result) {
                             if (result.error) {
-                                self.print_msg(result.error, 'error', result.errorcode);
+                                self.print_msg(result.error, 'error'); // TODO add filename?
                                 self.uploadfinished();
                                 // Don't do anything else after reporting the error.
                                 return;

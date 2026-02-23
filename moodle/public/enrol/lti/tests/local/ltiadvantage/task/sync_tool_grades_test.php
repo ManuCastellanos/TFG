@@ -20,6 +20,8 @@ use enrol_lti\helper;
 use Packback\Lti1p3\LtiAssignmentsGradesService;
 use Packback\Lti1p3\LtiGrade;
 use Packback\Lti1p3\LtiLineitem;
+use core\task\manager;
+use phpunit_util;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -430,7 +432,7 @@ final class sync_tool_grades_test extends \lti_advantage_testcase {
 
         // Delete the activity being shared by resource 2, leaving resource 2 disabled as a result.
         $modcontext = \context::instance_by_id($resource2->contextid);
-        \core_courseformat\formatactions::cm($course->id)->delete($modcontext->instanceid);
+        course_delete_module($modcontext->instanceid);
 
         // Only the enabled resource 3 should sync grades.
         $task = $this->get_task_with_mocked_grade_service();
@@ -462,7 +464,7 @@ final class sync_tool_grades_test extends \lti_advantage_testcase {
 
         // Delete the activity, then enable the enrolment method (it is disabled during activity deletion).
         $modcontext = \context::instance_by_id($resource->contextid);
-        \core_courseformat\formatactions::cm($course->id)->delete($modcontext->instanceid);
+        course_delete_module($modcontext->instanceid);
         $enrol = (object) ['id' => $resource->enrolid, 'status' => ENROL_INSTANCE_ENABLED];
         $DB->update_record('enrol', $enrol);
 

@@ -1027,7 +1027,6 @@ class global_navigation extends navigation_node {
             unset($sections[$key]->summary);
             $sections[$key]->hasactivites = false;
             if (!array_key_exists($section->sectionnum, $modinfo->sections)) {
-                // It may be because the section is not available for the user.
                 continue;
             }
             foreach ($section->get_sequence_cm_infos() as $cm) {
@@ -1084,7 +1083,6 @@ class global_navigation extends navigation_node {
         global $CFG, $DB, $USER, $SITE;
         require_once($CFG->dirroot . '/course/lib.php');
 
-        $format = course_get_format($course->id);
         [$sections, $activities] = $this->generate_sections_and_activities($course);
 
         $navigationsections = [];
@@ -1095,7 +1093,7 @@ class global_navigation extends navigation_node {
             }
 
             if (
-                !$format->is_section_visible($section)
+                !$section->uservisible
                 || (
                     !$this->showemptysections
                     && !$section->hasactivites

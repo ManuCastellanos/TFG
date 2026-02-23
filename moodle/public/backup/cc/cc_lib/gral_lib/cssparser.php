@@ -20,9 +20,19 @@ class cssparser {
 
   public function __construct($html = true) {
     // Register "destructor"
-    \core\shutdown_manager::register_function([&$this, "finalize"]);
+    core_shutdown_manager::register_function(array(&$this, "finalize"));
     $this->html = ($html != false);
     $this->Clear();
+  }
+
+  /**
+   * Old syntax of class constructor. Deprecated in PHP7.
+   *
+   * @deprecated since Moodle 3.1
+   */
+  public function cssparser($html = true) {
+      debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+      self::__construct($html);
   }
 
   function finalize() {

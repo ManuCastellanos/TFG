@@ -98,7 +98,17 @@ class grade_items extends base {
         $showonlyactiveenrol = $this->report->show_only_active();
         $this->ungradedcounts = $this->report->ungraded_counts(false, false, $showonlyactiveenrol);
 
-        return parent::initialise();
+        $columns = $this->get_all_columns();
+        foreach ($columns as $column) {
+            $this->add_column($column);
+        }
+
+        $filters = $this->get_all_filters();
+        foreach ($filters as $filter) {
+            $this->add_filter($filter);
+        }
+
+        return $this;
     }
 
     /**
@@ -106,7 +116,7 @@ class grade_items extends base {
      *
      * @return column[]
      */
-    protected function get_available_columns(): array {
+    protected function get_all_columns(): array {
 
         $tablealias = $this->get_table_alias('grade_items');
         $selectsql = "$tablealias.id, $tablealias.itemname, $tablealias.iteminstance, $tablealias.calculation,
@@ -211,7 +221,7 @@ class grade_items extends base {
      *
      * @return filter[]
      */
-    protected function get_available_filters(): array {
+    protected function get_all_filters(): array {
         $tablealias = $this->get_table_alias('grade_items');
 
         // Activity type filter (for performance only load options on demand).

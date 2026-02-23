@@ -58,7 +58,6 @@ $THEME->layouts = [
         'file' => 'columns.php',
         'regions' => array('side-pre', 'side-post'),
         'defaultregion' => 'side-pre',
-        'options' => ['completioninheader' => false],
     ),
     // The site home page.
     'frontpage' => array(

@@ -368,10 +368,11 @@ class AutoFilter implements Stringable
     /**
      * Test if cell value is within a set of values defined by a ruleset.
      *
-     * @param mixed[][] $ruleSet
+     * @param mixed[] $ruleSet
      */
     protected static function filterTestInCustomDataSet(mixed $cellValue, array $ruleSet): bool
     {
+        /** @var array[] $dataSet */
         $dataSet = $ruleSet['filterRules'];
         $join = $ruleSet['join'];
         $customRuleForBlanks = $ruleSet['customRuleForBlanks'] ?? false;
@@ -384,10 +385,11 @@ class AutoFilter implements Stringable
         }
         $returnVal = ($join == AutoFilter\Column::AUTOFILTER_COLUMN_JOIN_AND);
         foreach ($dataSet as $rule) {
-            /** @var string[] $rule */
+            /** @var string $ruleValue */
             $ruleValue = $rule['value'];
+            /** @var string $ruleOperator */
             $ruleOperator = $rule['operator'];
-            /** @var string */
+            /** @var string $cellValueString */
             $cellValueString = $cellValue ?? '';
             $retVal = false;
 
@@ -527,7 +529,6 @@ class AutoFilter implements Stringable
         Rule::AUTOFILTER_RULETYPE_DYNAMIC_YESTERDAY => 'dynamicYesterday',
     ];
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicLastMonth(): array
     {
         $maxval = new DateTime();
@@ -553,7 +554,6 @@ class AutoFilter implements Stringable
         return $val;
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicLastQuarter(): array
     {
         $maxval = self::firstDayOfQuarter();
@@ -563,7 +563,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicLastWeek(): array
     {
         $val = new DateTime();
@@ -577,7 +576,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicLastYear(): array
     {
         $val = new DateTime();
@@ -588,7 +586,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicNextMonth(): array
     {
         $val = new DateTime();
@@ -603,7 +600,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicNextQuarter(): array
     {
         $val = self::firstDayOfQuarter();
@@ -614,7 +610,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicNextWeek(): array
     {
         $val = new DateTime();
@@ -628,7 +623,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicNextYear(): array
     {
         $val = new DateTime();
@@ -639,7 +633,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicThisMonth(): array
     {
         $baseDate = new DateTime();
@@ -653,7 +646,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicThisQuarter(): array
     {
         $val = self::firstDayOfQuarter();
@@ -663,7 +655,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicThisWeek(): array
     {
         $val = new DateTime();
@@ -677,7 +668,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicThisYear(): array
     {
         $val = new DateTime();
@@ -688,7 +678,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicToday(): array
     {
         $val = new DateTime();
@@ -699,7 +688,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicTomorrow(): array
     {
         $val = new DateTime();
@@ -711,7 +699,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicYearToDate(): array
     {
         $maxval = new DateTime();
@@ -722,7 +709,6 @@ class AutoFilter implements Stringable
         return [$val, $maxval];
     }
 
-    /** @return array{DateTime, DateTime} */
     private static function dynamicYesterday(): array
     {
         $maxval = new DateTime();
@@ -955,7 +941,6 @@ class AutoFilter implements Stringable
                                 if ($periodType == 'M') {
                                     $ruleValues = [$period];
                                 } else {
-                                    /** @var int $period */
                                     --$period;
                                     $periodEnd = (1 + $period) * 3;
                                     $periodStart = 1 + $period * 3;
@@ -1086,7 +1071,7 @@ class AutoFilter implements Stringable
                 //    The columns array of \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet\AutoFilter objects
                 $this->{$key} = [];
                 foreach ($value as $k => $v) {
-                    $this->{$key}[$k] = clone $v; //* @phpstan-ignore-line
+                    $this->{$key}[$k] = clone $v;
                     // attach the new cloned Column to this new cloned Autofilter object
                     $this->{$key}[$k]->setParent($this);
                 }

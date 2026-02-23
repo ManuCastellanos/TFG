@@ -395,7 +395,6 @@ $string['eventsectionshuffleupdated'] = 'Section shuffle updated';
 $string['eventslotcreated'] = 'Slot created';
 $string['eventslotdeleted'] = 'Slot deleted';
 $string['eventslotdisplayedquestionnumberupdated'] = 'Slot displayed question number updated';
-$string['eventslotfilterconditionupdated'] = 'Slot filter condition updated';
 $string['eventslotgradeitemupdated'] = 'Slot grade item updated';
 $string['eventslotmarkupdated'] = 'Slot mark updated';
 $string['eventslotversionupdated'] = 'Slot version updated';
@@ -567,22 +566,22 @@ $string['missingcorrectanswer'] = 'Correct answer must be specified';
 $string['missingitemtypename'] = 'Missing name';
 $string['missingquestion'] = 'This question no longer seems to exist';
 $string['modulename'] = 'Quiz';
-$string['modulename_help'] = '###### Key features
-* Use different question types, such as multiple choice, true/false, matching, essay, and more
-* Grade most question types automatically, with manual grading for essays
-* Make each attempt unique by randomising questions and shuffling answer choices
-* Set time limits to complete a quiz, and decide when students can see hints, feedback, or correct answers
-* Save and reuse questions across different quiz activities and courses
-* Create secure online exam environments
+$string['modulename_help'] = 'The quiz activity enables a teacher to create quizzes comprising questions of various types, including multiple choice, matching, short-answer and numerical.
 
-###### Ways to use it
-* Deliver a timed exam with automatic grading
-* Provide a practice test with questions randomly drawn from a pool
-* Create a self-assessment with detailed feedback for each answer
-* Run short weekly quizzes to check understanding of topics';
+The teacher can allow the quiz to be attempted multiple times, with the questions shuffled or randomly selected from the question bank. A time limit may be set.
+
+Each attempt is marked automatically, with the exception of essay questions, and the grade is recorded in the gradebook.
+
+The teacher can choose when and if hints, feedback and correct answers are shown to students.
+
+Quizzes may be used
+
+* As course exams
+* As mini tests for reading assignments or at the end of a topic
+* As exam practice using questions from past exams
+* To deliver immediate feedback about performance
+* For self-assessment';
 $string['modulename_link'] = 'mod/quiz/view';
-$string['modulename_summary'] = 'Create a variety of assessments, from simple multiple-choice tests to complex exams with detailed feedback.';
-$string['modulename_tip'] = 'Create your questions in the question bank first to reuse them easily in multiple quizzes.';
 $string['modulenameplural'] = 'Quizzes';
 $string['moveselectedonpage'] = 'Move selected questions to page: {$a}';
 $string['multichoice'] = 'Multiple choice';
@@ -948,7 +947,6 @@ $string['requiresubnet'] = 'Require network address';
 $string['requiresubnet_help'] = 'Quiz access may be restricted to particular subnets on the LAN or Internet by specifying a comma-separated list of partial or full IP address numbers. This can be useful for an invigilated (proctored) quiz, to ensure that only people in a certain location can access the quiz.';
 $string['response'] = 'Response';
 $string['responses'] = 'Responses';
-$string['restorenotag'] = 'A tag matching \'{$a->tagname}\' could not be found when restoring the random question to quiz slot ID {$a->slotid}. The tag was removed from the question\'s filter conditions.';
 $string['results'] = 'Results';
 $string['returnattempt'] = 'Return to attempt';
 $string['reuseifpossible'] = 'reuse previously removed';

@@ -1,190 +1,32 @@
 # core (subsystem) Upgrade notes
 
-## 5.2dev
+## 5.1.2
 
 ### Added
 
-- Appending an exclamation mark to template names ignores theme overrides
-
-  For more information see [MDL-77894](https://tracker.moodle.org/browse/MDL-77894)
-- Redis connection timeout settings for cachestores and sessions have been split into connection timeout and read timeout to allow for finer control. These settings now also accept floats.
-
-  For more information see [MDL-85336](https://tracker.moodle.org/browse/MDL-85336)
-- The namespace for the `\core_shutdown_manager` has been moved to `\core\shutdown_manager`. The legacy namespace will continue to work for the moment.
-
-  For more information see [MDL-87046](https://tracker.moodle.org/browse/MDL-87046)
-- Added clean_string() that prevents double escaping in Mustache templates
-
-  For more information see [MDL-87066](https://tracker.moodle.org/browse/MDL-87066)
-- The `upgrade_ensure_not_running()` function has been deprecated and replaced
-  with:
-
-  - `\core\setup::warn_if_upgrade_is_running()`;
-  - `\core\setup::ensure_upgrade_is_not_running()`; and
-  - `\core\setup::is_upgrade_running()`.
-
-  For more information see [MDL-87107](https://tracker.moodle.org/browse/MDL-87107)
-- The CLI script used to terminate user sessions (kill_all_sessions.php) has been improved to make it safer and more flexible.  A new '--run' parameter has been introduced. Without '--run', the script performs a dry run making no changes. The script now supports targeted session termination using '--for-users' parameter.
-
-  For more information see [MDL-87173](https://tracker.moodle.org/browse/MDL-87173)
-- The __construct() method of the confirm_action class now accepts two optional new parameters: `$title` (string) to set the dialogue's heading, and `$dialogtype` (string) to specify the visual style of the action ('delete' for displaying the danger button).
-
-  For more information see [MDL-87281](https://tracker.moodle.org/browse/MDL-87281)
-- A new path_module parameter type for routing has been created
-
-  For more information see [MDL-87283](https://tracker.moodle.org/browse/MDL-87283)
-- Public require_login() function in moodlelib.php has been change to redirect users to a restricted page when the activity restrictions are visible.
-
-  For more information see [MDL-87283](https://tracker.moodle.org/browse/MDL-87283)
 - There is a new Behat `toast_message` named selector to more easily assert the presence of Toast messages on the page
 
   For more information see [MDL-87443](https://tracker.moodle.org/browse/MDL-87443)
-- Added new `options` parameter to loadingicon.js functions for displaying the icon as `overlay`.
-
-  For more information see [MDL-87517](https://tracker.moodle.org/browse/MDL-87517)
-- The Checks API now supports multiple results being returned for a single instance of `\core\check\check`.
-
-  To support this a new `get_results(): array;` method has been created which returns an array of `\core\check\result` objects.
-
-  For more information see [MDL-87648](https://tracker.moodle.org/browse/MDL-87648)
-- A new path_section parameter type for routing has been created
-
-  For more information see [MDL-87671](https://tracker.moodle.org/browse/MDL-87671)
-- Nodes from sections with visible restrictions have been added to the navigation tree
-
-  For more information see [MDL-87671](https://tracker.moodle.org/browse/MDL-87671)
-- New `\core\attribute\description` attribute, previously `\core_sms\description`, for representing a language string in code attributes
-
-  For more information see [MDL-87799](https://tracker.moodle.org/browse/MDL-87799)
 
 ### Changed
 
-- The `arg_separator.output` has been changed from a default of `amp;` to a default of `&` in line with PHP defaults.
-
-  If you were previously relying on the legacy default when using
-  `http_build_query()` then you should _actively_ specify the value as the third
-  parameter, for example:
-
-  ```
-  http_build_query($formdata, '', '&amp;');
-  ```
-
-  For more information see [MDL-71368](https://tracker.moodle.org/browse/MDL-71368)
-- The `core/drag_handle` template has been modified to use a native HTML button for a more accessible experience and a consistent look with other buttons on the page.
-
-  For more information see [MDL-86846](https://tracker.moodle.org/browse/MDL-86846)
-- The Hook Manager now uses localcache instead of caching via MUC.
-
-  For more information see [MDL-87107](https://tracker.moodle.org/browse/MDL-87107)
 - `\core\output\core_renderer::confirm()`'s `$displayoptions` parameter now also accepts a `headinglevel` option that developers can use to specify the heading level of the confirmation's heading. If not specified, the confirmation heading will be rendered in an `h4` tag.
 
   For more information see [MDL-87694](https://tracker.moodle.org/browse/MDL-87694)
-- The following classes have been renamed and now support autoloading.
 
-  The old names will be maintained without debugging until Moodle 6.0.
+## 5.1.1
 
-   | Old class name            | New class name                      |
-   | ---                       | ---                                 |
-   | `\phpunit_coverage_info`  | `\core\test\phpunit\coverage_info`  |
-   | `\phpunit_event_mock`     | `\core\test\phpunit\event_mock`     |
-   | `\phpunit_event_sink`     | `\core\test\phpunit\event_sink`     |
-   | `\phpunit_message_sink`   | `\core\test\phpunit\message_sink`   |
-   | `\phpunit_phpmailer_sink` | `\core\test\phpunit\phpmailer_sink` |
-   | `\phpunit_util`           | `\core\test\phpunit\phpunit_util`   |
-   | `\testing_util`           | `\core\test\testing_util`           |
+### Added
 
-  For more information see [MDL-87716](https://tracker.moodle.org/browse/MDL-87716)
+- Added clean_string() that prevents double escaping in Mustache templates
 
-### Removed
+  For more information see [MDL-87066](https://tracker.moodle.org/browse/MDL-87066)
 
-- Removed `qtype_random` from core. `core\component::is_valid_plugin_name` has an additional check to ensure no-one can create a new plugin called qtype_random, as this would conflict with the support for restoring old backups.
+### Changed
 
-  For more information see [MDL-73602](https://tracker.moodle.org/browse/MDL-73602)
-- The following AMD modules have been removed following the final deprecation process. It is no longer possible or necessary to manually register modal types. See MDL-78324 for further details.
+- The Hook Manager now uses localcache instead of caching via MUC.
 
-  - `core/modal_registry`
-  - `core/modal_factory`
-
-  For more information see [MDL-79182](https://tracker.moodle.org/browse/MDL-79182)
-- The `moodle-core-notification-confirm` YUI module has been removed after an extensive deprecation period. Please use the AMD `core/modal` module as a replacement.
-
-  For more information see [MDL-81962](https://tracker.moodle.org/browse/MDL-81962)
-- The following feaetures of the `moodle-core-notification` YUI module have been removed after an extensive deprecation process.:
-
-   - method: `keyDelegation`
-   - property: `lightbox`
-
-  There is no direct replacement for these features, but they were not widely used and their removal should not cause significant issues. If you were using these features, you will need to implement your own solutions for key delegation and lightbox functionality.
-
-  For more information see [MDL-81962](https://tracker.moodle.org/browse/MDL-81962)
-- Legacy constructors have been removed. These relate to PHP 4 and earlier.
-
-  For more information see [MDL-82284](https://tracker.moodle.org/browse/MDL-82284)
-- Removed $CFG->wwwrootendsinpublic flag to force users to configure their server accordingly.
-
-  For more information see [MDL-87072](https://tracker.moodle.org/browse/MDL-87072)
-- The following functions have been removed from `public/lib/deprecatedlib.php` as part of the depreciation process: - `print_course_request_buttons()` - `cron_run()` - `cron_run_scheduled_tasks()` - `cron_run_adhoc_tasks()` - `cron_run_inner_scheduled_task()` - `cron_run_inner_adhoc_task()` - `cron_set_process_title()` - `cron_trace_time_and_memory()` - `cron_prepare_core_renderer()` - `cron_setup_user()` - `badges_get_oauth2_service_options()` - `theme_is_device_locked()` - `theme_get_locked_theme_for_device()` - `random_bytes_emulate()` - `plagiarism_get_file_results()` - `plagiarism_update_status()` - `calendar_top_controls()` - `calendar_get_link_previous()` - `calendar_get_link_next()`
-
-  For more information see [MDL-87423](https://tracker.moodle.org/browse/MDL-87423)
-- The `MOD_PURPOSE_INTERFACE` constant has been removed from `public/lib/moodlelib.php`.
-
-  For more information see [MDL-87425](https://tracker.moodle.org/browse/MDL-87425)
-- The `public/lib/classes/navigation/flat_navigation_node.php` file has been removed.
-
-  For more information see [MDL-87425](https://tracker.moodle.org/browse/MDL-87425)
-- The `public/question/qengine.js` file has been removed.
-
-  For more information see [MDL-87425](https://tracker.moodle.org/browse/MDL-87425)
-- - The `public/lib/amd/src/addblockmodal.js` file has been removed. - The `request()` has been removed from `public/lib/amd/src/pending.js`. - The `triggerSelector()` has been removed from `public/lib/amd/src/comboboxsearch/search_combobox.js`. - The `public/lib/classes/navigation/flat_navigation.php` file has been removed. - The following methods have been removed from `public/lib/classes/output/action_menu.php`:
-    - `\core\output\action_menu::set_alignment()`
-    - `\core\output\action_menu::set_constraint()`
-  - The following methods have been removed from `public/lib/classes/output/core_renderer.php`:
-    - `\core\output\core_renderer::activity_information()`
-    - `\core\output\core_renderer::htmllize_file_tree()`
-  - The `\core\output\action_menu\link::instance` property has been removed from `public/lib/classes/output/action_menu/link.php`. - The `\core\output\renderer_base::should_display_main_logo()` has been removed from `public/lib/classes/output/renderer_base.php`. - The `\core\task\manager::ensure_adhoc_task_qos()` has been removed from `public/lib/classes/task/manager.php`. - The following methods have been removed from `public/lib/classes/task/task_base.php`:
-    - `\core\task\task_base::set_blocking()`
-    - `\core\task\task_base::is_blocking()`
-  - The `\core\moodlenet\activity_sender::share_activity()` has been removed from `public/lib/classes/moodlenet/activity_sender.php`. - The `\core\encryption::is_sodium_installed()` has been removed from `public/lib/classes/encryption.php`. - The `\core\hook\manager::is_deprecated_plugin_callback()` has been removed from `public/lib/classes/hook/manager.php`. - The `\core\report_helper::save_selected_report()` has been removed from `public/lib/classes/report_helper.php`. - The `\core_text::reset_caches()` has been removed from `public/lib/classes/text.php`. - The following methods have been removed from `public/lib/classes/useragent.php`:
-    - `\core_useragent::get_device_type_list()`
-    - `\core_useragent::get_device_type_theme()`
-    - `\core_useragent::get_device_type_cfg_var_name()`
-  - The `M.util.set_user_preference()` has been removed from `public/lib/javascript-static.js`.
-
-  For more information see [MDL-87425](https://tracker.moodle.org/browse/MDL-87425)
-- - The `\core\output\action_menu::do_not_enhance()` has been removed from `public/lib/classes/output/action_menu.php`. - The following functions have been removed from `public/lib/javascript-static.js`:
-    - `M.util.init_toggle_class_on_click()`
-    - `M.util.focus_login_form()`
-    - `M.util.focus_login_error()`
-    - `checkall()`
-    - `checknone()`
-    - `select_all_in_element_with_id()`
-    - `select_all_in()`
-    - `deselect_all_in()`
-    - `confirm_if()`
-    - `findParentNode()`
-    - `filterByParent()`
-    - `fix_column_widths()`
-    - `fix_column_width()`
-    - `stripHTML()`
-    - `M.form.init_smartselect()`
-
-  For more information see [MDL-87426](https://tracker.moodle.org/browse/MDL-87426)
-- The `\admin_setting_configselect::output_select_html()` has been removed from `public/lib/adminlib.php`.
-
-  For more information see [MDL-87426](https://tracker.moodle.org/browse/MDL-87426)
-- The `relateduserid` key inside the `other` array has been removed.
-
-  For more information see [MDL-87427](https://tracker.moodle.org/browse/MDL-87427)
-- - The following files have been removed:
-    - `public/lib/classes/event/content_viewed.php`
-    - `public/lib/classes/exception/webservice_parameter_exception.php`
-  - The `lightbox` attribute has been removed from `public/lib/yui/src/notification/js/dialogue.js`. - The following functions have been removed from `public/lib/deprecatedlib.php`:
-    - `get_context_instance()`
-    - `can_use_rotated_text()`
-    - `get_system_context()`
-    - `print_arrow()`
-
-  For more information see [MDL-87427](https://tracker.moodle.org/browse/MDL-87427)
+  For more information see [MDL-87107](https://tracker.moodle.org/browse/MDL-87107)
 
 ### Fixed
 

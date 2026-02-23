@@ -594,7 +594,7 @@ class quiz_settings {
                 // Skip questions where all versions are draft.
                 continue;
             }
-            if ($questiondata->random && $includepotential) {
+            if ($questiondata->qtype === 'random' && $includepotential) {
                 $filtercondition = $questiondata->filtercondition;
                 if (!empty($filtercondition)) {
                     $filter = $filtercondition['filter'];
