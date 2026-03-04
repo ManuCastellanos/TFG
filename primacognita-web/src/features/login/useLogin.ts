@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import AuthRepository from "../../modules/login/infrastructure/AuthRepository";
-import TokenStorage from "../../modules/login/infrastructure/TokenStorage";
+import TokenStorage from "../../modules/login/infrastructure/AuthStorage";
 import { Constants } from "../../shared/constants/Constants";
 
 type UseLoginResult = {

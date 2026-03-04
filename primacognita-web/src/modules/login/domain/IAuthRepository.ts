@@ -1,5 +1,6 @@
-import type { Token } from "./Token";
+import type { Auth } from "./Auth";
 
 export default interface IAuthRepository {
-  login(username: string, password: string): Promise<Token>;
+  login(username: string, password: string): Promise<Auth>;
+  getMyUserId(token: string): Promise<string>;
 }

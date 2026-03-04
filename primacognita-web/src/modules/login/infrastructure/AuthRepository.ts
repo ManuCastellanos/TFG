@@ -1,13 +1,24 @@
-import type { Token } from "../domain/Token";
-import type IAuthRepository from "../domain/IAuthRepository";
-import { env } from "../../../shared/utils/env";
+import type IAuthRepository from "@/modules/login/domain/IAuthRepository";
+import type { Auth } from "@/modules/login/domain/Auth";
+import { env } from "@/shared/utils/env";
 
-type ApiResponse =
-  | { token: string }
-  | { error: string; errorcode?: string; debuginfo?: string };
+import MoodleClient from "@/shared/clients/MoodleClient";
+import { isMoodleWsError, type MoodleWsError } from "@/shared/clients/moodle-errors";
+
+type TokenResponse = { token: string } | MoodleWsError;
+
+type SiteInfoResponse = {
+  userid: number;
+};
 
 export default class AuthRepository implements IAuthRepository {
-  async login(username: string, password: string): Promise<Token> {
+  private readonly moodleClient: MoodleClient;
+
+  constructor(moodleClient: MoodleClient = new MoodleClient()) {
+    this.moodleClient = moodleClient;
+  }
+
+  async login(username: string, password: string): Promise<Auth> {
     const body = new URLSearchParams({
       username,
       password,
@@ -19,13 +30,32 @@ export default class AuthRepository implements IAuthRepository {
       body,
     });
 
-    const json = (await res.json()) as ApiResponse;
+    const json = (await res.json()) as unknown;
 
-    if ("error" in json) {
+    if (isMoodleWsError(json)) {
       const code = json.errorcode ? ` (${json.errorcode})` : "";
       throw new Error(`${json.error}${code}`);
     }
 
-    return { id: json.token };
+    const tokenJson = json as TokenResponse;
+
+    if (!("token" in tokenJson)) {
+      throw new Error("Invalid token response from Moodle.");
+    }
+
+    const token = tokenJson.token;
+    const userId = await this.getMyUserId(token);
+
+    return { token, userId };
+  }
+
+  async getMyUserId(token: string): Promise<string> {
+    const response = await this.moodleClient.call<SiteInfoResponse>(
+      token,
+      "core_webservice_get_site_info",
+      {}
+    );
+
+    return String(response.userid);
   }
 }
