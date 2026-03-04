@@ -1,5 +1,6 @@
+import type { CourseCategoryId } from "./CourseCategory";
+
 export type CourseId = string;
-export type CourseCategoryId = string;
 
 export interface Course {
   id: CourseId;

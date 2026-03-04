@@ -1,5 +1,5 @@
 import AuthStorage from "@/modules/login/infrastructure/AuthStorage";
-import { useUserCourse } from "./useUserCourse";
+import { useUserCourses } from "./useUserCourses";
 
 export default function Dashboard() {
   const session = AuthStorage.get();
@@ -7,7 +7,7 @@ export default function Dashboard() {
   const userId = session?.userId ?? null;
   const token = session?.token ?? null;
 
-  const { courses, loading, error } = useUserCourse(userId, token);
+  const { courses, categoryNameById, loading, error } = useUserCourses(userId, token);
 
   return (
     <div className="min-h-screen bg-slate-100 p-6">
@@ -22,7 +22,7 @@ export default function Dashboard() {
             {courses.map((c) => (
               <li key={c.id} className="rounded-lg bg-white p-4 shadow-sm">
                 <div className="font-medium">{c.fullname}</div>
-                <div className="text-sm text-slate-600">{c.shortname}</div>
+                <div className="text-sm text-slate-600">{categoryNameById[c.categoryId ?? ""] ?? c.categoryId}</div>
                 {c.imageUrl && (
                   <img
                     className="mt-3 h-32 w-full rounded-md object-cover"
