@@ -1,9 +1,9 @@
 import type IAuthRepository from "@/modules/login/domain/IAuthRepository";
 import type { Auth } from "@/modules/login/domain/Auth";
+import type IMoodleClient from "@/shared/clients/IMoodleClient";
 import { env } from "@/shared/utils/env";
-
-import MoodleClient from "@/shared/clients/MoodleClient";
 import { isMoodleWsError, type MoodleWsError } from "@/shared/clients/moodle-errors";
+
 
 type TokenResponse = { token: string } | MoodleWsError;
 
@@ -12,11 +12,7 @@ type SiteInfoResponse = {
 };
 
 export default class AuthRepository implements IAuthRepository {
-  private readonly moodleClient: MoodleClient;
-
-  constructor(moodleClient: MoodleClient = new MoodleClient()) {
-    this.moodleClient = moodleClient;
-  }
+  constructor(private readonly moodleClient: IMoodleClient) {}
 
   async login(username: string, password: string): Promise<Auth> {
     const body = new URLSearchParams({

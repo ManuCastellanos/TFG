@@ -1,5 +1,6 @@
-import { env } from "../utils/env";
+import { env } from "@/shared/utils/env";
 import type { MoodleWsError } from "./moodle-errors";
+import type IMoodleClient from "./IMoodleClient";
 
 const isMoodleWsError = (value: unknown): value is MoodleWsError => {
   if (typeof value !== "object" || value === null) {
@@ -9,12 +10,8 @@ const isMoodleWsError = (value: unknown): value is MoodleWsError => {
   return "error" in value;
 };
 
-export default class MoodleClient {
-  async call<TResponse>(
-    token: string,
-    wsFunction: string,
-    params: Record<string, string>,
-  ): Promise<TResponse> {
+export default class MoodleClient implements IMoodleClient {
+  async call<TResponse>( token: string, wsFunction: string, params: Record<string, string>,): Promise<TResponse> {
     const body = new URLSearchParams({
       wstoken: token,
       wsfunction: wsFunction,
