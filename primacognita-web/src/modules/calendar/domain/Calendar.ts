@@ -1,3 +1,5 @@
+import type { CalendarEvent } from './CalendarEvent';
+
 export type UnixTimestamp = number;
 
 export interface Calendar {
@@ -16,4 +18,5 @@ interface CalendarDay {
   timestamp: UnixTimestamp;
   isToday: boolean;
   isWeekend: boolean;
+  events: CalendarEvent[];
 }
