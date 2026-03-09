@@ -1,14 +1,12 @@
-import AuthStorage from "@/modules/login/infrastructure/AuthStorage";
 import { useUserCourses } from "./hooks/useUserCourses";
 import { useMonthCursor } from "./hooks/useMonthCursor";
 import { useDashboardCalendar } from "./hooks/useDashboardCalendar";
 import { CalendarWidget } from "@/features/dashboard/CalendarWidget";
+import { useSession } from "@/shared/hooks/useSession";
 
 
 export default function Dashboard() {
-  const session = AuthStorage.get();
-  const userId = session?.userId ?? null;
-  const token = session?.token ?? null;
+  const { userId, token } = useSession();
 
   const { cursor, goPrevMonth, goNextMonth } = useMonthCursor();
   const { viewModel, error: errorCalendar } = useDashboardCalendar(token, cursor);
