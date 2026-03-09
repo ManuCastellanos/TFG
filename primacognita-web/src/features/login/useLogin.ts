@@ -1,18 +1,17 @@
 import { useCallback, useState } from "react";
 
-import SessionStorage from "@/modules/login/infrastructure/AuthStorage";
 import { Constants } from "@/shared/constants/Constants";
 import { useDependencies } from "@/shared/providers/DependenciesProvider";
 
 type UseLoginResult = {
   error: string | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
   clearError: () => void;
 };
 
 export const useLogin = (): UseLoginResult => {
-  const { authRepository } = useDependencies();
+  const { authRepository, authSessionStore } = useDependencies();
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,20 +21,22 @@ export const useLogin = (): UseLoginResult => {
   }, []);
 
   const login = useCallback(
-    async (username: string, password: string) => {
+    async (username: string, password: string): Promise<boolean> => {
       setError(null);
       setIsLoading(true);
 
       try {
         const auth = await authRepository.login(username, password);
-        SessionStorage.set(auth);
+        authSessionStore.save(auth);
+        return true;
       } catch {
         setError(Constants.INVALID_ACCESS_MSG);
+        return false;
       } finally {
         setIsLoading(false);
       }
     },
-    [authRepository],
+    [authRepository, authSessionStore],
   );
 
   return { error, isLoading, login, clearError };

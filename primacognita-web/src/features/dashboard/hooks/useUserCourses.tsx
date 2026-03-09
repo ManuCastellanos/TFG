@@ -18,7 +18,7 @@ export const useUserCourses = (
   userId: string | null,
   token: string | null
 ): UseUserCoursesResult => {
-  const { coursesRepository } = useDependencies();
+  const { courseRepository: coursesRepository } = useDependencies();
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [categoryNameById, setCategoryNameById] = useState<Record<string, string>>({});

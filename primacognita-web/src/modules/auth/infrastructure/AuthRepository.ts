@@ -1,5 +1,5 @@
-import type IAuthRepository from "@/modules/login/domain/IAuthRepository";
-import type { Auth } from "@/modules/login/domain/Auth";
+import type IAuthRepository from "@/modules/auth/domain/IAuthRepository";
+import type { Auth } from "@/modules/auth/domain/Auth";
 import type IMoodleClient from "@/shared/clients/IMoodleClient";
 import { env } from "@/shared/utils/env";
 import { isMoodleWsError, type MoodleWsError } from "@/shared/clients/moodle-errors";

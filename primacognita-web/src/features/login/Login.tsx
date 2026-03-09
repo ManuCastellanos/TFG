@@ -19,9 +19,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-
-    await login(username, password);
-    navigate({ to: "/dashboard" });
+  
+    const success = await login(username, password);
+  
+    if (success) {
+      navigate({ to: "/dashboard" });
+    }
   };
 
   return (
