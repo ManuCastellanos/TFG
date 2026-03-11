@@ -6,7 +6,7 @@ export type CourseResponse = {
   courseimage?: string;
   progress?: number;
   summary?: string;
-  visible?: number;    
-  hidden?: number;     
-  completed?: number;  
+  visible?: number;
+  hidden?: number;
+  completed?: number;
 };

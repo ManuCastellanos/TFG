@@ -1,24 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-
-import { buildCalendarMiniViewModel } from "@/components/ui/calendar/calendar.utils";
+import {
+  buildCalendarMiniViewModel,
+  buildCalendarTwoWeeksViewModel,
+} from "@/components/calendar/calendar.utils";
 import type { Calendar } from "@/modules/calendar/domain/Calendar";
 import { useDependencies } from "@/shared/providers/DependenciesProvider";
-import type { CalendarViewModel } from "@/components/ui/calendar/calendar.types";
+import type { CalendarViewModel } from "@/components/calendar/calendar.types";
 import type { MonthCursor } from "./useMonthCursor";
 
-type UseDashboardCalendarResult = {
+type CalendarMode = "full" | "twoWeeks";
+
+type UseCalendarResult = {
   viewModel: CalendarViewModel | null;
   error: string | null;
   isLoading: boolean;
   reload: () => Promise<void>;
 };
 
-export function useDashboardCalendar(
+export function useCalendar(
   token: string | null,
   cursor: MonthCursor,
-): UseDashboardCalendarResult {
+  mode: CalendarMode = "full",
+): UseCalendarResult {
   const { calendarRepository } = useDependencies();
-
   const [calendar, setCalendar] = useState<Calendar | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,8 +54,24 @@ export function useDashboardCalendar(
 
   const viewModel = useMemo(() => {
     if (!calendar) return null;
-    return buildCalendarMiniViewModel(calendar, cursor.year, cursor.month, isLoading);
-  }, [calendar, cursor.month, cursor.year, isLoading]);
+
+    if (mode === "twoWeeks") {
+      return buildCalendarTwoWeeksViewModel(
+        calendar,
+        cursor.year,
+        cursor.month,
+        cursor.weekOffset,
+        isLoading,
+      );
+    }
+
+    return buildCalendarMiniViewModel(
+      calendar,
+      cursor.year,
+      cursor.month,
+      isLoading,
+    );
+  }, [calendar, cursor.year, cursor.month, cursor.weekOffset, isLoading, mode]);
 
   return { viewModel, error, isLoading, reload };
 }

@@ -1,5 +1,18 @@
+export type CalendarEventVm = {
+  id: string;
+  name: string;
+  timestart: number;
+  descriptionHtml: string | null;
+  url: string | null;
+  viewUrl: string | null;
+  courseName: string | null;
+  eventType: string;
+  isOverdue: boolean;
+};
+
 export type CalendarCell =
   | { kind: "empty"; key: string }
+  | { kind: "ghost"; key: string; dayOfMonth: number }
   | {
       kind: "day";
       key: string;
@@ -16,16 +29,4 @@ export interface CalendarViewModel {
   title: string;
   cells: CalendarCell[];
   isFetching?: boolean;
-}
-
-export type CalendarEventVm = {
-  id: string;
-  name: string;
-  timestart: number;
-  descriptionHtml: string | null;
-  url: string | null;
-  viewUrl: string | null;
-  courseName: string | null;
-  eventType: string;
-  isOverdue: boolean;
 }

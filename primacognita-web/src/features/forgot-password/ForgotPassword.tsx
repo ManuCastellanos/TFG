@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Input } from "../../components/form/Input";
-import { Card } from "../../components/ui/Card";
-import { Page } from "../../components/ui/Page";
-import { Text } from "../../components/ui/Text";
-import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/input/Input";
+import { Card } from "../../components/card/Card";
+import { Page } from "../../components/page/Page";
+import { Text } from "../../components/text/Text";
+import { Button } from "../../components/button/Button";
 import { useNavigate } from "@tanstack/react-router";
-import { Banner } from "../../components/ui/Banner";
+import { Banner } from "../../components/banner/Banner";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();

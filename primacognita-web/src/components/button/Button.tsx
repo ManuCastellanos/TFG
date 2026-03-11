@@ -20,7 +20,6 @@ export const Button = ({ className, children, variant = "primary", ...rest }: Bu
       variant === "ghost" && [
         "w-auto p-2",
         "bg-transparent text-(--color-pr)",
-        "hover:bg-(--bg)",
       ],
       className,
     )}

@@ -1,6 +1,6 @@
 // EventsModal.tsx
 import { useEffect } from "react";
-import type { CalendarCell } from "@/components/ui/calendar/calendar.types";
+import type { CalendarCell } from "@/components/calendar/calendar.types";
 import { cn } from "@/shared/utils/cn";
 
 type DayCell = Extract<CalendarCell, { kind: "day" }>;

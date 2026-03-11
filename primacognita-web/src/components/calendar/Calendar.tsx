@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-import Button from "@/components/ui/Button";
+import Button from "@/components/button/Button";
 import { cn } from "@/shared/utils/cn";
 import { calendarClasses as c } from "./calendar.styles";
 import type { CalendarViewModel } from "./calendar.types";
@@ -13,7 +12,15 @@ interface Props {
   onDayClick?: (ts: number) => void;
 }
 
-export default function Calendar({ viewModel, onPrev, onNext, onDayHover, onDayClick }: Props) {
+const DOW_LABELS = ["L", "M", "X", "J", "V", "S", "D"] as const;
+
+export default function Calendar({
+  viewModel,
+  onPrev,
+  onNext,
+  onDayHover,
+  onDayClick,
+}: Props) {
   return (
     <div className={c.root}>
       <div className={c.header}>
@@ -27,9 +34,12 @@ export default function Calendar({ viewModel, onPrev, onNext, onDayHover, onDayC
           <ChevronLeft className={c.chevron} />
         </Button>
 
-        <div className={c.title}>
+        <div className={c.headerTitle}>
           <span
-            className={viewModel.isFetching ? c.titleFetching : c.titleText}
+            className={cn(
+              c.title,
+              viewModel.isFetching ? c.titleFetching : c.titleText,
+            )}
           >
             {viewModel.title}
           </span>
@@ -47,7 +57,7 @@ export default function Calendar({ viewModel, onPrev, onNext, onDayHover, onDayC
       </div>
 
       <div className={c.dowRow}>
-        {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
+        {DOW_LABELS.map((d) => (
           <div key={d} className={c.dowCell}>
             {d}
           </div>
@@ -60,33 +70,34 @@ export default function Calendar({ viewModel, onPrev, onNext, onDayHover, onDayC
             return <div key={cell.key} className={c.emptyCell} />;
           }
 
+          if (cell.kind === "ghost") {
+            return (
+              <div key={cell.key} className={c.cell}>
+                <div className={cn(c.dayBase, c.dayGhost)}>
+                  <span className={c.dayText}>{cell.dayOfMonth}</span>
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div key={cell.key} className={c.cell}>
               <div
                 className={cn(
                   c.dayBase,
                   cell.isToday ? c.dayToday : c.dayNormal,
-                  cell.hasEvents && c.dayHasEvents,
                   cell.hasOverdue && c.dayHasOverdue,
+                  !cell.hasOverdue && cell.hasEvents && c.dayHasEvents,
                 )}
-                
-                onMouseEnter={() => cell.hasEvents && onDayHover?.(cell.timestamp)}
+                onMouseEnter={() =>
+                  cell.hasEvents && onDayHover?.(cell.timestamp)
+                }
                 onMouseLeave={() => onDayHover?.(null)}
                 onClick={() => cell.hasEvents && onDayClick?.(cell.timestamp)}
                 role={cell.hasEvents ? "button" : undefined}
                 tabIndex={cell.hasEvents ? 0 : -1}
-                
               >
-                {cell.isWeekend && !cell.isToday && (
-                  <>
-                    <span className={c.weekendBlur1} />
-                    <span className={c.weekendBlur2} />
-                  </>
-                )}
-          
                 <span className={c.dayText}>{cell.dayOfMonth}</span>
-          
-              
               </div>
             </div>
           );
