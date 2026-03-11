@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Input } from "../../components/form/Input";
-import { PasswordInput } from "../../components/form/PasswordInput";
-import { Banner } from "../../components/ui/Banner";
-import { Button } from "../../components/ui/Button";
-import { Card } from "../../components/ui/Card";
-import { Page } from "../../components/ui/Page";
-import { Text } from "../../components/ui/Text";
+import { Input } from "../../components/input/Input";
+import { PasswordInput } from "../../components/input/PasswordInput";
+import { Banner } from "../../components/banner/Banner";
+import { Button } from "../../components/button/Button";
+import { Card } from "../../components/card/Card";
+import { Page } from "../../components/page/Page";
+import { Text } from "../../components/text/Text";
 import { cn } from "../../shared/utils/cn";
 import { useLogin } from "./useLogin";
 

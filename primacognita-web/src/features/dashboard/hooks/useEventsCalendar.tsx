@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { CalendarCell } from "@/components/ui/calendar/calendar.types";
+import type { CalendarCell } from "@/components/calendar/calendar.types";
 
 export function useEventsCalendar(cells: CalendarCell[]) {
   const [hoverTs, setHoverTs] = useState<number | null>(null);

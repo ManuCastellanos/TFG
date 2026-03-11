@@ -9,4 +9,6 @@ export interface Course {
   categoryId: CourseCategoryId | null;
   imageUrl: string | null;
   summary: string | null;
+  progress: number | null;
+  completed: boolean;
 }

@@ -21,6 +21,8 @@ export default class CoursesRepository implements ICourseRepository {
       categoryId: c.category != null ? String(c.category) : null,
       imageUrl: c.courseimage ?? null,
       summary: c.summary ?? null,
+      progress: c.progress ?? null,
+      completed: c.completed === 1,
     }));
   }
 

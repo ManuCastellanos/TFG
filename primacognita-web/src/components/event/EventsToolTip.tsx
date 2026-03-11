@@ -1,4 +1,4 @@
-import type { CalendarCell } from "@/components/ui/calendar/calendar.types";
+import type { CalendarCell } from "@/components/calendar/calendar.types";
 
 type DayCell = Extract<CalendarCell, { kind: "day" }>;
 
