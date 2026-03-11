@@ -12,12 +12,33 @@ const getMonthLabelEs = (year: number, month: number): string =>
     year: "numeric",
   });
 
-const buildCells = (calendar: Calendar): CalendarCell[] => {
+const daysInMonth = (year: number, month: number): number =>
+  new Date(year, month, 0).getDate();
+
+const buildCells = (
+  calendar: Calendar,
+  year: number,
+  month: number,
+): CalendarCell[] => {
   const cells: CalendarCell[] = [];
 
+  const prevMonth = month === 1 ? 12 : month - 1;
+  const prevYear = month === 1 ? year - 1 : year;
+  const prevDaysCount = daysInMonth(prevYear, prevMonth);
+
+  let postDayCounter = 1;
+
   calendar.weeks.forEach((week, weekIndex) => {
+    const prePaddingTotal = week.prepadding.length;
+
     week.prepadding.forEach((_, i) => {
-      cells.push({ kind: "empty", key: `pre-${weekIndex}-${i}` });
+      const dayOfMonth = prevDaysCount - (prePaddingTotal - 1 - i);
+
+      cells.push({
+        kind: "ghost",
+        key: `pre-${weekIndex}-${i}`,
+        dayOfMonth,
+      });
     });
 
     week.days.forEach((day) => {
@@ -47,7 +68,11 @@ const buildCells = (calendar: Calendar): CalendarCell[] => {
     });
 
     week.postpadding.forEach((_, i) => {
-      cells.push({ kind: "empty", key: `post-${weekIndex}-${i}` });
+      cells.push({
+        kind: "ghost",
+        key: `post-${weekIndex}-${i}`,
+        dayOfMonth: postDayCounter++,
+      });
     });
   });
 
@@ -61,7 +86,7 @@ export const buildCalendarMiniViewModel = (
   isFetching?: boolean,
 ): CalendarViewModel => ({
   title: calendar.periodName ?? getMonthLabelEs(year, month),
-  cells: buildCells(calendar),
+  cells: buildCells(calendar, year, month),
   isFetching,
 });
 
@@ -69,22 +94,16 @@ export const buildCalendarTwoWeeksViewModel = (
   calendar: Calendar,
   year: number,
   month: number,
+  weekOffset: number,
   isFetching?: boolean,
 ): CalendarViewModel => {
-  const allCells = buildCells(calendar);
-
-  const todayIndex = allCells.findIndex(
-    (c) => c.kind === "day" && c.isToday,
-  );
-
-  const weekStart =
-    todayIndex !== -1 ? Math.floor(todayIndex / 7) * 7 : 0;
-
-  const twoWeeksCells = allCells.slice(weekStart, weekStart + 14);
+  const allCells = buildCells(calendar, year, month);
+  const start = weekOffset * 7;
+  const cells = allCells.slice(start, start + 14);
 
   return {
     title: calendar.periodName ?? getMonthLabelEs(year, month),
-    cells: twoWeeksCells,
+    cells,
     isFetching,
   };
 };

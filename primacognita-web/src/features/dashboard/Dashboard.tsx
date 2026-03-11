@@ -41,8 +41,8 @@ export const Dashboard = () => {
     courses,
     scheduleItems,
     calendarViewModel,
-    goPrevMonth,
-    goNextMonth,
+    goPrevCalendar,
+    goNextCalendar,
   } = useDashboard();
 
   return (
@@ -76,8 +76,8 @@ export const Dashboard = () => {
         />
         <CalendarWidget
           viewModel={calendarViewModel}
-          onPrev={goPrevMonth}
-          onNext={goNextMonth}
+          onPrev={goPrevCalendar}
+          onNext={goNextCalendar}
         />
         <QuickStatsRow stats={[]} />
       </aside>

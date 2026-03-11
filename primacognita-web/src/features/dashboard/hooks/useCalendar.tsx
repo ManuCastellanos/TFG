@@ -33,8 +33,10 @@ export function useCalendar(
       setError(null);
       return;
     }
+
     setError(null);
     setIsLoading(true);
+
     try {
       const result = await calendarRepository.getCalendar(token, cursor);
       setCalendar(result);
@@ -52,12 +54,24 @@ export function useCalendar(
 
   const viewModel = useMemo(() => {
     if (!calendar) return null;
-    const builder =
-      mode === "twoWeeks"
-        ? buildCalendarTwoWeeksViewModel
-        : buildCalendarMiniViewModel;
-    return builder(calendar, cursor.year, cursor.month, isLoading);
-  }, [calendar, cursor.month, cursor.year, isLoading, mode]);
+
+    if (mode === "twoWeeks") {
+      return buildCalendarTwoWeeksViewModel(
+        calendar,
+        cursor.year,
+        cursor.month,
+        cursor.weekOffset,
+        isLoading,
+      );
+    }
+
+    return buildCalendarMiniViewModel(
+      calendar,
+      cursor.year,
+      cursor.month,
+      isLoading,
+    );
+  }, [calendar, cursor.year, cursor.month, cursor.weekOffset, isLoading, mode]);
 
   return { viewModel, error, isLoading, reload };
 }

@@ -12,6 +12,7 @@ export type CalendarEventVm = {
 
 export type CalendarCell =
   | { kind: "empty"; key: string }
+  | { kind: "ghost"; key: string; dayOfMonth: number }
   | {
       kind: "day";
       key: string;

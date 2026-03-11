@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useMonthCursor } from "./useMonthCursor";
 import { useCalendar } from "./useCalendar";
 import { useUserCourses } from "./useUserCourses";
@@ -5,7 +6,6 @@ import { useSession } from "@/shared/hooks/useSession";
 import type { CalendarEventVm } from "@/components/calendar/calendar.types";
 import type { ScheduleEntry } from "../components/schedule/schedule.types";
 import { useCurrentUser } from "./useUser";
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const SCHEDULE_COLORS = [
   "bg-orange-500",
@@ -27,8 +27,6 @@ const toScheduleEntry = (event: CalendarEventVm, i: number): ScheduleEntry => ({
   subtitle: event.courseName ?? "",
 });
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-
 export type UseDashboardResult = {
   user: ReturnType<typeof useCurrentUser>["user"];
   courses: ReturnType<typeof useUserCourses>["courses"];
@@ -37,28 +35,38 @@ export type UseDashboardResult = {
   scheduleItems: ScheduleEntry[];
   calendarViewModel: ReturnType<typeof useCalendar>["viewModel"];
   calendarLoading: boolean;
-  goPrevMonth: () => void;
-  goNextMonth: () => void;
+  goPrevCalendar: () => void;
+  goNextCalendar: () => void;
 };
 
 export function useDashboard(): UseDashboardResult {
-  const { userId, token, user } = useSession();
+  const { userId, token } = useSession();
+  const { user } = useCurrentUser();
 
-  const { courses, loading: coursesLoading, error: coursesError } =
-    useUserCourses(userId, token);
+  const {
+    courses,
+    loading: coursesLoading,
+    error: coursesError,
+  } = useUserCourses(userId, token);
 
-  const { cursor, goPrevMonth, goNextMonth } = useMonthCursor();
-  const { viewModel: calendarViewModel, isLoading: calendarLoading } =
-    useCalendar(token, cursor, "twoWeeks");
+  const { cursor, goPrevTwoWeeks, goNextTwoWeeks } = useMonthCursor();
 
-  const scheduleItems: ScheduleEntry[] = (() => {
+  const {
+    viewModel: calendarViewModel,
+    isLoading: calendarLoading,
+  } = useCalendar(token, cursor, "twoWeeks");
+
+  const scheduleItems: ScheduleEntry[] = useMemo(() => {
     if (!calendarViewModel) return [];
+
     const todayCell = calendarViewModel.cells.find(
       (c) => c.kind === "day" && c.isToday,
     );
+
     if (!todayCell || todayCell.kind !== "day") return [];
+
     return todayCell.events.map(toScheduleEntry);
-  })();
+  }, [calendarViewModel]);
 
   return {
     user,
@@ -68,7 +76,7 @@ export function useDashboard(): UseDashboardResult {
     scheduleItems,
     calendarViewModel,
     calendarLoading,
-    goPrevMonth,
-    goNextMonth,
+    goPrevCalendar: goPrevTwoWeeks,
+    goNextCalendar: goNextTwoWeeks,
   };
 }

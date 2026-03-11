@@ -1,5 +1,4 @@
 import Calendar from "@/components/calendar/Calendar";
-import { Surface } from "@/components/surface/Surface";
 import type { CalendarViewModel } from "@/components/calendar/calendar.types";
 
 export type CalendarWidgetProps = {
@@ -17,17 +16,19 @@ export const CalendarWidget = ({
   onDayHover,
   onDayClick,
 }: CalendarWidgetProps) => {
-  if (!viewModel) return <Surface className="h-48 animate-pulse" />;
+  if (!viewModel) {
+    return (
+      <div className="h-40 animate-pulse rounded-2xl bg-white/60" />
+    );
+  }
 
   return (
-    <Surface>
-      <Calendar
-        viewModel={viewModel}
-        onPrev={onPrev}
-        onNext={onNext}
-        onDayHover={onDayHover}
-        onDayClick={onDayClick}
-      />
-    </Surface>
+    <Calendar
+      viewModel={viewModel}
+      onPrev={onPrev}
+      onNext={onNext}
+      onDayHover={onDayHover}
+      onDayClick={onDayClick}
+    />
   );
 };

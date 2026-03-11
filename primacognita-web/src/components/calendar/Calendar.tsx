@@ -29,32 +29,37 @@ export default function Calendar({
           type="button"
           onClick={onPrev}
           disabled={viewModel.isFetching}
-          aria-label="Semana anterior"
+          aria-label="Mes anterior"
         >
           <ChevronLeft className={c.chevron} />
         </Button>
 
-        <span
-          className={cn(
-            c.title,
-            viewModel.isFetching ? c.titleFetching : c.titleText,
-          )}
-        >
-          {viewModel.title}
-        </span>
+        <span className={c.headerDivider} aria-hidden />
+
+        <div className={c.headerTitle}>
+          <span
+            className={cn(
+              c.title,
+              viewModel.isFetching ? c.titleFetching : c.titleText,
+            )}
+          >
+            {viewModel.title}
+          </span>
+        </div>
+
+        <span className={c.headerDivider} aria-hidden />
 
         <Button
           variant="ghost"
           type="button"
           onClick={onNext}
           disabled={viewModel.isFetching}
-          aria-label="Semana siguiente"
+          aria-label="Mes siguiente"
         >
           <ChevronRight className={c.chevron} />
         </Button>
       </div>
 
-      {/* ── Day-of-week labels ── */}
       <div className={c.dowRow}>
         {DOW_LABELS.map((d) => (
           <div key={d} className={c.dowCell}>
@@ -63,12 +68,23 @@ export default function Calendar({
         ))}
       </div>
 
-      {/* ── Day grid ── */}
       <div className={c.grid}>
         {viewModel.cells.map((cell) => {
           if (cell.kind === "empty") {
             return <div key={cell.key} className={c.emptyCell} />;
           }
+
+          if (cell.kind === "ghost") {
+            return (
+              <div key={cell.key} className={c.cell}>
+                <div className={cn(c.dayBase, c.dayGhost)}>
+                  <span className={c.dayText}>{cell.dayOfMonth}</span>
+                </div>
+              </div>
+            );
+          }
+
+          const isWeekend = cell.isWeekend && !cell.isToday;
 
           return (
             <div key={cell.key} className={c.cell}>
@@ -76,6 +92,7 @@ export default function Calendar({
                 className={cn(
                   c.dayBase,
                   cell.isToday ? c.dayToday : c.dayNormal,
+                  isWeekend && c.dayWeekend,
                   cell.hasOverdue && c.dayHasOverdue,
                   !cell.hasOverdue && cell.hasEvents && c.dayHasEvents,
                 )}
@@ -87,9 +104,7 @@ export default function Calendar({
                 role={cell.hasEvents ? "button" : undefined}
                 tabIndex={cell.hasEvents ? 0 : -1}
               >
-                {cell.isWeekend && !cell.isToday && (
-                  <span className={c.weekendBlur1} />
-                )}
+                {isWeekend && <span className={c.dayWeekendBg} aria-hidden />}
                 <span className={c.dayText}>{cell.dayOfMonth}</span>
               </div>
             </div>
