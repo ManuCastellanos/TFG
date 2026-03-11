@@ -14,6 +14,7 @@ export default class UserRepository implements IUserRepository {
     return {
       id: String(response.userid),
       fullName: response.fullname,
+      firstName: response.firstname,
       username: response.username,
       avatarUrl: response.userpictureurl ?? null,
     };

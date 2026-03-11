@@ -17,7 +17,7 @@ export const IconButton = ({
     type="button"
     aria-label={label}
     className={cn(
-      "flex size-9 shrink-0 items-center justify-center rounded-xl bg-(--surface) text-(--fg-muted) transition-colors hover:text-(--fg)",
+      "flex size-10 items-center justify-center rounded-xl bg-(--surface) text-(--fg-muted) transition-colors hover:text-(--fg)",
       className,
     )}
     {...props}

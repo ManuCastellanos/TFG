@@ -51,10 +51,8 @@ export function useDashboard(): UseDashboardResult {
 
   const { cursor, goPrevTwoWeeks, goNextTwoWeeks } = useMonthCursor();
 
-  const {
-    viewModel: calendarViewModel,
-    isLoading: calendarLoading,
-  } = useCalendar(token, cursor, "twoWeeks");
+  const { viewModel: calendarViewModel, isLoading: calendarLoading } =
+    useCalendar(token, cursor, "full");
 
   const scheduleItems: ScheduleEntry[] = useMemo(() => {
     if (!calendarViewModel) return [];

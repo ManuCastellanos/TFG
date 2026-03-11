@@ -1,38 +1,35 @@
 export const calendarClasses = {
-  root: "w-full p-4 text-(--fg) bg-white rounded-2xl",
+  root: "w-full rounded-2xl border border-(--calendar-border) bg-(--calendar-bg) p-4 text-(--fg)",
 
-  header: "flex items-center mb-3",
-  headerDivider: "w-px h-4 bg-(--border) mx-2 shrink-0",
+  header: "mb-3 flex items-center py-1.5",
+  headerDivider: "mx-2 h-4 w-px shrink-0 bg-(--calendar-border)",
   headerTitle: "flex-1 text-center",
-  chevron: "size-4 text-(--color-pr)",
-  title: "text-sm font-semibold text-(--fg) transition-opacity",
+  chevron: "size-5 text-(--pr-600)",
+  title: "text-md font-bold text-(--fg) transition-opacity",
   titleFetching: "opacity-40",
   titleText: "opacity-100",
 
-  dowRow: "grid grid-cols-7 text-center mb-1",
-  dowCell: "py-1 text-[11px] font-semibold text-(--fg)",
+  dowRow: "mb-1 grid grid-cols-7 text-center",
+  dowCell: "py-1 text-[13px] font-bold text-gray-500",
 
   grid: "grid grid-cols-7 text-center",
   emptyCell: "h-8",
   cell: "flex h-8 items-center justify-center",
 
   dayBase:
-    "relative flex size-7 items-center justify-center rounded-full text-xs font-medium transition-colors select-none",
+    "relative flex size-7 select-none items-center justify-center rounded-full text-sm font-black transition-colors",
 
-  dayToday: "bg-(--pr-700) text-white font-semibold",
+  dayToday: "bg-(--calendar-cell-selected) text-(--calendar-cell-selected-fg) font-semibold",
 
-  dayNormal: "text-(--fg) hover:bg-(--fg)/8",
+  dayNormal: "text-(--fg) hover:bg-(--calendar-cell-hover)",
 
-  dayWeekend: "text-red-400/80",
-  dayWeekendBg: "pointer-events-none absolute inset-0 rounded-full bg-red-400/10",
-
-  dayGhost: "text-(--fg)/25 cursor-default",
+  dayGhost: "cursor-default text-(--fg)/25",
 
   dayHasEvents:
-    "cursor-pointer ring-1 ring-blue-400/70 ring-offset-1 ring-offset-white text-(--fg)",
+    "cursor-pointer text-(--fg) ring-1 ring-(--calendar-border) ring-offset-1 ring-offset-(--calendar-bg) hover:bg-(--calendar-cell-hover)",
 
   dayHasOverdue:
-    "cursor-pointer ring-1 ring-red-400 ring-offset-1 ring-offset-white text-red-500",
+    "cursor-pointer text-red-500 ring-1 ring-red-400 ring-offset-1 ring-offset-(--calendar-bg) hover:bg-(--calendar-cell-hover)",
 
   dayText: "relative z-10",
 } as const;

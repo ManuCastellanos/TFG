@@ -18,19 +18,21 @@ import { QuickStatsRow } from "./components/widgets/QuickStatsRow";
 import { useDashboard } from "./hooks/useDashboard";
 
 import type { NavItemConfig } from "@/components/navItem/navItem.types";
-
-// ─── Nav config ───────────────────────────────────────────────────────────────
+import { Card } from "@/components/card/Card";
 
 const NAV_ITEMS: NavItemConfig[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-  { id: "profile",   label: "Profile",   icon: User,            path: "/profile"   },
-  { id: "schedule",  label: "Schedule",  icon: CalendarIcon,    path: "/schedule"  },
-  { id: "courses",   label: "Courses",   icon: BookOpen,        path: "/courses"   },
-  { id: "settings",  label: "Settings",  icon: Settings,        path: "/settings"  },
-  { id: "logout",    label: "Log out",   icon: LogOut,          path: "/logout"    },
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    path: "/dashboard",
+  },
+  { id: "profile", label: "Profile", icon: User, path: "/profile" },
+  { id: "schedule", label: "Schedule", icon: CalendarIcon, path: "/schedule" },
+  { id: "courses", label: "Courses", icon: BookOpen, path: "/courses" },
+  { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
+  { id: "logout", label: "Log out", icon: LogOut, path: "/logout" },
 ];
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ export const Dashboard = () => {
   } = useDashboard();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-(--bg)">
+    <div className="flex h-screen overflow-hidden bg-(--surface)">
       <Sidebar
         navItems={NAV_ITEMS}
         activePath={pathname}
@@ -54,22 +56,21 @@ export const Dashboard = () => {
       />
 
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-8">
+        <Card className="bg-(--panel) h-full flex-1">
         <Courses
           courses={courses}
-          onCourseClick={(id) => navigate({ to: "/courses/$id", params: { id } })}
+          onCourseClick={(id) =>
+            navigate({ to: "/courses/$id", params: { id } })
+          }
           onViewAll={() => navigate({ to: "/courses" })}
-        />
-        <ScheduleSection
-          items={scheduleItems}
-          onItemClick={(id) => navigate({ to: "/schedule/$id", params: { id } })}
-          onViewAll={() => navigate({ to: "/schedule" })}
-        />
+          />
+        </Card>
       </main>
 
-      <aside className="flex w-72 shrink-0 flex-col gap-4 overflow-y-auto border-l border-(--border) bg-(--bg) p-6">
+      <div className="flex w-85 shrink-0 flex-col gap-4 overflow-y-auto bg-(--panel) p-6">
         <TopBar
           user={{
-            name: user?.fullName ?? "",
+            name: user?.firstName ?? "",
             handle: user?.username ?? "",
             avatarUrl: user?.avatarUrl ?? null,
           }}
@@ -80,7 +81,16 @@ export const Dashboard = () => {
           onNext={goNextCalendar}
         />
         <QuickStatsRow stats={[]} />
-      </aside>
+        
+        <ScheduleSection
+          items={scheduleItems}
+          onItemClick={(id) =>
+            navigate({ to: "/schedule/$id", params: { id } })
+          }
+          onViewAll={() => navigate({ to: "/schedule" })}
+        />
+        
+      </div>
     </div>
   );
 };

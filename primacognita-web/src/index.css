@@ -2,65 +2,428 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* 1) Paletas + tokens (sin selectores) */
+
 @theme inline {
- 
-/* Fuente global */
- --font-sans: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  /* -------------------------
+     Typography
+     ------------------------- */
+  --font-sans: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* Brand - primary (#39D196) */
-  --pr-50: #ecfdf5;
-  --pr-100: #d2f9e4;
-  --pr-200: #a8f2ce;
-  --pr-300: #70e5b4;
-  --pr-400: #39d196;
-  --pr-500: #13b67c;
-  --pr-600: #079465;
-  --pr-700: #067653;
-  --pr-800: #075e43;
-  --pr-900: #074d38;
-  --pr-950: #032b21;
+  /* -------------------------
+     Neutral scale
+     ------------------------- */
+  --neutral-0: #ffffff;
+  --neutral-25: #fcfcfc;
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-150: #efefef;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
 
-  /* Brand - secondary (#DBB351) */
-  --scd-50: #faf7ec;
-  --scd-100: #f4eccd;
-  --scd-200: #ebd89d;
-  --scd-300: #dbb351;
-  --scd-400: #d4a23b;
-  --scd-500: #c58c2d;
-  --scd-600: #a96e25;
-  --scd-700: #884f20;
-  --scd-800: #714222;
-  --scd-900: #613822;
-  --scd-950: #381c10;
+  /* -------------------------
+     Tinted foundation (light)
+     La idea es que el layout respire un poco
+     sin volver al verde fuerte.
+     ------------------------- */
+  --tint-50: #f6fbf8;
+  --tint-100: #f1f8f4;
+  --tint-150: #edf6f1;
+  --tint-200: #e7f1eb;
 
-  /* Tokens de marca (semánticos) */
-  --color-pr: var(--pr-500);
-  --color-pr-hover: var(--pr-600);
-  --color-scd: var(--scd-300);
+  /* -------------------------
+     Semantic app tokens - light
+     ------------------------- */
+  --bg: var(--tint-100);
+  --panel: var(--tint-150);
+  --surface: var(--neutral-0);
+  --surface-muted: var(--neutral-50);
+  --surface-subtle: var(--tint-50);
 
-  /* Ring */
-  --color-ring: var(--pr-200);
-  --color-ring-strong: var(--pr-300);
+  --fg: var(--neutral-900);
+  --fg-muted: var(--neutral-600);
+  --fg-subtle: var(--neutral-500);
+  --fg-inverse: var(--neutral-0);
 
-  /* Neutros (light por defecto) */
-  --bg: var(--pr-50);
-  --surface: #ffffff;
-  --fg: #0f172a;
-  --muted: #64748b;
-  --muted-2: #94a3b8;
-  --border: #cbd5e1;
+  --border: #e4e7e4;
+  --border-strong: #d6dbd7;
+
+  --primary: var(--neutral-900);
+  --primary-hover: var(--neutral-700);
+  --primary-foreground: var(--neutral-0);
+
+  --secondary: var(--neutral-100);
+  --secondary-hover: var(--neutral-200);
+  --secondary-foreground: var(--neutral-900);
+
+  --ring: #cfd6d1;
+  --ring-strong: #b8c2bc;
+
+  --sidebar-bg: rgba(255, 255, 255, 0.88);
+  --sidebar-fg: var(--neutral-700);
+  --sidebar-border: rgba(228, 231, 228, 0.9);
+  --sidebar-active-bg: var(--neutral-900);
+  --sidebar-active-fg: var(--neutral-0);
+  --sidebar-hover-bg: var(--neutral-100);
+
+  --card-bg: var(--neutral-0);
+  --card-fg: var(--neutral-900);
+  --card-border: rgba(228, 231, 228, 0.95);
+
+  --input-bg: var(--neutral-0);
+  --input-fg: var(--neutral-900);
+  --input-border: #dfe4e0;
+  --input-placeholder: #9aa29d;
+
+  --calendar-bg: var(--neutral-0);
+  --calendar-border: rgba(228, 231, 228, 0.95);
+  --calendar-cell-hover: var(--tint-50);
+  --calendar-cell-selected: var(--neutral-900);
+  --calendar-cell-selected-fg: var(--neutral-0);
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-md: 0 8px 24px -12px rgb(0 0 0 / 0.10);
+  --shadow-lg: 0 20px 40px -20px rgb(0 0 0 / 0.14);
+
+  /* -------------------------
+     Rainbow palette
+     Para cursos, badges, progreso, etc.
+     Puedes usar luego bg-(--course-red), border-(--course-blue), etc.
+     ------------------------- */
+
+  /* Red */
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --red-800: #991b1b;
+  --red-900: #7f1d1d;
+
+  /* Orange */
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-800: #9a3412;
+  --orange-900: #7c2d12;
+
+  /* Yellow */
+  --yellow-50: #fefce8;
+  --yellow-100: #fef9c3;
+  --yellow-200: #fef08a;
+  --yellow-300: #fde047;
+  --yellow-400: #facc15;
+  --yellow-500: #eab308;
+  --yellow-600: #ca8a04;
+  --yellow-700: #a16207;
+  --yellow-800: #854d0e;
+  --yellow-900: #713f12;
+
+  /* Lime */
+  --lime-50: #f7fee7;
+  --lime-100: #ecfccb;
+  --lime-200: #d9f99d;
+  --lime-300: #bef264;
+  --lime-400: #a3e635;
+  --lime-500: #84cc16;
+  --lime-600: #65a30d;
+  --lime-700: #4d7c0f;
+  --lime-800: #3f6212;
+  --lime-900: #365314;
+
+  /* Green */
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-300: #86efac;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-800: #166534;
+  --green-900: #14532d;
+
+  /* Emerald */
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-200: #a7f3d0;
+  --emerald-300: #6ee7b7;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065f46;
+  --emerald-900: #064e3b;
+
+  /* Teal */
+  --teal-50: #f0fdfa;
+  --teal-100: #ccfbf1;
+  --teal-200: #99f6e4;
+  --teal-300: #5eead4;
+  --teal-400: #2dd4bf;
+  --teal-500: #14b8a6;
+  --teal-600: #0d9488;
+  --teal-700: #0f766e;
+  --teal-800: #115e59;
+  --teal-900: #134e4a;
+
+  /* Cyan */
+  --cyan-50: #ecfeff;
+  --cyan-100: #cffafe;
+  --cyan-200: #a5f3fc;
+  --cyan-300: #67e8f9;
+  --cyan-400: #22d3ee;
+  --cyan-500: #06b6d4;
+  --cyan-600: #0891b2;
+  --cyan-700: #0e7490;
+  --cyan-800: #155e75;
+  --cyan-900: #164e63;
+
+  /* Sky */
+  --sky-50: #f0f9ff;
+  --sky-100: #e0f2fe;
+  --sky-200: #bae6fd;
+  --sky-300: #7dd3fc;
+  --sky-400: #38bdf8;
+  --sky-500: #0ea5e9;
+  --sky-600: #0284c7;
+  --sky-700: #0369a1;
+  --sky-800: #075985;
+  --sky-900: #0c4a6e;
+
+  /* Blue */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
+
+  /* Indigo */
+  --indigo-50: #eef2ff;
+  --indigo-100: #e0e7ff;
+  --indigo-200: #c7d2fe;
+  --indigo-300: #a5b4fc;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --indigo-800: #3730a3;
+  --indigo-900: #312e81;
+
+  /* Violet */
+  --violet-50: #f5f3ff;
+  --violet-100: #ede9fe;
+  --violet-200: #ddd6fe;
+  --violet-300: #c4b5fd;
+  --violet-400: #a78bfa;
+  --violet-500: #8b5cf6;
+  --violet-600: #7c3aed;
+  --violet-700: #6d28d9;
+  --violet-800: #5b21b6;
+  --violet-900: #4c1d95;
+
+  /* Purple */
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-200: #e9d5ff;
+  --purple-300: #d8b4fe;
+  --purple-400: #c084fc;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --purple-700: #7e22ce;
+  --purple-800: #6b21a8;
+  --purple-900: #581c87;
+
+  /* Fuchsia */
+  --fuchsia-50: #fdf4ff;
+  --fuchsia-100: #fae8ff;
+  --fuchsia-200: #f5d0fe;
+  --fuchsia-300: #f0abfc;
+  --fuchsia-400: #e879f9;
+  --fuchsia-500: #d946ef;
+  --fuchsia-600: #c026d3;
+  --fuchsia-700: #a21caf;
+  --fuchsia-800: #86198f;
+  --fuchsia-900: #701a75;
+
+  /* Pink */
+  --pink-50: #fdf2f8;
+  --pink-100: #fce7f3;
+  --pink-200: #fbcfe8;
+  --pink-300: #f9a8d4;
+  --pink-400: #f472b6;
+  --pink-500: #ec4899;
+  --pink-600: #db2777;
+  --pink-700: #be185d;
+  --pink-800: #9d174d;
+  --pink-900: #831843;
+
+  /* Rose */
+  --rose-50: #fff1f2;
+  --rose-100: #ffe4e6;
+  --rose-200: #fecdd3;
+  --rose-300: #fda4af;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --rose-800: #9f1239;
+  --rose-900: #881337;
+
+  /* -------------------------
+     Semantic aliases for quick course usage
+     ------------------------- */
+     /* Course gradients */
+     --course-red-from: var(--red-400);
+     --course-red-to: var(--red-500);
+   
+     --course-orange-from: var(--orange-400);
+     --course-orange-to: var(--orange-500);
+   
+     --course-yellow-from: var(--yellow-400);
+     --course-yellow-to: var(--yellow-500);
+   
+     --course-lime-from: var(--lime-400);
+     --course-lime-to: var(--lime-500);
+   
+     --course-green-from: var(--green-400);
+     --course-green-to: var(--green-500);
+   
+     --course-emerald-from: var(--emerald-400);
+     --course-emerald-to: var(--emerald-500);
+   
+     --course-teal-from: var(--teal-400);
+     --course-teal-to: var(--teal-500);
+   
+     --course-cyan-from: var(--cyan-400);
+     --course-cyan-to: var(--cyan-500);
+   
+     --course-sky-from: var(--sky-400);
+     --course-sky-to: var(--sky-500);
+   
+     --course-blue-from: var(--blue-400);
+     --course-blue-to: var(--blue-500);
+   
+     --course-indigo-from: var(--indigo-400);
+     --course-indigo-to: var(--indigo-500);
+   
+     --course-violet-from: var(--violet-400);
+     --course-violet-to: var(--violet-500);
+   
+     --course-purple-from: var(--purple-400);
+     --course-purple-to: var(--purple-500);
+   
+     --course-fuchsia-from: var(--fuchsia-400);
+     --course-fuchsia-to: var(--fuchsia-500);
+   
+     --course-pink-from: var(--pink-400);
+     --course-pink-to: var(--pink-500);
+   
+     --course-rose-from: var(--rose-400);
+     --course-rose-to: var(--rose-500);
 }
 
-/* 2) Dark mode: solo overrides */
+/* -------------------------
+   Dark mode overrides
+   ------------------------- */
 .dark {
-  --bg: #0b1220;
-  --surface: #0f172a;
-  --fg: #e5e7eb;
-  --muted: #94a3b8;
-  --muted-2: #64748b;
-  --border: #1e293b;
+  --bg: #0c1110;
+  --panel: #101715;
+  --surface: #141b19;
+  --surface-muted: #18211e;
+  --surface-subtle: #1b2522;
 
-  --color-ring: var(--pr-700);
-  --color-ring-strong: var(--pr-600);
+  --fg: #f5f7f6;
+  --fg-muted: #a8b0ab;
+  --fg-subtle: #7e8782;
+  --fg-inverse: #0c1110;
+
+  --border: #24302b;
+  --border-strong: #31403a;
+
+  --primary: #f5f7f6;
+  --primary-hover: #dde3e0;
+  --primary-foreground: #0c1110;
+
+  --secondary: #18211e;
+  --secondary-hover: #1f2a26;
+  --secondary-foreground: #f5f7f6;
+
+  --ring: #31403a;
+  --ring-strong: #41524b;
+
+  --sidebar-bg: rgba(20, 27, 25, 0.92);
+  --sidebar-fg: #c5cbc8;
+  --sidebar-border: rgba(36, 48, 43, 0.95);
+  --sidebar-active-bg: #f5f7f6;
+  --sidebar-active-fg: #0c1110;
+  --sidebar-hover-bg: #1b2522;
+
+  --card-bg: #141b19;
+  --card-fg: #f5f7f6;
+  --card-border: rgba(36, 48, 43, 0.95);
+
+  --input-bg: #141b19;
+  --input-fg: #f5f7f6;
+  --input-border: #2a3732;
+  --input-placeholder: #7e8782;
+
+  --calendar-bg: #141b19;
+  --calendar-border: rgba(36, 48, 43, 0.95);
+  --calendar-cell-hover: #1b2522;
+  --calendar-cell-selected: #f5f7f6;
+  --calendar-cell-selected-fg: #0c1110;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.25);
+  --shadow-md: 0 10px 28px -12px rgb(0 0 0 / 0.32);
+  --shadow-lg: 0 24px 48px -24px rgb(0 0 0 / 0.40);
+}
+
+/* -------------------------
+   Base styles
+   ------------------------- */
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Opcional: selección de texto */
+::selection {
+  background: color-mix(in srgb, var(--course-emerald) 24%, white);
+  color: var(--fg);
 }

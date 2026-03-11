@@ -9,9 +9,9 @@ export const NavItem = ({ item, isActive = false, onClick }: NavItemProps) => {
       type="button"
       onClick={() => onClick?.(item.path)}
       className={cn(
-        "flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
+        "flex w-full items-center gap-3 rounded-xl px-4 py-3 text-md font-medium transition-colors",
         isActive
-          ? "bg-(--fg) text-(--bg)"
+          ? "bg-(--primary) text-(--bg)"
           : "text-(--fg-muted) hover:bg-(--surface) hover:text-(--fg)",
       )}
     >

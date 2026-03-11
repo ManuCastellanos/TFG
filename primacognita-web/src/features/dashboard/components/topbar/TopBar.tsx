@@ -8,16 +8,22 @@ export const TopBar = ({
   onMessageClick,
   onNotificationClick,
 }: TopBarProps) => (
-  <div className="flex items-center justify-end gap-2 py-2">
-    <IconButton icon={Mail} label="Mensajes" onClick={onMessageClick} />
-    <IconButton icon={Bell} label="Notificaciones" onClick={onNotificationClick} />
+  <div className="flex items-center justify-between gap-2 py-2">
+    <div className="flex items-center gap-2">
+      <IconButton icon={Mail} label="Mensajes" onClick={onMessageClick} />
+      <IconButton
+        icon={Bell}
+        label="Notificaciones"
+        onClick={onNotificationClick}
+      />
+    </div>
 
-    <div className="ml-2 flex items-center gap-3">
-      <div className="flex flex-col items-end leading-tight">
-        <span className="text-sm font-semibold text-(--fg)">{user.name}</span>
-        <span className="text-xs text-(--fg-muted)">@{user.handle}</span>
+    <div className="ml-2 flex items-center gap-3.5">
+      <div className=" justify-center flex flex-col items-end leading-tight">
+        <span className="text-md font-bold text-(--fg)">{user.name}</span>
+        <span className="text-sm  text-(--fg)">@{user.handle}</span>
       </div>
-      <Avatar src={user.avatarUrl} alt={user.name} size="md" />
+      <Avatar src={user.avatarUrl} alt={user.name} size="lg" />
     </div>
   </div>
 );

@@ -17,7 +17,7 @@ export const ScheduleSection = ({
 }: ScheduleSectionProps) => (
   <section className="flex flex-col gap-4">
     <SectionHeader
-      title="Today's Schedule"
+      title="Horario"
       action={
         <IconButton
           icon={ChevronRight}

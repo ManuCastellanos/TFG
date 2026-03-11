@@ -10,9 +10,9 @@ export type AvatarProps = {
 };
 
 const sizeClasses: Record<AvatarSize, string> = {
-  sm: "size-7 text-[10px]",
-  md: "size-9 text-xs",
-  lg: "size-12 text-sm",
+  sm: "size-9 text-[10px]",
+  md: "size-12 text-xs",
+  lg: "size-15 text-sm",
 };
 
 const getInitials = (name: string): string =>

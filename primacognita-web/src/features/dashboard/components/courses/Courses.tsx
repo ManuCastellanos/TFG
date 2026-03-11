@@ -4,12 +4,11 @@ import { IconButton } from "@/components/button/IconButton";
 import { CourseCard } from "./CourseCard";
 import type { Course } from "@/modules/course/domain/Course";
 
-const ACCENT_COLORS = [
-  "bg-orange-400",
-  "bg-pink-400",
-  "bg-blue-500",
-  "bg-violet-400",
-  "bg-teal-400",
+const COURSE_GRADIENTS = [
+  "from-[var(--course-blue-from)] to-[var(--course-cyan-to)]",
+  "from-[var(--course-violet-from)] to-[var(--course-purple-to)]",
+  "from-[var(--course-emerald-from)] to-[var(--course-teal-to)]",
+  "from-[var(--course-orange-from)] to-[var(--course-red-to)]",
 ];
 
 export type CoursesProps = {
@@ -25,7 +24,7 @@ export const Courses = ({
 }: CoursesProps) => (
   <section className="flex flex-col gap-4">
     <SectionHeader
-      title="Your Courses"
+      title="Mis Cursos"
       action={
         <IconButton
           icon={ChevronRight}
@@ -40,7 +39,7 @@ export const Courses = ({
         <CourseCard
           key={course.id}
           course={course}
-          accentColor={ACCENT_COLORS[i % ACCENT_COLORS.length]}
+          gradient={COURSE_GRADIENTS[i % COURSE_GRADIENTS.length]}
           onClick={() => onCourseClick?.(course.id)}
         />
       ))}

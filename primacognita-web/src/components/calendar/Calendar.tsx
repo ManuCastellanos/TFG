@@ -34,8 +34,6 @@ export default function Calendar({
           <ChevronLeft className={c.chevron} />
         </Button>
 
-        <span className={c.headerDivider} aria-hidden />
-
         <div className={c.headerTitle}>
           <span
             className={cn(
@@ -46,8 +44,6 @@ export default function Calendar({
             {viewModel.title}
           </span>
         </div>
-
-        <span className={c.headerDivider} aria-hidden />
 
         <Button
           variant="ghost"
@@ -84,15 +80,12 @@ export default function Calendar({
             );
           }
 
-          const isWeekend = cell.isWeekend && !cell.isToday;
-
           return (
             <div key={cell.key} className={c.cell}>
               <div
                 className={cn(
                   c.dayBase,
                   cell.isToday ? c.dayToday : c.dayNormal,
-                  isWeekend && c.dayWeekend,
                   cell.hasOverdue && c.dayHasOverdue,
                   !cell.hasOverdue && cell.hasEvents && c.dayHasEvents,
                 )}
@@ -104,7 +97,6 @@ export default function Calendar({
                 role={cell.hasEvents ? "button" : undefined}
                 tabIndex={cell.hasEvents ? 0 : -1}
               >
-                {isWeekend && <span className={c.dayWeekendBg} aria-hidden />}
                 <span className={c.dayText}>{cell.dayOfMonth}</span>
               </div>
             </div>

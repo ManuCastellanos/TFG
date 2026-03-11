@@ -8,11 +8,9 @@ export const Card = ({ className, ...props }: CardProps) => {
     <div
       className={cn(
         `
-        w-full max-w-md
+        w-full
         rounded-2xl
         bg-(--surface)
-        border border-(--border)
-        shadow-2xl
         p-8
         transition-colors
         `,
