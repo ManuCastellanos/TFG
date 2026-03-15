@@ -1,9 +1,3 @@
-import { useUserCourses } from "./hooks/useUserCourses";
-import { useMonthCursor } from "./hooks/useMonthCursor";
-import { useDashboardCalendar } from "./hooks/useDashboardCalendar";
-import { CalendarWidget } from "@/features/dashboard/CalendarWidget";
-import { useSession } from "@/shared/hooks/useSession";
-=======
 import {
   LayoutDashboard,
   User,
@@ -12,7 +6,6 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
->>>>>>> 812aba5703b666aff1f59e0345ad3405b36ad08f
 
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Sidebar } from "./components/sidebar/Sidebar";
@@ -22,12 +15,7 @@ import { ScheduleSection } from "./components/schedule/ScheduleSection";
 import { CalendarWidget } from "./components/widgets/CalendarWidget";
 import { QuickStatsRow } from "./components/widgets/QuickStatsRow";
 
-<<<<<<< HEAD
-export default function Dashboard() {
-  const { userId, token } = useSession();
-=======
 import { useDashboard } from "./hooks/useDashboard";
->>>>>>> 812aba5703b666aff1f59e0345ad3405b36ad08f
 
 import type { NavItemConfig } from "@/components/navItem/navItem.types";
 import { Card } from "@/components/card/Card";

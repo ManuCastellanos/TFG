@@ -5,10 +5,16 @@ import { CourseCard } from "./CourseCard";
 import type { Course } from "@/modules/course/domain/Course";
 
 const COURSE_GRADIENTS = [
-  "from-[var(--course-blue-from)] to-[var(--course-cyan-to)]",
-  "from-[var(--course-violet-from)] to-[var(--course-purple-to)]",
-  "from-[var(--course-emerald-from)] to-[var(--course-teal-to)]",
-  "from-[var(--course-orange-from)] to-[var(--course-red-to)]",
+  "from-[var(--course-green-from)] to-[var(--course-emerald-to)]",
+  "from-[var(--course-rose-from)] to-[var(--course-red-to)]",
+  "from-[var(--course-blue-from)] to-[var(--course-indigo-to)]",
+  "from-[var(--course-teal-from)] to-[var(--course-teal-to)]",
+  "from-[var(--course-lime-from)] to-[var(--course-lime-to)]",
+  "from-[var(--course-yellow-from)] to-[var(--course-yellow-to)]",
+  "from-[var(--course-purple-from)] to-[var(--course-violet-to)]",
+  "from-[var(--course-rose-from)] to-[var(--course-pink-to)]",
+  "from-[var(--course-cyan-from)] to-[var(--course-sky-to)]",
+  "from-[var(--course-orange-from)] to-[var(--course-orange-to)]",
 ];
 
 export type CoursesProps = {

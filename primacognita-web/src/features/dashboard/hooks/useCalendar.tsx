@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  buildCalendarMiniViewModel,
-  buildCalendarTwoWeeksViewModel,
-} from "@/components/calendar/calendar.utils";
+import { buildCalendarMiniViewModel } from "@/components/calendar/calendar.utils";
 import type { Calendar } from "@/modules/calendar/domain/Calendar";
 import { useDependencies } from "@/shared/providers/DependenciesProvider";
 import type { CalendarViewModel } from "@/components/calendar/calendar.types";
 import type { MonthCursor } from "./useMonthCursor";
-
-type CalendarMode = "full" | "twoWeeks";
 
 type UseCalendarResult = {
   viewModel: CalendarViewModel | null;
@@ -20,7 +15,6 @@ type UseCalendarResult = {
 export function useCalendar(
   token: string | null,
   cursor: MonthCursor,
-  mode: CalendarMode = "full",
 ): UseCalendarResult {
   const { calendarRepository } = useDependencies();
   const [calendar, setCalendar] = useState<Calendar | null>(null);
@@ -33,10 +27,8 @@ export function useCalendar(
       setError(null);
       return;
     }
-
     setError(null);
     setIsLoading(true);
-
     try {
       const result = await calendarRepository.getCalendar(token, cursor);
       setCalendar(result);
@@ -54,24 +46,8 @@ export function useCalendar(
 
   const viewModel = useMemo(() => {
     if (!calendar) return null;
-
-    if (mode === "twoWeeks") {
-      return buildCalendarTwoWeeksViewModel(
-        calendar,
-        cursor.year,
-        cursor.month,
-        cursor.weekOffset,
-        isLoading,
-      );
-    }
-
-    return buildCalendarMiniViewModel(
-      calendar,
-      cursor.year,
-      cursor.month,
-      isLoading,
-    );
-  }, [calendar, cursor.year, cursor.month, cursor.weekOffset, isLoading, mode]);
+    return buildCalendarMiniViewModel(calendar, cursor.year, cursor.month, isLoading);
+  }, [calendar, cursor.year, cursor.month, isLoading]);
 
   return { viewModel, error, isLoading, reload };
 }

@@ -3,9 +3,9 @@ import { useMonthCursor } from "./useMonthCursor";
 import { useCalendar } from "./useCalendar";
 import { useUserCourses } from "./useUserCourses";
 import { useSession } from "@/shared/hooks/useSession";
+import { useCurrentUser } from "./useUser";
 import type { CalendarEventVm } from "@/components/calendar/calendar.types";
 import type { ScheduleEntry } from "../components/schedule/schedule.types";
-import { useCurrentUser } from "./useUser";
 
 const SCHEDULE_COLORS = [
   "bg-orange-500",
@@ -43,26 +43,19 @@ export function useDashboard(): UseDashboardResult {
   const { userId, token } = useSession();
   const { user } = useCurrentUser();
 
-  const {
-    courses,
-    loading: coursesLoading,
-    error: coursesError,
-  } = useUserCourses(userId, token);
+  const { courses, loading: coursesLoading, error: coursesError } =
+    useUserCourses(userId, token);
 
-  const { cursor, goPrevTwoWeeks, goNextTwoWeeks } = useMonthCursor();
-
+  const { cursor, goPrevMonth, goNextMonth } = useMonthCursor();
   const { viewModel: calendarViewModel, isLoading: calendarLoading } =
-    useCalendar(token, cursor, "full");
+    useCalendar(token, cursor);
 
-  const scheduleItems: ScheduleEntry[] = useMemo(() => {
+  const scheduleItems = useMemo<ScheduleEntry[]>(() => {
     if (!calendarViewModel) return [];
-
     const todayCell = calendarViewModel.cells.find(
       (c) => c.kind === "day" && c.isToday,
     );
-
     if (!todayCell || todayCell.kind !== "day") return [];
-
     return todayCell.events.map(toScheduleEntry);
   }, [calendarViewModel]);
 
@@ -74,7 +67,7 @@ export function useDashboard(): UseDashboardResult {
     scheduleItems,
     calendarViewModel,
     calendarLoading,
-    goPrevCalendar: goPrevTwoWeeks,
-    goNextCalendar: goNextTwoWeeks,
+    goPrevCalendar: goPrevMonth,
+    goNextCalendar: goNextMonth,
   };
 }

@@ -36,9 +36,9 @@ export const CourseCard = ({
       className={cn(
         "group w-full overflow-hidden rounded-[1.6rem] p-0 text-left",
         "transition-all duration-200",
-        "hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]",
+        "hover:-translate-y-0.5 hover:shadow-(--shadow-md)",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-strong)",
-        "bg-gradient-to-br",
+        "bg-linear-to-br",
         gradient,
       )}
     >
@@ -55,7 +55,7 @@ export const CourseCard = ({
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-white/95">
-              <span className="text-3xl font-extrabold tracking-tight text-black/25">
+              <span className="text-4xl font-extrabold tracking-tight text-black/25">
                 {course.shortname.slice(0, 2).toUpperCase()}
               </span>
             </div>
@@ -63,7 +63,7 @@ export const CourseCard = ({
         </div>
 
         <div className="flex flex-col gap-2 px-1 pb-1">
-          <p className="line-clamp-2 text-[0.98rem] font-extrabold leading-tight text-white">
+          <p className="line-clamp-2 text-shadow-md font-extrabold leading-tight text-white">
             {course.fullname}
           </p>
 

@@ -22,23 +22,19 @@ const buildCells = (
 ): CalendarCell[] => {
   const cells: CalendarCell[] = [];
 
-  const prevMonth = month === 1 ? 12 : month - 1;
-  const prevYear = month === 1 ? year - 1 : year;
-  const prevDaysCount = daysInMonth(prevYear, prevMonth);
+  if (!calendar?.weeks?.length) return cells;
 
-  let postDayCounter = 1;
+  const prevMonth     = month === 1 ? 12 : month - 1;
+  const prevYear      = month === 1 ? year - 1 : year;
+  const prevDaysCount = daysInMonth(prevYear, prevMonth);
+  let postDayCounter  = 1;
 
   calendar.weeks.forEach((week, weekIndex) => {
     const prePaddingTotal = week.prepadding.length;
 
     week.prepadding.forEach((_, i) => {
       const dayOfMonth = prevDaysCount - (prePaddingTotal - 1 - i);
-
-      cells.push({
-        kind: "ghost",
-        key: `pre-${weekIndex}-${i}`,
-        dayOfMonth,
-      });
+      cells.push({ kind: "ghost", key: `pre-${weekIndex}-${i}`, dayOfMonth });
     });
 
     week.days.forEach((day) => {
@@ -76,6 +72,15 @@ const buildCells = (
     });
   });
 
+
+  const remainder = cells.length % 7;
+  if (remainder !== 0) {
+    const toFill = 7 - remainder;
+    for (let i = 0; i < toFill; i++) {
+      cells.push({ kind: "ghost", key: `trail-${i}`, dayOfMonth: postDayCounter++ });
+    }
+  }
+
   return cells;
 };
 
@@ -89,21 +94,3 @@ export const buildCalendarMiniViewModel = (
   cells: buildCells(calendar, year, month),
   isFetching,
 });
-
-export const buildCalendarTwoWeeksViewModel = (
-  calendar: Calendar,
-  year: number,
-  month: number,
-  weekOffset: number,
-  isFetching?: boolean,
-): CalendarViewModel => {
-  const allCells = buildCells(calendar, year, month);
-  const start = weekOffset * 7;
-  const cells = allCells.slice(start, start + 14);
-
-  return {
-    title: calendar.periodName ?? getMonthLabelEs(year, month),
-    cells,
-    isFetching,
-  };
-};

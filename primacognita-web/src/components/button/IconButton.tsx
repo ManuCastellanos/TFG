@@ -17,11 +17,11 @@ export const IconButton = ({
     type="button"
     aria-label={label}
     className={cn(
-      "flex size-10 items-center justify-center rounded-xl bg-(--surface) text-(--fg-muted) transition-colors hover:text-(--fg)",
+      "flex size-12 items-center justify-center rounded-xl bg-(--surface) text-(--fg-muted) transition-colors hover:text-(--fg)",
       className,
     )}
     {...props}
   >
-    <Icon className="size-4" />
+    <Icon className="size-5" />
   </button>
 );
