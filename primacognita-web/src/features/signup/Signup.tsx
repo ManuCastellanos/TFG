@@ -122,7 +122,7 @@ export default function Register() {
 
   return (
     <Page>
-      <Card>
+      <Card variant="auth">
         <Text className="text-2xl font-bold text-(--fg)">Crear cuenta</Text>
         <Text className="mt-1 text-sm text-(--muted)">
           Crea tu cuenta para acceder al campus virtual.

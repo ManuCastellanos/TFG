@@ -7,7 +7,6 @@ import { Button } from "../../components/button/Button";
 import { Card } from "../../components/card/Card";
 import { Page } from "../../components/page/Page";
 import { Text } from "../../components/text/Text";
-import { cn } from "../../shared/utils/cn";
 import { useLogin } from "./useLogin";
 
 export default function Login() {
@@ -19,9 +18,9 @@ export default function Login() {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-  
+
     const success = await login(username, password);
-  
+
     if (success) {
       navigate({ to: "/dashboard" });
     }
@@ -29,7 +28,7 @@ export default function Login() {
 
   return (
     <Page>
-      <Card>
+      <Card variant="auth">
         <Text className="text-2xl font-bold text-(--fg)">
           Acceder a Prima Cognita
         </Text>
@@ -59,12 +58,10 @@ export default function Login() {
           <div className="flex items-center justify-center">
             <Button
               type="button"
-              className="w-fit bg-transparent p-0 hover:bg-transparent"
+              variant="ghost"
               onClick={() => navigate({ to: "/forgot_password" })}
             >
-              <p className="w-full text-center text-sm text-(--pr-700) hover:underline">
-                ¿Olvidó su contraseña?
-              </p>
+              <span className="text-sm hover:underline">¿Olvidó su contraseña?</span>
             </Button>
           </div>
         </form>
@@ -81,12 +78,8 @@ export default function Login() {
 
           <Button
             type="button"
-            className={cn(
-              "mt-3 w-full rounded-xl border px-4 py-3 text-sm font-medium",
-              "border-[--border] bg-transparent text-(--fg)",
-              "hover:border-[--muted-2] hover:bg-[--surface]",
-              "focus:ring-2 focus:ring-[--color-ring]"
-            )}
+            variant="outline"
+            className="mt-3"
             onClick={() => navigate({ to: "/signup" })}
           >
             Crear nueva cuenta

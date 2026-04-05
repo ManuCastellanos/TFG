@@ -26,7 +26,7 @@ export default function ForgotPassword() {
 
   return (
     <Page>
-      <Card>
+      <Card variant="auth">
         {!submitted ? (
           <>
             <Text>
