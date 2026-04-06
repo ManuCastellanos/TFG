@@ -1,5 +1,3 @@
-import type { isTypedArray } from "util/types";
-
 export interface User {
   id: string;
   username: string;

@@ -3,11 +3,13 @@ import type { MoodleWsError } from "./moodle-errors";
 import type IMoodleClient from "./IMoodleClient";
 
 const isMoodleWsError = (value: unknown): value is MoodleWsError => {
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-
+  if (typeof value !== "object" || value === null) return false;
   return "error" in value;
+};
+
+const isMoodleWsException = (value: unknown): value is { exception: string; message: string; errorcode?: string } => {
+  if (typeof value !== "object" || value === null) return false;
+  return "exception" in value;
 };
 
 export default class MoodleClient implements IMoodleClient {
@@ -29,6 +31,11 @@ export default class MoodleClient implements IMoodleClient {
     if (isMoodleWsError(json)) {
       const code = json.errorcode ? ` (${json.errorcode})` : "";
       throw new Error(`${json.error}${code}`);
+    }
+
+    if (isMoodleWsException(json)) {
+      const code = json.errorcode ? ` (${json.errorcode})` : "";
+      throw new Error(`${json.message}${code}`);
     }
 
     return json as TResponse;

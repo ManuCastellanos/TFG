@@ -15,3 +15,8 @@ export type CreateCourseResponse = {
   id: number;
   shortname: string;
 };
+
+export type CreateCourseApiResponse = {
+  courses: CreateCourseResponse[];
+  warnings: unknown[];
+};

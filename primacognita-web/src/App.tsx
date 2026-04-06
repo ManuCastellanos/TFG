@@ -8,6 +8,8 @@ import Login from "./features/login/Login";
 import Dashboard from "./features/dashboard/Dashboard";
 import Signup from "./features/signup/Signup";
 import ForgotPassword from "./features/forgot-password/ForgotPassword";
+import Courses from "./features/courses/Courses";
+import CreateCourse from "./features/courses/CreateCourse";
 
 const rootRoute = new RootRoute();
 
@@ -35,7 +37,19 @@ const forgotPasswordRoute = new Route({
   component: ForgotPassword,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, signupRoute, forgotPasswordRoute]);
+const coursesRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/courses",
+  component: Courses,
+});
+
+const createCourseRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/courses/new",
+  component: CreateCourse,
+});
+
+const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, signupRoute, forgotPasswordRoute, coursesRoute, createCourseRoute]);
 
 const router = createRouter({ routeTree });
 
