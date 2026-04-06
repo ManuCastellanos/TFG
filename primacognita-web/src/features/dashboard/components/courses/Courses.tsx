@@ -28,7 +28,7 @@ export const Courses = ({
   onCourseClick,
   onViewAll,
 }: CoursesProps) => (
-  <section className="flex flex-col gap-4">
+  <section className="flex flex-col gap-6">
     <SectionHeader
       title="Mis Cursos"
       action={
@@ -36,6 +36,7 @@ export const Courses = ({
           icon={ChevronRight}
           label="Ver todos los cursos"
           onClick={onViewAll}
+          className="size-auto p-1.5 rounded-md"
         />
       }
     />

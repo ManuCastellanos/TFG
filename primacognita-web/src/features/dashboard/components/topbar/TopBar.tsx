@@ -10,11 +10,12 @@ export const TopBar = ({
 }: TopBarProps) => (
   <div className="flex items-center justify-between gap-2 py-2">
     <div className="flex items-center gap-2">
-      <IconButton icon={Mail} label="Mensajes" onClick={onMessageClick} />
+      <IconButton icon={Mail} label="Mensajes" onClick={onMessageClick} className="bg-white"/>
       <IconButton
         icon={Bell}
         label="Notificaciones"
         onClick={onNotificationClick}
+        className="bg-white"
       />
     </div>
 

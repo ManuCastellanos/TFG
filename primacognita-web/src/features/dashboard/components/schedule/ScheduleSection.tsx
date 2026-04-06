@@ -23,6 +23,7 @@ export const ScheduleSection = ({
           icon={ChevronRight}
           label="Ver agenda completa"
           onClick={onViewAll}
+          className="size-auto p-1.5 rounded-md"
         />
       }
     />
