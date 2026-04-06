@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useMonthCursor } from "./useMonthCursor";
 import { useCalendar } from "./useCalendar";
-import { useUserCourses } from "./useUserCourses";
+import { useUserCourses } from "../../courses/hooks/useUserCourses";
 import { useSession } from "@/shared/hooks/useSession";
 import { useCurrentUser } from "./useUser";
 import type { CalendarEventVm } from "@/components/calendar/calendar.types";

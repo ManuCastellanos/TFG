@@ -10,3 +10,8 @@ export type CourseResponse = {
   hidden?: number;
   completed?: number;
 };
+
+export type CreateCourseResponse = {
+  id: number;
+  shortname: string;
+};

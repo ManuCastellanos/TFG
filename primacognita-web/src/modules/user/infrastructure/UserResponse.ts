@@ -4,4 +4,5 @@ export type UserResponse = {
   firstname: string;
   fullname: string;
   userpictureurl: string;
+  functions: Array<{ name: string; version: string }>;
 };

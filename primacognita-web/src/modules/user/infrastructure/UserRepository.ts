@@ -17,6 +17,7 @@ export default class UserRepository implements IUserRepository {
       firstName: response.firstname,
       username: response.username,
       avatarUrl: response.userpictureurl ?? null,
+      isTeacher: response.functions.some((f) => f.name === "core_course_create_courses"),
     };
   }
 }

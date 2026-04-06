@@ -10,7 +10,7 @@ import {
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Sidebar } from "./components/sidebar/Sidebar";
 import { TopBar } from "./components/topbar/TopBar";
-import { Courses } from "./components/courses/Courses";
+import { CoursesList } from "../courses/CoursesList";
 import { ScheduleSection } from "./components/schedule/ScheduleSection";
 import { CalendarWidget } from "./components/widgets/CalendarWidget";
 import { QuickStatsRow } from "./components/widgets/QuickStatsRow";
@@ -57,7 +57,7 @@ export const Dashboard = () => {
 
       <main className="flex flex-1 flex-col gap-6 overflow-y-auto p-8">
         <Card className="bg-(--panel) h-full flex-1">
-        <Courses
+        <CoursesList
           courses={courses}
           onCourseClick={(id) =>
             navigate({ to: "/courses/$id", params: { id } })

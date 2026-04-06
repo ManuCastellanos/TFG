@@ -11,4 +11,8 @@ export interface Course {
   summary: string | null;
   progress: number | null;
   completed: boolean;
+  visible?: 0 | 1;
+  startdate?: number;
+  enddate?: number;
+  idnumber?: number;
 }

@@ -17,17 +17,17 @@ const COURSE_GRADIENTS = [
   "from-[var(--course-orange-from)] to-[var(--course-orange-to)]",
 ];
 
-export type CoursesProps = {
+export type CourseProps = {
   courses: Course[];
   onCourseClick?: (courseId: string) => void;
   onViewAll?: () => void;
 };
 
-export const Courses = ({
+export const CoursesList = ({
   courses,
   onCourseClick,
   onViewAll,
-}: CoursesProps) => (
+}: CourseProps) => (
   <section className="flex flex-col gap-6">
     <SectionHeader
       title="Mis Cursos"
