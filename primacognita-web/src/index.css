@@ -47,7 +47,7 @@
   --surface-subtle: var(--tint-50);
 
   --fg: var(--neutral-900);
-  --fg-muted: var(--neutral-600);
+  --fg-muted: var(--neutral-700);
   --fg-subtle: var(--neutral-500);
   --fg-inverse: var(--neutral-0);
 
@@ -68,7 +68,8 @@
   --sidebar-bg: rgba(255, 255, 255, 0.88);
   --sidebar-fg: var(--neutral-700);
   --sidebar-border: rgba(228, 231, 228, 0.9);
-  --sidebar-active-bg: var(--neutral-900);
+  --sidebar-active-bg: #274E38;
+  --sidebar-profile: #468B64;
   --sidebar-active-fg: var(--neutral-0);
   --sidebar-hover-bg: var(--neutral-100);
 

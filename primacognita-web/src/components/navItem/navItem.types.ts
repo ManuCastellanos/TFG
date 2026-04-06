@@ -10,5 +10,6 @@ export type NavItemConfig = {
 export type NavItemProps = {
   item: NavItemConfig;
   isActive?: boolean;
+  danger?: boolean;
   onClick?: (path: string) => void;
 };
