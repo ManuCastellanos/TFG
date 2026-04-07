@@ -9,12 +9,14 @@ export const Input = ({
   rightAdornment,
   placeholder,
   className,
+  required,
   ...rest
 }: InputProps) => {
   return (
     <div className="relative">
       <input
         {...rest}
+        required={required}
         placeholder=" "
         className={cn(
           `
@@ -30,14 +32,15 @@ export const Input = ({
           className
         )}
       />
-      
+
       <label
         className="
+          pointer-events-none
           absolute left-4 top-1/2 -translate-y-1/2 text-base transition-all duration-200
           text-gray-500
-      
+
           peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:text-(--color-pr)
-      
+
           peer-[:not(:placeholder-shown)]:top-2
           peer-[:not(:placeholder-shown)]:translate-y-0
           peer-[:not(:placeholder-shown)]:text-sm
@@ -45,6 +48,7 @@ export const Input = ({
         "
       >
         {placeholder}
+        {required && <span className="ml-0.5 text-red-500">*</span>}
       </label>
 
 

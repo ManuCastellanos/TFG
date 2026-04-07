@@ -27,11 +27,11 @@ const NAV_ITEMS: NavItemConfig[] = [
     icon: LayoutDashboard,
     path: "/dashboard",
   },
-  { id: "profile", label: "Profile", icon: User, path: "/profile" },
-  { id: "schedule", label: "Schedule", icon: CalendarIcon, path: "/schedule" },
-  { id: "courses", label: "Courses", icon: BookOpen, path: "/courses" },
-  { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
-  { id: "logout", label: "Log out", icon: LogOut, path: "/logout" },
+  { id: "profile", label: "Perfil", icon: User, path: "/profile" },
+  { id: "schedule", label: "Horario", icon: CalendarIcon, path: "/schedule" },
+  { id: "courses", label: "Cursos", icon: BookOpen, path: "/courses" },
+  { id: "settings", label: "Configuración", icon: Settings, path: "/settings" },
+  { id: "logout", label: "Cerrar sesión", icon: LogOut, path: "/logout" },
 ];
 
 export const Dashboard = () => {

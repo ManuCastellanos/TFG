@@ -21,25 +21,31 @@ export type CourseProps = {
   courses: Course[];
   onCourseClick?: (courseId: string) => void;
   onViewAll?: () => void;
+  showHeader?: boolean;
 };
 
 export const CoursesList = ({
   courses,
   onCourseClick,
   onViewAll,
+  showHeader = true,
 }: CourseProps) => (
   <section className="flex flex-col gap-6">
-    <SectionHeader
-      title="Mis Cursos"
-      action={
-        <IconButton
-          icon={ChevronRight}
-          label="Ver todos los cursos"
-          onClick={onViewAll}
-          className="size-auto p-1.5 rounded-md"
-        />
-      }
-    />
+    {showHeader && (
+      <SectionHeader
+        title="Mis Cursos"
+        action={
+          onViewAll ? (
+            <IconButton
+              icon={ChevronRight}
+              label="Ver todos los cursos"
+              onClick={onViewAll}
+              className="size-auto p-1.5 rounded-md"
+            />
+          ) : undefined
+        }
+      />
+    )}
 
     <div className="grid grid-cols-3 gap-4">
       {courses.map((course, i) => (

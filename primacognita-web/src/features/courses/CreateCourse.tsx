@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useId } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Page } from "@/components/page/Page";
 import { Card } from "@/components/card/Card";
@@ -32,6 +32,7 @@ export default function CreateCourse() {
   const [formError, setFormError] = useState<string | null>(null);
 
   const categoryRef = useRef<HTMLDivElement>(null);
+  const fileInputId = useId();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -119,6 +120,7 @@ export default function CreateCourse() {
               }}
               onFocus={() => setCategoryDropdownOpen(true)}
               placeholder="Categoría"
+              required
             />
             {categoryDropdownOpen && (
               <div className="absolute left-0 top-full z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-(--border) bg-(--surface) shadow-(--shadow-md)">
@@ -188,15 +190,26 @@ export default function CreateCourse() {
             placeholder="Descripción"
           />
 
-          {/* Image upload */}
-          <div className="space-y-1">
-            <Text className="text-sm text-(--muted)">Imagen del curso (opcional)</Text>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-              className="w-full text-sm text-(--fg)"
-            />
+          <div className="space-y-2">
+            <Text className="text-sm font-semibold">Imagen del curso (opcional)</Text>
+            <div className="flex items-center gap-3">
+              <input
+                id={fileInputId}
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                className="hidden"
+              />
+              <label
+                htmlFor={fileInputId}
+                className="cursor-pointer rounded-xl border border-(--border) bg-(--surface) px-4 py-2 text-sm text-(--fg) transition-colors hover:bg-(--surface-muted)"
+              >
+                Seleccionar imagen
+              </label>
+              <Text className="text-sm text-(--muted) truncate">
+                {imageFile ? imageFile.name : "Ningún archivo seleccionado"}
+              </Text>
+            </div>
           </div>
 
           <div className="flex gap-3 pt-2">
