@@ -13,7 +13,7 @@ export const Schedule = ({ item, onClick }: ScheduleProps) => (
     onClick={onClick}
     className={cn(
       "flex w-full items-center gap-4 px-4 py-3 text-left",
-      "transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-(--color-pr)",
+      "shadow-md transition hover:shadow-lg focus-visible:outline-2 focus-visible:outline-(--color-pr)",
     )}
   >
     <div

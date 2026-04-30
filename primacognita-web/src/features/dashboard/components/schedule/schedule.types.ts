@@ -8,4 +8,6 @@ export type ScheduleEntry = {
 
   time: string;
   subtitle: string;
+
+  viewUrl: string | null;
 };

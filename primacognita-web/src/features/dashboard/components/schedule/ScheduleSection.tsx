@@ -1,4 +1,3 @@
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { Schedule } from "./Schedule";
 import type { ScheduleEntry } from "./schedule.types";
 
@@ -12,19 +11,13 @@ export const ScheduleSection = ({
   items,
   onItemClick
 }: ScheduleSectionProps) => (
-  <section className="flex flex-col gap-4">
-    <SectionHeader
-      title="Sigue por aquí"
-    />
-
-    <div className="flex flex-col gap-2">
-      {items.map((item) => (
-        <Schedule
-          key={item.id}
-          item={item}
-          onClick={() => onItemClick?.(item.id)}
-        />
-      ))}
-    </div>
-  </section>
+  <div className="flex flex-col gap-2">
+    {items.map((item) => (
+      <Schedule
+        key={item.id}
+        item={item}
+        onClick={() => onItemClick?.(item.id)}
+      />
+    ))}
+  </div>
 );

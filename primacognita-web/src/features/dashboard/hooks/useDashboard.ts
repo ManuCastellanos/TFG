@@ -2,10 +2,12 @@ import { useMemo } from "react";
 import { useMonthCursor } from "./useMonthCursor";
 import { useCalendar } from "./useCalendar";
 import { useUserCourses } from "../../courses/hooks/useUserCourses";
+import { useRecentlyAccessedItems } from "./useRecentlyAccessedItems";
 import { useSession } from "@/shared/hooks/useSession";
 import { useCurrentUser } from "./useUser";
 import type { CalendarEventVm } from "@/components/calendar/calendar.types";
 import type { ScheduleEntry } from "../components/schedule/schedule.types";
+import type { RecentItem } from "@/modules/recentlyAccessed/domain/RecentItem";
 
 const SCHEDULE_COLORS = [
   "bg-orange-500",
@@ -15,16 +17,26 @@ const SCHEDULE_COLORS = [
   "bg-teal-500",
 ] as const;
 
-const toScheduleEntry = (event: CalendarEventVm, i: number): ScheduleEntry => ({
-  id: event.id,
-  code: (event.courseName ?? event.name).slice(0, 2).toUpperCase(),
-  accentColor: SCHEDULE_COLORS[i % SCHEDULE_COLORS.length],
-  title: event.name,
-  time: new Date(event.timestart * 1000).toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
+const MOD_COLORS: Record<string, string> = {
+  resource: "bg-blue-500",
+  quiz: "bg-orange-500",
+  assign: "bg-violet-500",
+  forum: "bg-teal-500",
+  page: "bg-amber-500",
+  url: "bg-green-500",
+};
+
+const toRecentEntry = (item: RecentItem, i: number): ScheduleEntry => ({
+  id: item.id,
+  code: item.modName.slice(0, 2).toUpperCase(),
+  accentColor: MOD_COLORS[item.modName] ?? SCHEDULE_COLORS[i % SCHEDULE_COLORS.length],
+  title: item.name,
+  time: new Date(item.timeAccess * 1000).toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "short",
   }),
-  subtitle: event.courseName ?? "",
+  subtitle: item.courseName,
+  viewUrl: item.viewUrl || null,
 });
 
 export type UseDashboardResult = {
@@ -50,14 +62,12 @@ export function useDashboard(): UseDashboardResult {
   const { viewModel: calendarViewModel, isLoading: calendarLoading } =
     useCalendar(token, cursor);
 
-  const scheduleItems = useMemo<ScheduleEntry[]>(() => {
-    if (!calendarViewModel) return [];
-    const todayCell = calendarViewModel.cells.find(
-      (c) => c.kind === "day" && c.isToday,
-    );
-    if (!todayCell || todayCell.kind !== "day") return [];
-    return todayCell.events.map(toScheduleEntry);
-  }, [calendarViewModel]);
+  const { items: recentItems } = useRecentlyAccessedItems(token);
+
+  const scheduleItems = useMemo<ScheduleEntry[]>(
+    () => recentItems.map(toRecentEntry),
+    [recentItems],
+  );
 
   return {
     user,

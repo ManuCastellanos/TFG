@@ -12,6 +12,7 @@ import { useDashboard } from './hooks/useDashboard';
 
 import type { NavItemConfig } from '@/components/navItem/navItem.types';
 import { Card } from '@/components/card/Card';
+import { SectionHeader } from '@/components/sectionHeader/SectionHeader';
 
 const NAV_ITEMS: NavItemConfig[] = [
   {
@@ -58,11 +59,18 @@ export const Dashboard = () => {
         <CalendarWidget viewModel={calendarViewModel} onPrev={goPrevCalendar} onNext={goNextCalendar} />
         <QuickStatsRow stats={[]} />
 
-        <ScheduleSection
-          items={scheduleItems}
-          onItemClick={(id) => navigate({ to: '/schedule/$id', params: { id } })}
-          onViewAll={() => navigate({ to: '/schedule' })}
-        />
+        <section className="flex flex-col gap-3">
+          <SectionHeader title="Sigue por aquí" />
+          <Card className="p-4">
+            <ScheduleSection
+              items={scheduleItems}
+              onItemClick={(id) => {
+                const entry = scheduleItems.find((i) => i.id === id);
+                if (entry?.viewUrl) window.open(entry.viewUrl, "_blank");
+              }}
+            />
+          </Card>
+        </section>
       </div>
     </div>
   );
