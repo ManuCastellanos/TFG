@@ -1,6 +1,4 @@
-import { ChevronRight } from "lucide-react";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
-import { IconButton } from "@/components/button/IconButton";
 import { Schedule } from "./Schedule";
 import type { ScheduleEntry } from "./schedule.types";
 
@@ -12,20 +10,11 @@ export type ScheduleSectionProps = {
 
 export const ScheduleSection = ({
   items,
-  onItemClick,
-  onViewAll,
+  onItemClick
 }: ScheduleSectionProps) => (
   <section className="flex flex-col gap-4">
     <SectionHeader
-      title="Horario"
-      action={
-        <IconButton
-          icon={ChevronRight}
-          label="Ver agenda completa"
-          onClick={onViewAll}
-          className="size-auto p-1.5 rounded-md"
-        />
-      }
+      title="Sigue por aquí"
     />
 
     <div className="flex flex-col gap-2">

@@ -1,5 +1,6 @@
 import type { Course, CourseId } from "./Course";
 import type { CourseCategory, CourseCategoryId } from "./CourseCategory";
+import type { CourseSection } from "./CourseSection";
 
 export default interface ICourseRepository {
   getUserCourses(userId: string, token: string): Promise<Course[]>;
@@ -9,4 +10,5 @@ export default interface ICourseRepository {
   updateCourse(token: string, input: Course): Promise<void>;
   uploadCourseImage(token: string, file: File, userId: string): Promise<number>;
   enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void>;
+  getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]>;
 }
