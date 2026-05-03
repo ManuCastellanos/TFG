@@ -4,5 +4,11 @@ export interface User {
   firstName: string;
   fullName: string;
   avatarUrl: string | null;
-  isTeacher: boolean;
+  roleId: number | null;
+  roleName: string | null;
 }
+
+const TEACHER_SHORTNAMES = new Set(['editingteacher', 'teacher']);
+
+export const isTeacherRole = (roleName: string | null | undefined): boolean =>
+  TEACHER_SHORTNAMES.has(roleName ?? '');

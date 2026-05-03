@@ -1,0 +1,8 @@
+export interface Participant {
+  id: string;
+  fullName: string;
+  avatarUrl: string | null;
+  roleId: number | null;
+  roleName: string | null;
+  roleDisplayName: string | null;
+}

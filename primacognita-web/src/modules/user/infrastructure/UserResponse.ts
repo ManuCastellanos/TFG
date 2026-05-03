@@ -20,5 +20,7 @@ export type MoodleRole = {
 
 export type EnrolledUsersResponse = Array<{
   id: number;
+  fullname?: string;
+  profileimageurl?: string;
   roles: MoodleRole[];
 }>;

@@ -6,6 +6,8 @@ import type { CourseCategory, CourseCategoryId } from '@/modules/course/domain/C
 import type { CategoryResponse } from '@/modules/course/infrastructure/CategoryResponse';
 import type { CourseSection } from '@/modules/course/domain/CourseSection';
 import type { CourseSectionResponse } from './CourseContentsResponse';
+import type { Participant } from '@/modules/course/domain/Participant';
+import type { ParticipantResponse } from './ParticipantResponse';
 import { env } from '../../../shared/utils/env';
 
 export default class CoursesRepository implements ICourseRepository {
@@ -125,6 +127,26 @@ export default class CoursesRepository implements ICourseRepository {
       'enrolments[0][roleid]': '3',
       'enrolments[0][userid]': userId,
       'enrolments[0][courseid]': courseId,
+    });
+  }
+
+  async getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]> {
+    const response = await this.moodleClient.call<ParticipantResponse[]>(
+      token,
+      'core_enrol_get_enrolled_users',
+      { courseid: courseId },
+    );
+
+    return response.map((u) => {
+      const primary = u.roles?.[0] ?? null;
+      return {
+        id: String(u.id),
+        fullName: u.fullname ?? '',
+        avatarUrl: u.profileimageurl ?? null,
+        roleId: primary?.roleid ?? null,
+        roleName: primary?.shortname ?? null,
+        roleDisplayName: primary?.name ?? null,
+      };
     });
   }
 

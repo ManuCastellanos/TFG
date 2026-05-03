@@ -1,37 +1,30 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
-import {
-  LayoutDashboard,
-  User,
-  Calendar as CalendarIcon,
-  BookOpen,
-  Settings,
-  LogOut,
-  Plus,
-} from "lucide-react";
-import { Banner } from "@/components/banner/Banner";
-import { Button } from "@/components/button/Button";
-import { Text } from "@/components/text/Text";
-import { Sidebar } from "../dashboard/components/sidebar/Sidebar";
-import { TopBar } from "../dashboard/components/topbar/TopBar";
-import { CoursesList } from "./CoursesList";
-import { useSession } from "@/shared/hooks/useSession";
-import { useCurrentUser } from "../dashboard/hooks/useUser";
-import { useUserCourses } from "./hooks/useUserCourses";
-import type { NavItemConfig } from "@/components/navItem/navItem.types";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { LayoutDashboard, User, Calendar as CalendarIcon, BookOpen, Settings, LogOut, Plus } from 'lucide-react';
+import { Banner } from '@/components/banner/Banner';
+import { Button } from '@/components/button/Button';
+import { Text } from '@/components/text/Text';
+import { Sidebar } from '../dashboard/components/sidebar/Sidebar';
+import { TopBar } from '../dashboard/components/topbar/TopBar';
+import { CoursesList } from './CoursesList';
+import { useSession } from '@/shared/hooks/useSession';
+import { useCurrentUser } from '../dashboard/hooks/useUser';
+import { useUserCourses } from './hooks/useUserCourses';
+import { isTeacherRole } from '@/modules/user/domain/User';
+import type { NavItemConfig } from '@/components/navItem/navItem.types';
 
 const NAV_ITEMS: NavItemConfig[] = [
   {
-    id: "dashboard",
-    label: "Dashboard",
+    id: 'dashboard',
+    label: 'Dashboard',
     icon: LayoutDashboard,
-    path: "/dashboard",
+    path: '/dashboard',
   },
-  { id: "profile", label: "Perfil", icon: User, path: "/profile" },
-  { id: "schedule", label: "Horario", icon: CalendarIcon, path: "/schedule" },
-  { id: "courses", label: "Cursos", icon: BookOpen, path: "/courses" },
-  { id: "settings", label: "Configuración", icon: Settings, path: "/settings" },
-  { id: "logout", label: "Cerrar sesión", icon: LogOut, path: "/logout" },
+  { id: 'profile', label: 'Perfil', icon: User, path: '/profile' },
+  { id: 'schedule', label: 'Horario', icon: CalendarIcon, path: '/schedule' },
+  { id: 'courses', label: 'Cursos', icon: BookOpen, path: '/courses' },
+  { id: 'settings', label: 'Configuración', icon: Settings, path: '/settings' },
+  { id: 'logout', label: 'Cerrar sesión', icon: LogOut, path: '/logout' },
 ];
 
 export default function Courses() {
@@ -51,24 +44,20 @@ export default function Courses() {
       }
     };
     if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownOpen]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-(--surface)">
-      <Sidebar
-        navItems={NAV_ITEMS}
-        activePath={pathname}
-        onNavigate={(path) => navigate({ to: path })}
-      />
+      <Sidebar navItems={NAV_ITEMS} activePath={pathname} onNavigate={(path) => navigate({ to: path })} />
 
       <main className="flex flex-1 flex-col overflow-y-auto p-8">
         <div className="mb-6 flex items-center justify-between">
           <Text className="text-2xl font-bold text-(--fg)">Mis Cursos</Text>
 
-          {user?.isTeacher && (
+          {isTeacherRole(user?.roleName) && (
             <div className="relative" ref={dropdownRef}>
               <Button
                 type="button"
@@ -87,7 +76,7 @@ export default function Courses() {
                     className="w-full px-4 py-2.5 text-left text-sm text-(--fg) transition-colors hover:bg-(--surface-muted)"
                     onClick={() => {
                       setDropdownOpen(false);
-                      navigate({ to: "/courses/new" });
+                      navigate({ to: '/courses/new' });
                     }}
                   >
                     Crear curso
@@ -97,7 +86,7 @@ export default function Courses() {
                     className="w-full px-4 py-2.5 text-left text-sm text-(--fg) transition-colors hover:bg-(--surface-muted)"
                     onClick={() => {
                       setDropdownOpen(false);
-                      navigate({ to: "/courses/manage" });
+                      navigate({ to: '/courses/manage' });
                     }}
                   >
                     Gestionar cursos
@@ -110,14 +99,12 @@ export default function Courses() {
 
         {error && <Banner variant="error">{error}</Banner>}
 
-        {loading && (
-          <Text className="text-(--muted)">Cargando cursos...</Text>
-        )}
+        {loading && <Text className="text-(--muted)">Cargando cursos...</Text>}
 
         {!loading && !error && (
           <CoursesList
             courses={courses}
-            onCourseClick={(id) => navigate({ to: "/courses/$id", params: { id } })}
+            onCourseClick={(id) => navigate({ to: '/courses/$id', params: { id } })}
             showHeader={false}
           />
         )}
@@ -126,8 +113,8 @@ export default function Courses() {
       <div className="flex w-85 shrink-0 flex-col gap-4 overflow-y-auto bg-(--panel) p-6">
         <TopBar
           user={{
-            name: user?.firstName ?? "",
-            handle: user?.username ?? "",
+            name: user?.firstName ?? '',
+            handle: user?.username ?? '',
             avatarUrl: user?.avatarUrl ?? null,
           }}
         />

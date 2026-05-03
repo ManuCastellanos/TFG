@@ -1,6 +1,6 @@
 import { cn } from "@/shared/utils/cn";
 
-export type CoursePageSection = "temario" | "ejercicios";
+export type CoursePageSection = "temario" | "ejercicios" | "calificaciones" | "participantes";
 
 type SectionTile = {
   id: CoursePageSection;
@@ -22,6 +22,18 @@ const SECTION_TILES: readonly SectionTile[] = [
     emoji: "✏️",
     gradient: "from-[var(--course-yellow-from)] to-[var(--course-orange-to)]",
   },
+  {
+    id: "calificaciones",
+    label: "Calificaciones",
+    emoji: "🏆",
+    gradient: "from-sky-400 to-blue-600",
+  },
+  {
+    id: "participantes",
+    label: "Participantes",
+    emoji: "👥",
+    gradient: "from-violet-400 to-purple-600",
+  },
 ];
 
 export type CoursePageNavProps = {
@@ -30,7 +42,7 @@ export type CoursePageNavProps = {
 };
 
 export const CoursePageNav = ({ active, onChange }: CoursePageNavProps) => (
-  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
     {SECTION_TILES.map((tile) => {
       const isActive = active === tile.id;
 
