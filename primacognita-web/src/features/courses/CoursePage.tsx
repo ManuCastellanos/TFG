@@ -11,21 +11,7 @@ import { CoursePageNav, type CoursePageSection } from './coursePage/CoursePageNa
 import { TemarioView } from './coursePage/TemarioView';
 import { TaskView } from './coursePage/TaskView';
 import { ParticipantsView } from './coursePage/ParticipantsView';
-import type { ProgressBarViewModel } from '@/components/progressBar/progressBar.types';
-import type { Course } from '@/modules/course/domain/Course';
-
-const clamp = (v: number) => Math.min(100, Math.max(0, v));
-
-function toProgressBarViewModel(course: Course): ProgressBarViewModel {
-  const progress = clamp(Math.round(course.progress ?? 0));
-  const completed = course.completed;
-  let message = '¡Empieza tu aventura! ✨';
-  if (completed) message = '¡Curso completado! 🏆';
-  else if (progress >= 75) message = '¡Casi lo tienes! 💪';
-  else if (progress >= 40) message = '¡Vas genial! 🚀';
-  else if (progress > 0) message = '¡Sigue así! 🌱';
-  return { progress, completed, message };
-}
+import { toProgressBarViewModel } from './course.utils';
 
 export default function CoursePage() {
   const navigate = useNavigate();

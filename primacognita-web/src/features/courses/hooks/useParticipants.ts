@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import type { Participant } from "@/modules/course/domain/Participant";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { useCallback, useEffect, useState } from 'react';
+import type { Participant } from '@/modules/course/domain/Participant';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
 type UseParticipantsResult = {
   participants: Participant[];
@@ -8,10 +8,7 @@ type UseParticipantsResult = {
   error: string | null;
 };
 
-export const useParticipants = (
-  token: string | null,
-  courseId: string | null,
-): UseParticipantsResult => {
+export const useParticipants = (token: string | null, courseId: string | null): UseParticipantsResult => {
   const { courseRepository } = useDependencies();
 
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -31,7 +28,7 @@ export const useParticipants = (
       const data = await courseRepository.getEnrolledUsers(token, courseId);
       setParticipants(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : 'Unknown error');
       setParticipants([]);
     } finally {
       setLoading(false);

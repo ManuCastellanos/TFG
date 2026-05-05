@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from 'react';
 
 export interface MonthCursor {
   year: number;
@@ -11,11 +11,7 @@ const addMonths = (year: number, month: number, delta: number): MonthCursor => {
   return { year: date.getFullYear(), month: date.getMonth() + 1 };
 };
 
-export function useMonthCursor(): {
-  cursor: MonthCursor;
-  goPrevMonth: () => void;
-  goNextMonth: () => void;
-} {
+export function useMonthCursor() {
   const today = useMemo(() => new Date(), []);
 
   const [cursor, setCursor] = useState<MonthCursor>(() => ({
@@ -23,13 +19,8 @@ export function useMonthCursor(): {
     month: today.getMonth() + 1,
   }));
 
-  const goPrevMonth = useCallback(() => {
-    setCursor((c) => addMonths(c.year, c.month, -1));
-  }, []);
-
-  const goNextMonth = useCallback(() => {
-    setCursor((c) => addMonths(c.year, c.month, 1));
-  }, []);
+  const goPrevMonth = useCallback(() => setCursor((c) => addMonths(c.year, c.month, -1)), []);
+  const goNextMonth = useCallback(() => setCursor((c) => addMonths(c.year, c.month, 1)), []);
 
   return { cursor, goPrevMonth, goNextMonth };
 }

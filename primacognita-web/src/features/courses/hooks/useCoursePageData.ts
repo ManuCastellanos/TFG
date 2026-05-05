@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { Course, CourseId } from "@/modules/course/domain/Course";
-import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
-import { isExerciseModule } from "@/modules/course/domain/CourseSection";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import type { Course, CourseId } from '@/modules/course/domain/Course';
+import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
+import { isExerciseModule } from '@/modules/course/domain/CourseSection';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
 type UseCoursePageDataResult = {
   course: Course | null;
@@ -48,7 +48,7 @@ export const useCoursePageData = (
       setCourse(matched);
       setSections(contents);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : 'Unknown error');
       setCourse(null);
       setSections([]);
     } finally {

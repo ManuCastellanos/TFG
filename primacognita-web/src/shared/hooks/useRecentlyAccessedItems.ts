@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import type { RecentItem } from "@/modules/recentlyAccessed/domain/RecentItem";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { useCallback, useEffect, useState } from 'react';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import type { RecentItem } from '@/modules/recentlyAccessed/domain/RecentItem';
 
 type UseRecentlyAccessedItemsResult = {
   items: RecentItem[];
@@ -8,30 +8,24 @@ type UseRecentlyAccessedItemsResult = {
   error: string | null;
 };
 
-export const useRecentlyAccessedItems = (
-  token: string | null,
-): UseRecentlyAccessedItemsResult => {
+export function useRecentlyAccessedItems(token: string | null): UseRecentlyAccessedItemsResult {
   const { recentlyAccessedRepository } = useDependencies();
 
   const [items, setItems] = useState<RecentItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchItems = useCallback(async () => {
+  const fetch = useCallback(async () => {
     if (!token) {
       setItems([]);
-      setLoading(false);
       return;
     }
-
     setLoading(true);
     setError(null);
-
     try {
-      const data = await recentlyAccessedRepository.getRecentItems(token);
-      setItems(data);
+      setItems(await recentlyAccessedRepository.getRecentItems(token));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : 'Error desconocido');
       setItems([]);
     } finally {
       setLoading(false);
@@ -39,8 +33,8 @@ export const useRecentlyAccessedItems = (
   }, [recentlyAccessedRepository, token]);
 
   useEffect(() => {
-    void fetchItems();
-  }, [fetchItems]);
+    void fetch();
+  }, [fetch]);
 
   return { items, loading, error };
-};
+}

@@ -10,7 +10,7 @@ import type { Participant } from '@/modules/course/domain/Participant';
 import type { ParticipantResponse } from './ParticipantResponse';
 import { env } from '../../../shared/utils/env';
 
-export default class CoursesRepository implements ICourseRepository {
+export default class CourseRepository implements ICourseRepository {
   constructor(private readonly moodleClient: IMoodleClient) {}
 
   async getUserCourses(userId: string, token: string): Promise<Course[]> {

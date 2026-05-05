@@ -6,9 +6,9 @@ import { Button } from '@/components/button/Button';
 import { Text } from '@/components/text/Text';
 import { CoursesList } from './CoursesList';
 import { useSession } from '@/shared/hooks/useSession';
-import { useCurrentUser } from '../dashboard/hooks/useUser';
 import { useUserCourses } from './hooks/useUserCourses';
 import { isTeacherRole } from '@/modules/user/domain/User';
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser';
 
 export default function Courses() {
   const navigate = useNavigate();

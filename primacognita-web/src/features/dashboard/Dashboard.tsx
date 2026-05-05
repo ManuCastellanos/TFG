@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { CoursesList } from '../courses/CoursesList';
-import { useDashboard } from './hooks/useDashboard';
+import { useDashboard } from './useDashboard';
 import { Card } from '@/components/card/Card';
 
 export const Dashboard = () => {

@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState } from 'react';
 
-import { Constants } from "@/shared/constants/Constants";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { Constants } from '@/shared/constants/Constants';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
 type UseLoginResult = {
   error: string | null;

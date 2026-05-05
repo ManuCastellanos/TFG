@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-
-import type { Course } from "@/modules/course/domain/Course";
-import type { CourseCategoryId } from "@/modules/course/domain/CourseCategory";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { useCallback, useEffect, useState } from 'react';
+import type { Course } from '@/modules/course/domain/Course';
+import type { CourseCategoryId } from '@/modules/course/domain/CourseCategory';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
 type UseUserCoursesResult = {
   courses: Course[];
@@ -14,10 +13,7 @@ type UseUserCoursesResult = {
 
 const unique = (values: string[]) => Array.from(new Set(values));
 
-export const useUserCourses = (
-  userId: string | null,
-  token: string | null
-): UseUserCoursesResult => {
+export const useUserCourses = (userId: string | null, token: string | null): UseUserCoursesResult => {
   const { courseRepository: coursesRepository } = useDependencies();
 
   const [courses, setCourses] = useState<Course[]>([]);
@@ -42,9 +38,7 @@ export const useUserCourses = (
       setCourses(data);
 
       const categoryIds = unique(
-        data
-          .map((c) => c.categoryId)
-          .filter((id): id is CourseCategoryId => Boolean(id && id.trim().length > 0))
+        data.map((c) => c.categoryId).filter((id): id is CourseCategoryId => Boolean(id && id.trim().length > 0)),
       );
 
       if (categoryIds.length === 0) {
@@ -61,7 +55,7 @@ export const useUserCourses = (
 
       setCategoryNameById(map);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : 'Unknown error');
       setCourses([]);
       setCategoryNameById({});
     } finally {
