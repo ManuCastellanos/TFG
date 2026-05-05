@@ -1,8 +1,9 @@
 import {
   createRouter,
   RouterProvider,
-  Route,
-  RootRoute,
+  createRootRoute,
+  createRoute,
+  Outlet,
 } from "@tanstack/react-router";
 import Login from "./features/login/Login";
 import Dashboard from "./features/dashboard/Dashboard";
@@ -12,58 +13,84 @@ import Courses from "./features/courses/Courses";
 import CreateCourse from "./features/courses/CreateCourse";
 import CoursePage from "./features/courses/CoursePage";
 import TaskPage from "./features/task/TaskPage";
+import { AppLayout } from "./layouts/AppLayout";
 
-const rootRoute = new RootRoute();
+function AppLayoutRoute() {
+  return (
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
+  );
+}
 
-const loginRoute = new Route({
+const rootRoute = createRootRoute();
+
+const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   component: Login,
 });
 
-const dashboardRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: "/dashboard",
-  component: Dashboard,
-});
-
-const signupRoute = new Route({
+const signupRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/signup",
   component: Signup,
 });
 
-const forgotPasswordRoute = new Route({
+const forgotPasswordRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/forgot_password",
   component: ForgotPassword,
 });
 
-const coursesRoute = new Route({
+const appLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
+  id: "app",
+  component: AppLayoutRoute,
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: "/dashboard",
+  component: Dashboard,
+});
+
+const coursesRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
   path: "/courses",
   component: Courses,
 });
 
-const createCourseRoute = new Route({
-  getParentRoute: () => rootRoute,
+const createCourseRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
   path: "/courses/new",
   component: CreateCourse,
 });
 
-const courseDetailRoute = new Route({
-  getParentRoute: () => rootRoute,
+const courseDetailRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
   path: "/courses/$id",
   component: CoursePage,
 });
 
-const assignmentRoute = new Route({
-  getParentRoute: () => rootRoute,
+const assignmentRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
   path: "/courses/$courseId/exercise/$modName/$cmid",
   component: TaskPage,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, signupRoute, forgotPasswordRoute, coursesRoute, createCourseRoute, courseDetailRoute, assignmentRoute]);
+const routeTree = rootRoute.addChildren([
+  loginRoute,
+  signupRoute,
+  forgotPasswordRoute,
+  appLayoutRoute.addChildren([
+    dashboardRoute,
+    coursesRoute,
+    createCourseRoute,
+    courseDetailRoute,
+    assignmentRoute,
+  ]),
+]);
 
 const router = createRouter({ routeTree });
 

@@ -1,33 +1,10 @@
-import { useNavigate, useParams, useRouterState } from '@tanstack/react-router';
-import {
-  LayoutDashboard,
-  User,
-  Calendar as CalendarIcon,
-  BookOpen,
-  Settings,
-  LogOut,
-  ArrowLeft,
-  CalendarClock,
-  Trophy,
-} from 'lucide-react';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { ArrowLeft, CalendarClock, Trophy } from 'lucide-react';
 import { Banner } from '@/components/banner/Banner';
 import { Button } from '@/components/button/Button';
 import { Text } from '@/components/text/Text';
 import { Card } from '@/components/card/Card';
-import { Sidebar } from '../dashboard/components/sidebar/Sidebar';
-import { TopBar } from '../dashboard/components/topbar/TopBar';
-import { useCurrentUser } from '../dashboard/hooks/useUser';
 import { useTask } from './hooks/useTask';
-import type { NavItemConfig } from '@/components/navItem/navItem.types';
-
-const NAV_ITEMS: NavItemConfig[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { id: 'profile', label: 'Perfil', icon: User, path: '/profile' },
-  { id: 'schedule', label: 'Horario', icon: CalendarIcon, path: '/schedule' },
-  { id: 'courses', label: 'Cursos', icon: BookOpen, path: '/courses' },
-  { id: 'settings', label: 'Configuración', icon: Settings, path: '/settings' },
-  { id: 'logout', label: 'Cerrar sesión', icon: LogOut, path: '/logout' },
-];
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('es-ES', {
@@ -44,27 +21,18 @@ const formatGrade = (value: number) =>
 
 export default function TaskPage() {
   const navigate = useNavigate();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { courseId, modName, cmid } = useParams({ strict: false }) as {
     courseId: string;
     modName: string;
     cmid: string;
   };
 
-  const { user } = useCurrentUser();
   const { task, loading, error } = useTask(courseId, modName, cmid);
 
   const isQuiz = modName === 'quiz';
 
   return (
-    <div className="flex h-screen overflow-hidden bg-(--surface)">
-      <Sidebar
-        navItems={NAV_ITEMS}
-        activePath={pathname}
-        onNavigate={(path) => navigate({ to: path })}
-      />
-
-      <main className="flex flex-1 flex-col overflow-y-auto p-8">
+    <main className="flex flex-1 flex-col overflow-y-auto p-8">
         <div className="mb-6 flex items-center gap-3">
           <Button
             type="button"
@@ -157,17 +125,6 @@ export default function TaskPage() {
             </Card>
           </div>
         )}
-      </main>
-
-      <div className="flex w-85 shrink-0 flex-col gap-4 overflow-y-auto bg-(--panel) p-6">
-        <TopBar
-          user={{
-            name: user?.firstName ?? '',
-            handle: user?.username ?? '',
-            avatarUrl: user?.avatarUrl ?? null,
-          }}
-        />
-      </div>
-    </div>
+    </main>
   );
 }

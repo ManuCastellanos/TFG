@@ -5,7 +5,6 @@ import { useUserCourses } from "../../courses/hooks/useUserCourses";
 import { useRecentlyAccessedItems } from "./useRecentlyAccessedItems";
 import { useSession } from "@/shared/hooks/useSession";
 import { useCurrentUser } from "./useUser";
-import type { CalendarEventVm } from "@/components/calendar/calendar.types";
 import type { ScheduleEntry } from "../components/schedule/schedule.types";
 import type { RecentItem } from "@/modules/recentlyAccessed/domain/RecentItem";
 

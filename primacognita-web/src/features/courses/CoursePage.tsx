@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { useNavigate, useParams, useRouterState } from '@tanstack/react-router';
-import { LayoutDashboard, User, Calendar as CalendarIcon, BookOpen, Settings, LogOut, ArrowLeft } from 'lucide-react';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
 import { Banner } from '@/components/banner/Banner';
 import { Button } from '@/components/button/Button';
 import { Text } from '@/components/text/Text';
-import { Sidebar } from '../dashboard/components/sidebar/Sidebar';
-import { TopBar } from '../dashboard/components/topbar/TopBar';
 import { useSession } from '@/shared/hooks/useSession';
-import { useCurrentUser } from '../dashboard/hooks/useUser';
 import { useCoursePageData } from './hooks/useCoursePageData';
 import { useParticipants } from './hooks/useParticipants';
 import { CoursePageNav, type CoursePageSection } from './coursePage/CoursePageNav';
@@ -16,7 +13,6 @@ import { TaskView } from './coursePage/TaskView';
 import { ParticipantsView } from './coursePage/ParticipantsView';
 import type { ProgressBarViewModel } from '@/components/progressBar/progressBar.types';
 import type { Course } from '@/modules/course/domain/Course';
-import type { NavItemConfig } from '@/components/navItem/navItem.types';
 
 const clamp = (v: number) => Math.min(100, Math.max(0, v));
 
@@ -31,32 +27,18 @@ function toProgressBarViewModel(course: Course): ProgressBarViewModel {
   return { progress, completed, message };
 }
 
-const NAV_ITEMS: NavItemConfig[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { id: 'profile', label: 'Perfil', icon: User, path: '/profile' },
-  { id: 'schedule', label: 'Horario', icon: CalendarIcon, path: '/schedule' },
-  { id: 'courses', label: 'Cursos', icon: BookOpen, path: '/courses' },
-  { id: 'settings', label: 'Configuración', icon: Settings, path: '/settings' },
-  { id: 'logout', label: 'Cerrar sesión', icon: LogOut, path: '/logout' },
-];
-
 export default function CoursePage() {
   const navigate = useNavigate();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { id: courseId } = useParams({ strict: false }) as { id: string };
 
   const { token, userId } = useSession();
-  const { user } = useCurrentUser();
   const { course, sections, exercises, loading, error } = useCoursePageData(courseId, userId, token);
   const { participants, loading: participantsLoading } = useParticipants(token, courseId);
 
   const [activeSection, setActiveSection] = useState<CoursePageSection>('temario');
 
   return (
-    <div className="flex h-screen overflow-hidden bg-(--surface)">
-      <Sidebar navItems={NAV_ITEMS} activePath={pathname} onNavigate={(path) => navigate({ to: path })} />
-
-      <main className="flex flex-1 flex-col overflow-y-auto p-8">
+    <main className="flex flex-1 flex-col overflow-y-auto p-8">
         <div className="mb-6 flex items-center gap-3">
           <Button
             type="button"
@@ -128,17 +110,6 @@ export default function CoursePage() {
             <ParticipantsView participants={participants} loading={participantsLoading} />
           </section>
         )}
-      </main>
-
-      <div className="flex w-85 shrink-0 flex-col gap-4 overflow-y-auto bg-(--panel) p-6">
-        <TopBar
-          user={{
-            name: user?.firstName ?? '',
-            handle: user?.username ?? '',
-            avatarUrl: user?.avatarUrl ?? null,
-          }}
-        />
-      </div>
-    </div>
+    </main>
   );
 }
