@@ -7,7 +7,7 @@ import { useAppLayout } from './useAppLayout';
 
 interface AppLayoutProps {
   children: ReactNode;
-  rightPanel?: ReactNode;
+  rightPanel: ReactNode;
 }
 
 export function AppLayout({ children, rightPanel }: AppLayoutProps) {
