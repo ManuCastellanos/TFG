@@ -1,20 +1,20 @@
-import { ChevronRight } from "lucide-react";
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
-import { IconButton } from "@/components/button/IconButton";
-import { CourseCard } from "./CourseCard";
-import type { Course } from "@/modules/course/domain/Course";
+import { ChevronRight } from 'lucide-react';
+import { SectionHeader } from '@/components/sectionHeader/SectionHeader';
+import { IconButton } from '@/components/button/IconButton';
+import { CourseCard } from './CourseCard';
+import type { Course } from '@/modules/course/domain/Course';
 
 const COURSE_GRADIENTS = [
-  "from-[var(--course-green-from)] to-[var(--course-emerald-to)]",
-  "from-[var(--course-rose-from)] to-[var(--course-red-to)]",
-  "from-[var(--course-blue-from)] to-[var(--course-indigo-to)]",
-  "from-[var(--course-teal-from)] to-[var(--course-teal-to)]",
-  "from-[var(--course-lime-from)] to-[var(--course-lime-to)]",
-  "from-[var(--course-yellow-from)] to-[var(--course-yellow-to)]",
-  "from-[var(--course-purple-from)] to-[var(--course-violet-to)]",
-  "from-[var(--course-rose-from)] to-[var(--course-pink-to)]",
-  "from-[var(--course-cyan-from)] to-[var(--course-sky-to)]",
-  "from-[var(--course-orange-from)] to-[var(--course-orange-to)]",
+  'from-[var(--course-green-from)] to-[var(--course-emerald-to)]',
+  'from-[var(--course-rose-from)] to-[var(--course-red-to)]',
+  'from-[var(--course-blue-from)] to-[var(--course-indigo-to)]',
+  'from-[var(--course-teal-from)] to-[var(--course-teal-to)]',
+  'from-[var(--course-lime-from)] to-[var(--course-lime-to)]',
+  'from-[var(--course-yellow-from)] to-[var(--course-yellow-to)]',
+  'from-[var(--course-purple-from)] to-[var(--course-violet-to)]',
+  'from-[var(--course-rose-from)] to-[var(--course-pink-to)]',
+  'from-[var(--course-cyan-from)] to-[var(--course-sky-to)]',
+  'from-[var(--course-orange-from)] to-[var(--course-orange-to)]',
 ];
 
 export type CourseProps = {
@@ -24,12 +24,7 @@ export type CourseProps = {
   showHeader?: boolean;
 };
 
-export const CoursesList = ({
-  courses,
-  onCourseClick,
-  onViewAll,
-  showHeader = true,
-}: CourseProps) => (
+export const CoursesList = ({ courses, onCourseClick, onViewAll, showHeader = true }: CourseProps) => (
   <section className="flex flex-col gap-6">
     {showHeader && (
       <SectionHeader

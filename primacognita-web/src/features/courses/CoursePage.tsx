@@ -90,13 +90,30 @@ export default function CoursePage() {
 
         {!loading && !error && activeSection === 'temario' && (
           <section className="flex flex-col gap-4">
-            <TemarioView sections={sections} progressViewModel={course ? toProgressBarViewModel(course) : undefined} />
+            <TemarioView
+              sections={sections}
+              progressViewModel={course ? toProgressBarViewModel(course) : undefined}
+              onModuleClick={(module) =>
+                navigate({
+                  to: '/courses/$courseId/exercise/$modName/$cmid',
+                  params: { courseId, modName: module.modName, cmid: String(module.cmid) },
+                })
+              }
+            />
           </section>
         )}
 
         {!loading && !error && activeSection === 'ejercicios' && (
           <section className="flex flex-col gap-4">
-            <TaskView exercises={exercises} />
+            <TaskView
+              exercises={exercises}
+              onExerciseClick={(module) =>
+                navigate({
+                  to: '/courses/$courseId/exercise/$modName/$cmid',
+                  params: { courseId, modName: module.modName, cmid: String(module.cmid) },
+                })
+              }
+            />
           </section>
         )}
 

@@ -21,12 +21,23 @@ const TYPE_ACCENT: Record<string, string> = {
   workshop: "from-[var(--course-violet-from)] to-[var(--course-purple-to)]",
 };
 
+const INTERNAL_MOD_NAMES = new Set(["assign", "quiz"]);
+
 const typeLabel = (type: string) => TYPE_LABEL[type] ?? "Ejercicio";
 const typeAccent = (type: string) =>
   TYPE_ACCENT[type] ?? "from-[var(--course-emerald-from)] to-[var(--course-emerald-to)]";
 
-const ExerciseCard = ({ module, icon: Icon }: { module: CourseModule; icon: LucideIcon }) => {
-  const interactive = Boolean(module.url);
+const ExerciseCard = ({
+  module,
+  icon: Icon,
+  onExerciseClick,
+}: {
+  module: CourseModule;
+  icon: LucideIcon;
+  onExerciseClick?: (module: CourseModule) => void;
+}) => {
+  const usesInternalPage = INTERNAL_MOD_NAMES.has(module.modName);
+  const interactive = usesInternalPage || Boolean(module.url);
 
   const inner = (
     <Surface
@@ -53,6 +64,18 @@ const ExerciseCard = ({ module, icon: Icon }: { module: CourseModule; icon: Luci
     </Surface>
   );
 
+  if (usesInternalPage) {
+    return (
+      <button
+        type="button"
+        onClick={() => onExerciseClick?.(module)}
+        className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-strong) rounded-2xl"
+      >
+        {inner}
+      </button>
+    );
+  }
+
   return interactive ? (
     <a
       href={module.url ?? undefined}
@@ -69,9 +92,10 @@ const ExerciseCard = ({ module, icon: Icon }: { module: CourseModule; icon: Luci
 
 export type TaskViewProps = {
   exercises: CourseModule[];
+  onExerciseClick?: (module: CourseModule) => void;
 };
 
-export const TaskView = ({ exercises: tasks }: TaskViewProps) => {
+export const TaskView = ({ exercises: tasks, onExerciseClick }: TaskViewProps) => {
   if (tasks.length === 0) {
     return (
       <Text className="text-(--fg-subtle)">
@@ -84,7 +108,7 @@ export const TaskView = ({ exercises: tasks }: TaskViewProps) => {
     <ul className="flex flex-col gap-3">
       {tasks.map((exercise) => (
         <li key={exercise.id}>
-          <ExerciseCard module={exercise} icon={ClipboardList} />
+          <ExerciseCard module={exercise} icon={ClipboardList} onExerciseClick={onExerciseClick} />
         </li>
       ))}
     </ul>

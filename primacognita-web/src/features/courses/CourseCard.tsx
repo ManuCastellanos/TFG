@@ -1,6 +1,6 @@
-import { cn } from "@/shared/utils/cn";
-import { Surface } from "@/components/surface/Surface";
-import type { Course } from "@/modules/course/domain/Course";
+import { cn } from '@/shared/utils/cn';
+import { Surface } from '@/components/surface/Surface';
+import type { Course } from '@/modules/course/domain/Course';
 
 export type CourseCardProps = {
   course: Course;
@@ -16,7 +16,7 @@ const ProgressBar = ({ value }: { value: number }) => (
       className="h-full rounded-full transition-all"
       style={{
         width: `${clampProgress(value)}%`,
-        backgroundColor: "rgba(255,255,255,0.92)",
+        backgroundColor: 'rgba(255,255,255,0.92)',
       }}
     />
   </div>
@@ -24,7 +24,7 @@ const ProgressBar = ({ value }: { value: number }) => (
 
 export const CourseCard = ({
   course,
-  gradient = "from-[var(--course-blue-from)] to-[var(--course-blue-to)]",
+  gradient = 'from-[var(--course-blue-from)] to-[var(--course-blue-to)]',
   onClick,
 }: CourseCardProps) => {
   const progress = course.progress ?? 0;
@@ -34,18 +34,18 @@ export const CourseCard = ({
       as="button"
       onClick={onClick}
       className={cn(
-        "group w-full overflow-hidden rounded-[1.6rem] p-0 text-left",
-        "transition-all duration-200",
-        "hover:-translate-y-0.5 hover:shadow-(--shadow-md)",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-strong)",
-        "bg-linear-to-br",
+        'group w-full overflow-hidden rounded-[1.6rem] p-0 text-left',
+        'transition-all duration-200',
+        'hover:-translate-y-0.5 hover:shadow-(--shadow-md)',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-strong)',
+        'bg-linear-to-br',
         gradient,
       )}
     >
       <div className="flex flex-col gap-3 p-3">
         <div
           className="relative h-34 w-full overflow-hidden rounded-[1.15rem] bg-white"
-          style={{ border: "2px solid rgba(255,255,255,0.75)" }}
+          style={{ border: '2px solid rgba(255,255,255,0.75)' }}
         >
           {course.imageUrl ? (
             <img
@@ -63,19 +63,13 @@ export const CourseCard = ({
         </div>
 
         <div className="flex flex-col gap-2 px-1 pb-1">
-          <p className="line-clamp-2 text-shadow-md font-extrabold leading-tight text-white">
-            {course.fullname}
-          </p>
+          <p className="line-clamp-2 text-shadow-md font-extrabold leading-tight text-white">{course.fullname}</p>
 
           <ProgressBar value={progress} />
 
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-white/80">
-              Completed:
-            </span>
-            <span className="text-[11px] font-bold text-white/95">
-              {progress}%
-            </span>
+            <span className="text-[11px] font-medium text-white/80">Completed:</span>
+            <span className="text-[11px] font-bold text-white/95">{progress}%</span>
           </div>
         </div>
       </div>

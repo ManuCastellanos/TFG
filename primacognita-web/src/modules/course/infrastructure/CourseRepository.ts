@@ -131,11 +131,9 @@ export default class CoursesRepository implements ICourseRepository {
   }
 
   async getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]> {
-    const response = await this.moodleClient.call<ParticipantResponse[]>(
-      token,
-      'core_enrol_get_enrolled_users',
-      { courseid: courseId },
-    );
+    const response = await this.moodleClient.call<ParticipantResponse[]>(token, 'core_enrol_get_enrolled_users', {
+      courseid: courseId,
+    });
 
     return response.map((u) => {
       const primary = u.roles?.[0] ?? null;
@@ -164,7 +162,7 @@ export default class CoursesRepository implements ICourseRepository {
         .filter((m) => m.uservisible !== false && m.visible !== 0)
         .map((m) => ({
           id: m.id,
-          cmid: m.cmid,
+          cmid: m.cmid ?? m.id,
           name: m.name,
           modName: m.modname,
           url: m.url ?? null,

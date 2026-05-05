@@ -11,6 +11,7 @@ import ForgotPassword from "./features/forgot-password/ForgotPassword";
 import Courses from "./features/courses/Courses";
 import CreateCourse from "./features/courses/CreateCourse";
 import CoursePage from "./features/courses/CoursePage";
+import TaskPage from "./features/task/TaskPage";
 
 const rootRoute = new RootRoute();
 
@@ -56,7 +57,13 @@ const courseDetailRoute = new Route({
   component: CoursePage,
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, signupRoute, forgotPasswordRoute, coursesRoute, createCourseRoute, courseDetailRoute]);
+const assignmentRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/courses/$courseId/exercise/$modName/$cmid",
+  component: TaskPage,
+});
+
+const routeTree = rootRoute.addChildren([loginRoute, dashboardRoute, signupRoute, forgotPasswordRoute, coursesRoute, createCourseRoute, courseDetailRoute, assignmentRoute]);
 
 const router = createRouter({ routeTree });
 

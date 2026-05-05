@@ -1,19 +1,21 @@
-import MoodleClient from "../clients/MoodleClient";
+import MoodleClient from '../clients/MoodleClient';
 
-import AuthRepository from "@/modules/auth/infrastructure/AuthRepository";
-import CourseRepository from "@/modules/course/infrastructure/CourseRepository";
-import CalendarRepository from "@/modules/calendar/infrastructure/CalendarRepository";
-import AuthStorage from "@/modules/auth/infrastructure/AuthStorage";
-import UserRepository from "@/modules/user/infrastructure/UserRepository";
-import RecentlyAccessedRepository from "@/modules/recentlyAccessed/infrastructure/RecentlyAccessedRepository";
+import AuthRepository from '@/modules/auth/infrastructure/AuthRepository';
+import CourseRepository from '@/modules/course/infrastructure/CourseRepository';
+import CalendarRepository from '@/modules/calendar/infrastructure/CalendarRepository';
+import AuthStorage from '@/modules/auth/infrastructure/AuthStorage';
+import UserRepository from '@/modules/user/infrastructure/UserRepository';
+import RecentlyAccessedRepository from '@/modules/recentlyAccessed/infrastructure/RecentlyAccessedRepository';
+import TaskRepository from '@/modules/task/infrastructure/TaskRepository';
 
-import type IMoodleClient from "@/shared/clients/IMoodleClient";
-import type IAuthRepository from "@/modules/auth/domain/IAuthRepository";
-import type ICourseRepository from "@/modules/course/domain/ICourseRepository";
-import type ICalendarRepository from "@/modules/calendar/domain/ICalendarRepository";
-import type IAuthSessionStore from "@/modules/auth/domain/IAuthSessionStore";
-import type IUserRepository from "@/modules/user/domain/IUserRepository";
-import type IRecentlyAccessedRepository from "@/modules/recentlyAccessed/domain/IRecentlyAccessedRepository";
+import type IMoodleClient from '@/shared/clients/IMoodleClient';
+import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
+import type ICourseRepository from '@/modules/course/domain/ICourseRepository';
+import type ICalendarRepository from '@/modules/calendar/domain/ICalendarRepository';
+import type IAuthSessionStore from '@/modules/auth/domain/IAuthSessionStore';
+import type IUserRepository from '@/modules/user/domain/IUserRepository';
+import type IRecentlyAccessedRepository from '@/modules/recentlyAccessed/domain/IRecentlyAccessedRepository';
+import type ITaskRepository from '@/modules/task/domain/ITaskRepository';
 
 export default class Dependencies {
   readonly moodleClient: IMoodleClient;
@@ -24,6 +26,7 @@ export default class Dependencies {
   readonly authSessionStore: IAuthSessionStore;
   readonly userRepository: IUserRepository;
   readonly recentlyAccessedRepository: IRecentlyAccessedRepository;
+  readonly taskRepository: ITaskRepository;
 
   private constructor(params: {
     moodleClient: IMoodleClient;
@@ -33,6 +36,7 @@ export default class Dependencies {
     authSessionStore: IAuthSessionStore;
     userRepository: IUserRepository;
     recentlyAccessedRepository: IRecentlyAccessedRepository;
+    taskRepository: ITaskRepository;
   }) {
     this.moodleClient = params.moodleClient;
     this.authRepository = params.authRepository;
@@ -41,6 +45,7 @@ export default class Dependencies {
     this.authSessionStore = params.authSessionStore;
     this.userRepository = params.userRepository;
     this.recentlyAccessedRepository = params.recentlyAccessedRepository;
+    this.taskRepository = params.taskRepository;
   }
 
   static create(): Dependencies {
@@ -54,6 +59,7 @@ export default class Dependencies {
       authSessionStore: new AuthStorage(),
       userRepository: new UserRepository(moodleClient),
       recentlyAccessedRepository: new RecentlyAccessedRepository(moodleClient),
+      taskRepository: new TaskRepository(moodleClient),
     });
   }
 }

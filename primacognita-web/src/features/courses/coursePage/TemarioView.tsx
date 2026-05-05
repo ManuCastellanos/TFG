@@ -5,8 +5,17 @@ import type { CourseModule, CourseSection } from '@/modules/course/domain/Course
 import ProgressBar from '@/components/progressBar/ProgressBar';
 import type { ProgressBarViewModel } from '@/components/progressBar/progressBar.types';
 
-const ModuleRow = ({ module }: { module: CourseModule }) => {
-  const interactive = Boolean(module.url);
+const INTERNAL_MOD_NAMES = new Set(['assign', 'quiz']);
+
+const ModuleRow = ({
+  module,
+  onModuleClick,
+}: {
+  module: CourseModule;
+  onModuleClick?: (module: CourseModule) => void;
+}) => {
+  const usesInternalPage = INTERNAL_MOD_NAMES.has(module.modName);
+  const interactive = usesInternalPage || Boolean(module.url);
 
   const content = (
     <>
@@ -17,6 +26,22 @@ const ModuleRow = ({ module }: { module: CourseModule }) => {
       </span>
     </>
   );
+
+  if (usesInternalPage) {
+    return (
+      <button
+        type="button"
+        onClick={() => onModuleClick?.(module)}
+        className={cn(
+          'flex w-full items-center gap-3 rounded-xl border border-(--border) bg-(--surface) px-3 py-2.5 text-left',
+          'transition-colors hover:bg-(--surface-muted)',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring-strong)',
+        )}
+      >
+        {content}
+      </button>
+    );
+  }
 
   return interactive ? (
     <a
@@ -38,7 +63,13 @@ const ModuleRow = ({ module }: { module: CourseModule }) => {
   );
 };
 
-const SectionCard = ({ section }: { section: CourseSection }) => (
+const SectionCard = ({
+  section,
+  onModuleClick,
+}: {
+  section: CourseSection;
+  onModuleClick?: (module: CourseModule) => void;
+}) => (
   <Surface className="flex flex-col gap-4 border border-(--border) p-5">
     <div className="flex items-baseline gap-3">
       <h3 className="text-lg font-extrabold text-(--fg)">{section.name}</h3>
@@ -50,7 +81,7 @@ const SectionCard = ({ section }: { section: CourseSection }) => (
       <ul className="flex flex-col gap-2">
         {section.modules.map((module) => (
           <li key={module.id}>
-            <ModuleRow module={module} />
+            <ModuleRow module={module} onModuleClick={onModuleClick} />
           </li>
         ))}
       </ul>
@@ -61,9 +92,10 @@ const SectionCard = ({ section }: { section: CourseSection }) => (
 export type TemarioViewProps = {
   sections: CourseSection[];
   progressViewModel?: ProgressBarViewModel;
+  onModuleClick?: (module: CourseModule) => void;
 };
 
-export const TemarioView = ({ sections, progressViewModel }: TemarioViewProps) => {
+export const TemarioView = ({ sections, progressViewModel, onModuleClick }: TemarioViewProps) => {
   if (sections.length === 0) {
     return <Text className="text-(--fg-subtle)">Este curso aún no tiene temas.</Text>;
   }
@@ -71,7 +103,7 @@ export const TemarioView = ({ sections, progressViewModel }: TemarioViewProps) =
   return (
     <div className="flex flex-col gap-4">
       {sections.map((section) => (
-        <SectionCard key={section.id} section={section} />
+        <SectionCard key={section.id} section={section} onModuleClick={onModuleClick} />
       ))}
       {progressViewModel && <ProgressBar viewModel={progressViewModel} />}
     </div>
