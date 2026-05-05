@@ -7,7 +7,7 @@ import AuthStorage from '@/modules/auth/infrastructure/AuthStorage';
 import UserRepository from '@/modules/user/infrastructure/UserRepository';
 import RecentlyAccessedRepository from '@/modules/recentlyAccessed/infrastructure/RecentlyAccessedRepository';
 import TaskRepository from '@/modules/task/infrastructure/TaskRepository';
-import SignupRepository from '@/modules/signup/infrastructure/SignupRepository';
+import UserStorage from '@/modules/user/infrastructure/UserStorage';
 
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
@@ -17,11 +17,11 @@ import type IAuthSessionStore from '@/modules/auth/domain/IAuthSessionStore';
 import type IUserRepository from '@/modules/user/domain/IUserRepository';
 import type IRecentlyAccessedRepository from '@/modules/recentlyAccessed/domain/IRecentlyAccessedRepository';
 import type ITaskRepository from '@/modules/task/domain/ITaskRepository';
-import type ISignupRepository from '@/modules/signup/domain/ISignupRepository';
+import type IUserSessionStore from '@/modules/user/domain/IUserSessionStore';
+
 
 export default class Dependencies {
   readonly moodleClient: IMoodleClient;
-
   readonly authRepository: IAuthRepository;
   readonly courseRepository: ICourseRepository;
   readonly calendarRepository: ICalendarRepository;
@@ -29,8 +29,8 @@ export default class Dependencies {
   readonly userRepository: IUserRepository;
   readonly recentlyAccessedRepository: IRecentlyAccessedRepository;
   readonly taskRepository: ITaskRepository;
-  readonly signupRepository: ISignupRepository;
-
+  readonly userSessionStore: IUserSessionStore;
+  
   private constructor(params: {
     moodleClient: IMoodleClient;
     authRepository: IAuthRepository;
@@ -40,7 +40,7 @@ export default class Dependencies {
     userRepository: IUserRepository;
     recentlyAccessedRepository: IRecentlyAccessedRepository;
     taskRepository: ITaskRepository;
-    signupRepository: ISignupRepository;
+    userSessionStore: IUserSessionStore;
   }) {
     this.moodleClient = params.moodleClient;
     this.authRepository = params.authRepository;
@@ -50,7 +50,7 @@ export default class Dependencies {
     this.userRepository = params.userRepository;
     this.recentlyAccessedRepository = params.recentlyAccessedRepository;
     this.taskRepository = params.taskRepository;
-    this.signupRepository = params.signupRepository;
+    this.userSessionStore = params.userSessionStore;
   }
 
   static create(): Dependencies {
@@ -58,14 +58,14 @@ export default class Dependencies {
 
     return new Dependencies({
       moodleClient,
-      authRepository: new AuthRepository(moodleClient),
+      authRepository: new AuthRepository(),
       courseRepository: new CourseRepository(moodleClient),
       calendarRepository: new CalendarRepository(moodleClient),
       authSessionStore: new AuthStorage(),
       userRepository: new UserRepository(moodleClient),
       recentlyAccessedRepository: new RecentlyAccessedRepository(moodleClient),
       taskRepository: new TaskRepository(moodleClient),
-      signupRepository: new SignupRepository(),
+      userSessionStore: new UserStorage(),      
     });
   }
 }

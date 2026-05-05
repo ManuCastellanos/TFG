@@ -1,4 +1,4 @@
-import type { Auth } from "./Auth";
+import type { Auth } from './Auth';
 
 export default interface IAuthSessionStore {
   get(): Auth | null;

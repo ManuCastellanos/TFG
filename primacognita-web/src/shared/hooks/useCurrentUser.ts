@@ -11,9 +11,9 @@ type UseCurrentUserResult = {
 
 export function useCurrentUser(): UseCurrentUserResult {
   const { token, isAuthenticated } = useSession();
-  const { userRepository } = useDependencies();
+  const { userRepository, userSessionStore } = useDependencies();
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => userSessionStore.get());
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -27,7 +27,9 @@ export function useCurrentUser(): UseCurrentUserResult {
       setIsLoading(true);
       setError(null);
       try {
-        setUser(await userRepository.getCurrentUser(token));
+        const fetchedUser = await userRepository.getCurrentUser(token);
+        userSessionStore.save(fetchedUser);
+        setUser(fetchedUser);
       } catch (e) {
         setError(e instanceof Error ? e : new Error('Error al cargar el usuario'));
       } finally {
@@ -36,7 +38,7 @@ export function useCurrentUser(): UseCurrentUserResult {
     };
 
     void load();
-  }, [isAuthenticated, token, userRepository]);
+  }, [isAuthenticated, token, userRepository, userSessionStore]);
 
   return { user, isLoading, error };
 }

@@ -27,7 +27,10 @@ export default class UserRepository implements IUserRepository {
     };
   }
 
-  private async getUserRole(token: string, userId: number): Promise<{ roleId: number | null; roleName: string | null }> {
+  private async getUserRole(
+    token: string,
+    userId: number,
+  ): Promise<{ roleId: number | null; roleName: string | null }> {
     try {
       const courses = await this.moodleClient.call<UserCoursesResponse>(token, 'core_enrol_get_users_courses', {
         userid: String(userId),

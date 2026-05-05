@@ -36,6 +36,7 @@ export const useUserCourses = (userId: string | null, token: string | null): Use
     try {
       const data = await coursesRepository.getUserCourses(userId, token);
       setCourses(data);
+      setLoading(false);
 
       const categoryIds = unique(
         data.map((c) => c.categoryId).filter((id): id is CourseCategoryId => Boolean(id && id.trim().length > 0)),
@@ -58,7 +59,6 @@ export const useUserCourses = (userId: string | null, token: string | null): Use
       setError(e instanceof Error ? e.message : 'Unknown error');
       setCourses([]);
       setCategoryNameById({});
-    } finally {
       setLoading(false);
     }
   }, [coursesRepository, token, userId]);

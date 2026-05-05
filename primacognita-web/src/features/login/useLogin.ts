@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-
 import { Constants } from '@/shared/constants/Constants';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
@@ -11,8 +10,7 @@ type UseLoginResult = {
 };
 
 export const useLogin = (): UseLoginResult => {
-  const { authRepository, authSessionStore } = useDependencies();
-
+  const { authRepository, authSessionStore, userRepository, userSessionStore } = useDependencies();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +26,12 @@ export const useLogin = (): UseLoginResult => {
       try {
         const auth = await authRepository.login(username, password);
         authSessionStore.save(auth);
+
+        const user = await userRepository.getCurrentUser(auth.token);
+
+      
+        userSessionStore.save(user);
+
         return true;
       } catch {
         setError(Constants.INVALID_ACCESS_MSG);
@@ -36,7 +40,7 @@ export const useLogin = (): UseLoginResult => {
         setIsLoading(false);
       }
     },
-    [authRepository, authSessionStore],
+    [authRepository, authSessionStore, userRepository, userSessionStore],
   );
 
   return { error, isLoading, login, clearError };

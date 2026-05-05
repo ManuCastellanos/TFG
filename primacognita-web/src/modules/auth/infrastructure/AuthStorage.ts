@@ -1,7 +1,7 @@
-import type { Auth } from "@/modules/auth/domain/Auth";
-import type IAuthSessionStore from "@/modules/auth/domain/IAuthSessionStore";
+import type { Auth } from '@/modules/auth/domain/Auth';
+import type IAuthSessionStore from '@/modules/auth/domain/IAuthSessionStore';
 
-const KEY = "pc_session";
+const KEY = 'pc_session';
 
 export default class AuthStorage implements IAuthSessionStore {
   get(): Auth | null {

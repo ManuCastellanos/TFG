@@ -7,12 +7,13 @@ type UseSessionResult = {
 };
 
 export const useSession = (): UseSessionResult => {
-  const { authSessionStore } = useDependencies();
-  const session = authSessionStore.get();
+  const { authSessionStore, userSessionStore } = useDependencies();
+  const auth = authSessionStore.get();
+  const user = userSessionStore.get();
 
   return {
-    token: session?.token ?? null,
-    userId: session?.userId ?? null,
-    isAuthenticated: !!session?.token,
+    token: auth?.token ?? null,
+    userId: user?.id ?? null,
+    isAuthenticated: !!auth?.token,
   };
 };
