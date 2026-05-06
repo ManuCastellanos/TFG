@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Constants } from '@/shared/constants/Constants';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
-import { loginUser } from '@/features/auth/loginUser';
+import { loginUser } from '@/features/session/loginUser';
 import type { LoginCredentials } from '../types/login.types';
 
 type UseLoginResult = {

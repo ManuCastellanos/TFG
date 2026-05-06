@@ -4,7 +4,7 @@ import { Sidebar } from './components/sidebar/Sidebar';
 import { TopBar } from './components/topbar/TopBar';
 import { NAV_ITEMS } from './appLayout.constants';
 import { useAppLayout } from './useAppLayout';
-import { useLogout } from '@/features/auth/hooks/useLogout';
+import { useLogout } from '@/features/session/hooks/useLogout';
 
 interface AppLayoutProps {
   children: ReactNode;
