@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
-import { Input } from '@/components/input/Input';
-import { PasswordInput } from '@/components/input/PasswordInput';
-import { Banner } from '@/components/banner/Banner';
-import { Button } from '@/components/button/Button';
-import { Text } from '@/components/text/Text';
+import { Input } from '@/components/ui/input/Input';
+import { PasswordInput } from '@/components/ui/input/PasswordInput';
+import { Banner } from '@/components/feedback/banner/Banner';
+import { Button } from '@/components/ui/button/Button';
+import { Text } from '@/components/ui/text/Text';
 import type { LoginCredentials } from '../types/login.types';
 
 const FieldError = ({ message }: { message?: string }) =>

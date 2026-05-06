@@ -1,4 +1,4 @@
-import { Surface } from '@/components/surface/Surface';
+import { Surface } from '@/components/ui/surface/Surface';
 import type { RecentlyAccessedItemVM } from './RecentlyAccessed.types';
 
 interface Props {

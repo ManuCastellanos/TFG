@@ -1,5 +1,5 @@
 import { useDropdown } from '@/shared/hooks/useDropdown';
-import { Input } from '@/components/input/Input';
+import { Input } from '@/components/ui/input/Input';
 import type { CourseCategory } from '@/modules/course/domain/CourseCategory';
 
 type Props = {

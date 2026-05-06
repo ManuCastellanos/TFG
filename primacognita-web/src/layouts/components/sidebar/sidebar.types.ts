@@ -1,4 +1,4 @@
-import type { NavItemConfig } from "@/components/navItem/navItem.types";
+import type { NavItemConfig } from "@/components/navigation/navItem/navItem.types";
 
 export type SidebarProps = {
   navItems: NavItemConfig[];

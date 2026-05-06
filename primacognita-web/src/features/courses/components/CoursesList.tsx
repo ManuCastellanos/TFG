@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
-import { SectionHeader } from '@/components/sectionHeader/SectionHeader';
-import { IconButton } from '@/components/button/IconButton';
+import { SectionHeader } from '@/components/layout/sectionHeader/SectionHeader';
+import { IconButton } from '@/components/ui/button/IconButton';
 import { CourseCard } from './CourseCard';
 import type { Course } from '@/modules/course/domain/Course';
 

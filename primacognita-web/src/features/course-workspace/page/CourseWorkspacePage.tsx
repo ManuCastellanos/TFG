@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import { Banner } from '@/components/banner/Banner';
-import { Button } from '@/components/button/Button';
-import { Text } from '@/components/text/Text';
+import { Banner } from '@/components/feedback/banner/Banner';
+import { Button } from '@/components/ui/button/Button';
+import { Text } from '@/components/ui/text/Text';
 import { useSession } from '@/shared/hooks/useSession';
 import { useCoursePageData } from '../hooks/useCoursePage';
 import { useParticipants } from '../sections/participants/hooks/useParticipants';

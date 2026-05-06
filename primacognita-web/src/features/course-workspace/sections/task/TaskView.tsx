@@ -1,7 +1,7 @@
 import { ClipboardList } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Surface } from "@/components/surface/Surface";
-import { Text } from "@/components/text/Text";
+import { Surface } from "@/components/ui/surface/Surface";
+import { Text } from "@/components/ui/text/Text";
 import { cn } from "@/shared/utils/cn";
 import type { CourseModule } from "@/modules/course/domain/CourseSection";
 

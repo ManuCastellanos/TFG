@@ -1,8 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Card } from '@/components/card/Card';
-import { Page } from '@/components/page/Page';
-import { Text } from '@/components/text/Text';
-import { Button } from '@/components/button/Button';
+import { Card } from '@/components/ui/card/Card';
+import { Page } from '@/components/layout/page/Page';
+import { Text } from '@/components/ui/text/Text';
+import { Button } from '@/components/ui/button/Button';
 import { useLogin } from '../hooks/useLogin';
 import { LoginForm } from '../components/LoginForm';
 import type { LoginCredentials } from '../types/login.types';

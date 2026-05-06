@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Banner } from '@/components/banner/Banner';
-import { Text } from '@/components/text/Text';
+import { Banner } from '@/components/feedback/banner/Banner';
+import { Text } from '@/components/ui/text/Text';
 import { CoursesList } from '../components/CoursesList';
 import { CoursesHeader } from '../components/CoursesHeader';
 import { useCourses } from '../hooks/useCourses';

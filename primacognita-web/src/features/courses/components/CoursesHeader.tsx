@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Text } from '@/components/text/Text';
-import { Button } from '@/components/button/Button';
-import { Dropdown } from '@/components/dropdown/Dropdown';
-import { DropdownItem } from '@/components/dropdown/DropdownItem';
+import { Text } from '@/components/ui/text/Text';
+import { Button } from '@/components/ui/button/Button';
+import { Dropdown } from '@/components/navigation/dropdown/Dropdown';
+import { DropdownItem } from '@/components/navigation/dropdown/DropdownItem';
 import { useClickOutside } from '@/shared/hooks/useClickOutside';
 
 type Props = {

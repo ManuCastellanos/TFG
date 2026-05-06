@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Page } from '@/components/page/Page';
-import { Card } from '@/components/card/Card';
-import { Text } from '@/components/text/Text';
+import { Page } from '@/components/layout/page/Page';
+import { Card } from '@/components/ui/card/Card';
+import { Text } from '@/components/ui/text/Text';
 import { useCreateCourse } from '../hooks/useCreateCourse';
 import { useAllCategories } from '../hooks/useCourseCategories';
 import { CreateCourseForm } from '../components/CreateCourseForm';

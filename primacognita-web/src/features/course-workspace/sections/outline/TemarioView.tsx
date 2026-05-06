@@ -1,9 +1,9 @@
-import { Surface } from '@/components/surface/Surface';
-import { Text } from '@/components/text/Text';
+import { Surface } from '@/components/ui/surface/Surface';
+import { Text } from '@/components/ui/text/Text';
 import { cn } from '@/shared/utils/cn';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
-import ProgressBar from '@/components/progressBar/ProgressBar';
-import type { ProgressBarViewModel } from '@/components/progressBar/progressBar.types';
+import ProgressBar from '@/components/ui/progressBar/ProgressBar';
+import type { ProgressBarViewModel } from '@/components/ui/progressBar/progressBar.types';
 
 const INTERNAL_MOD_NAMES = new Set(['assign', 'quiz']);
 

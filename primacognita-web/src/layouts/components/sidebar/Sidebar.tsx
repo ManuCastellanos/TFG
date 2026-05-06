@@ -1,4 +1,4 @@
-import { NavItem } from '@/components/navItem/NavItem';
+import { NavItem } from '@/components/navigation/navItem/NavItem';
 import type { SidebarProps } from './sidebar.types';
 
 export const Sidebar = ({ navItems, activePath, onNavigate }: SidebarProps) => (

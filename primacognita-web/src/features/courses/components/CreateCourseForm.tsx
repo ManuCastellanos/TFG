@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Input } from '@/components/input/Input';
-import { Banner } from '@/components/banner/Banner';
-import { Button } from '@/components/button/Button';
+import { Input } from '@/components/ui/input/Input';
+import { Banner } from '@/components/feedback/banner/Banner';
+import { Button } from '@/components/ui/button/Button';
 import { CategoryDropdown } from './CategoryDropdown';
 import { dateStringToUnix } from '../utils/course.utils';
 import type { CourseCategory } from '@/modules/course/domain/CourseCategory';

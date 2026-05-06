@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { Card } from '@/components/card/Card';
-import { SectionHeader } from '@/components/sectionHeader/SectionHeader';
+import { Card } from '@/components/ui/card/Card';
+import { SectionHeader } from '@/components/layout/sectionHeader/SectionHeader';
 import { useSession } from '@/shared/hooks/useSession';
 import { useRecentlyAccessedItems } from '@/shared/hooks/useRecentlyAccessedItems';
 import { RecentlyAccessedList } from './RecentlyAccessedList';

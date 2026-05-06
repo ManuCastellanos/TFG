@@ -1,5 +1,5 @@
 import type { ElementType, HTMLAttributes, ReactNode } from "react";
-import { cn } from "../../shared/utils/cn";
+import { cn } from "@/shared/utils/cn";
 
 export type SurfaceProps = HTMLAttributes<HTMLElement> & {
   children?: ReactNode;

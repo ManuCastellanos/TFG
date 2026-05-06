@@ -1,5 +1,5 @@
 import type { Course } from '@/modules/course/domain/Course';
-import type { ProgressBarViewModel } from '@/components/progressBar/progressBar.types';
+import type { ProgressBarViewModel } from '@/components/ui/progressBar/progressBar.types';
 
 export function dateStringToUnix(dateString: string): number {
   return Math.floor(new Date(dateString).getTime() / 1000);

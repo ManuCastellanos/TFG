@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Input } from "../../components/input/Input";
-import { Card } from "../../components/card/Card";
-import { Page } from "../../components/page/Page";
-import { Text } from "../../components/text/Text";
-import { Button } from "../../components/button/Button";
-import { useNavigate } from "@tanstack/react-router";
-import { Banner } from "../../components/banner/Banner";
+import { useState } from 'react';
+import { Input } from '@/components/ui/input/Input';
+import { Card } from '@/components/ui/card/Card';
+import { Page } from '@/components/layout/page/Page';
+import { Text } from '@/components/ui/text/Text';
+import { Button } from '@/components/ui/button/Button';
+import { useNavigate } from '@tanstack/react-router';
+import { Banner } from '@/components/feedback/banner/Banner';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
 
@@ -19,7 +19,7 @@ export default function ForgotPassword() {
     e.preventDefault();
 
     setInfo(
-      "En esta prueba de concepto, la recuperación de contraseña por email no está disponible porque el servidor de correo (SMTP) no está configurado en el entorno actual.",
+      'En esta prueba de concepto, la recuperación de contraseña por email no está disponible porque el servidor de correo (SMTP) no está configurado en el entorno actual.',
     );
     setSubmitted(true);
   };
@@ -30,15 +30,12 @@ export default function ForgotPassword() {
         {!submitted ? (
           <>
             <Text>
-              Para restablecer su contraseña, envíe su nombre de usuario o su
-              dirección de correo electrónico. Le enviaremos un email con
-              instrucciones para poder acceder de nuevo.
+              Para restablecer su contraseña, envíe su nombre de usuario o su dirección de correo electrónico. Le
+              enviaremos un email con instrucciones para poder acceder de nuevo.
             </Text>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <Text className="text-xl font-bold text-(--fg)">
-                Buscar por nombre de usuario
-              </Text>
+              <Text className="text-xl font-bold text-(--fg)">Buscar por nombre de usuario</Text>
 
               <Input
                 type="text"
@@ -56,9 +53,7 @@ export default function ForgotPassword() {
 
               <div className="my-6 h-px bg-(--border)" />
 
-              <Text className="text-xl font-bold text-(--fg)">
-                Buscar por correo electrónico
-              </Text>
+              <Text className="text-xl font-bold text-(--fg)">Buscar por correo electrónico</Text>
 
               <Input
                 type="text"
@@ -80,27 +75,25 @@ export default function ForgotPassword() {
                 <Button
                   type="button"
                   className="w-fit bg-transparent p-0 hover:bg-transparent"
-                  onClick={() => navigate({ to: "/" })}
+                  onClick={() => navigate({ to: '/' })}
                 >
-                  <p className="w-full text-center text-sm text-(--pr-700) hover:underline">
-                    Atrás
-                  </p>
+                  <p className="w-full text-center text-sm text-(--pr-700) hover:underline">Atrás</p>
                 </Button>
               </div>
             </form>
           </>
         ) : (
           <div className="space-y-4">
-            <Text className="text-xl font-bold text-(--fg)">
-              Recuperación de contraseña (PoC)
-            </Text>
+            <Text className="text-xl font-bold text-(--fg)">Recuperación de contraseña (PoC)</Text>
 
-            {info && <Banner className= "text-md" variant="info">{info}</Banner>}
+            {info && (
+              <Banner className="text-md" variant="info">
+                {info}
+              </Banner>
+            )}
 
             <div className="flex items-center justify-center pt-2">
-              <Button onClick={() => navigate({ to: "/" })}>
-                Volver a login
-              </Button>
+              <Button onClick={() => navigate({ to: '/' })}>Volver a login</Button>
             </div>
           </div>
         )}

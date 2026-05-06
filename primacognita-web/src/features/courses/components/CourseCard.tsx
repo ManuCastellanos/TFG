@@ -1,5 +1,5 @@
 import { cn } from '@/shared/utils/cn';
-import { Surface } from '@/components/surface/Surface';
+import { Surface } from '@/components/ui/surface/Surface';
 import type { Course } from '@/modules/course/domain/Course';
 
 export type CourseCardProps = {

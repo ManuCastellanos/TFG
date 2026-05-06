@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, CalendarClock, Trophy } from 'lucide-react';
-import { Banner } from '@/components/banner/Banner';
-import { Button } from '@/components/button/Button';
-import { Text } from '@/components/text/Text';
-import { Card } from '@/components/card/Card';
+import { Banner } from '@/components/feedback/banner/Banner';
+import { Button } from '@/components/ui/button/Button';
+import { Text } from '@/components/ui/text/Text';
+import { Card } from '@/components/ui/card/Card';
 import { useTask } from './hooks/useTask';
 
 const formatDate = (date: Date) =>
@@ -33,98 +33,101 @@ export default function TaskPage() {
 
   return (
     <main className="flex flex-1 flex-col overflow-y-auto p-8">
-        <div className="mb-6 flex items-center gap-3">
+      <div className="mb-6 flex items-center gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          className="p-2"
+          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
+          aria-label="Volver al curso"
+        >
+          <ArrowLeft className="size-5" />
+        </Button>
+
+        <Text className="text-2xl font-bold text-(--fg)">{task?.title ?? (loading ? 'Cargando...' : 'Ejercicio')}</Text>
+      </div>
+
+      {error && <Banner variant="error">{error}</Banner>}
+
+      {!loading && task && (
+        <div className="flex max-w-2xl flex-col gap-6">
+          <Card className="flex flex-col gap-4 p-6">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--fg-muted)">
+              <CalendarClock className="size-4" />
+              <span>Requisitos de finalización</span>
+            </div>
+
+            <div className="flex flex-col gap-2 text-sm text-(--fg)">
+              {task.openDate && (
+                <div className="flex gap-2">
+                  <span className="font-medium text-(--fg-muted)">Abrió:</span>
+                  <span className="capitalize">{formatDate(task.openDate)}</span>
+                </div>
+              )}
+              {task.dueDate && (
+                <div className="flex gap-2">
+                  <span className="font-medium text-(--fg-muted)">Cierra:</span>
+                  <span className="capitalize">{formatDate(task.dueDate)}</span>
+                </div>
+              )}
+              {!task.openDate && !task.dueDate && (
+                <span className="text-(--fg-muted)">Sin fechas límite establecidas.</span>
+              )}
+            </div>
+          </Card>
+
           <Button
             type="button"
-            variant="ghost"
-            className="p-2"
-            onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-            aria-label="Volver al curso"
+            variant="primary"
+            onClick={() =>
+              isQuiz
+                ? navigate({
+                    to: '/courses/$courseId/quiz/$quizId/attempt',
+                    params: { courseId, quizId: String(task.id) },
+                  })
+                : window.open(task.viewUrl, '_blank')
+            }
           >
-            <ArrowLeft className="size-5" />
+            {isQuiz ? 'Intento cuestionario' : 'Entregar tarea'}
           </Button>
 
-          <Text className="text-2xl font-bold text-(--fg)">
-            {task?.title ?? (loading ? 'Cargando...' : 'Ejercicio')}
-          </Text>
+          <Card className="flex flex-col gap-3 p-6">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--fg-muted)">
+              <Trophy className="size-4" />
+              <span>Calificación</span>
+            </div>
+
+            <div className="flex flex-col gap-1.5 text-sm text-(--fg)">
+              {isQuiz && task.gradingMethod && (
+                <div className="flex gap-2">
+                  <span className="font-medium text-(--fg-muted)">Método de calificación:</span>
+                  <span>{task.gradingMethod}</span>
+                </div>
+              )}
+              {task.gradePass != null && (
+                <div className="flex gap-2">
+                  <span className="font-medium text-(--fg-muted)">Calificación para aprobar:</span>
+                  <span>
+                    {formatGrade(task.gradePass)} de {formatGrade(task.gradeMax)}
+                  </span>
+                </div>
+              )}
+              {task.gradePass == null && (
+                <div className="flex gap-2">
+                  <span className="font-medium text-(--fg-muted)">Calificación máxima:</span>
+                  <span>{formatGrade(task.gradeMax)}</span>
+                </div>
+              )}
+              {task.status.graded && task.status.grade != null && (
+                <div className="flex gap-2">
+                  <span className="font-medium text-(--fg-muted)">Tu calificación:</span>
+                  <span className="font-semibold text-(--color-pr)">{formatGrade(task.status.grade)}</span>
+                </div>
+              )}
+            </div>
+          </Card>
         </div>
-
-        {error && <Banner variant="error">{error}</Banner>}
-
-        {!loading && task && (
-          <div className="flex max-w-2xl flex-col gap-6">
-            <Card className="flex flex-col gap-4 p-6">
-              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--fg-muted)">
-                <CalendarClock className="size-4" />
-                <span>Requisitos de finalización</span>
-              </div>
-
-              <div className="flex flex-col gap-2 text-sm text-(--fg)">
-                {task.openDate && (
-                  <div className="flex gap-2">
-                    <span className="font-medium text-(--fg-muted)">Abrió:</span>
-                    <span className="capitalize">{formatDate(task.openDate)}</span>
-                  </div>
-                )}
-                {task.dueDate && (
-                  <div className="flex gap-2">
-                    <span className="font-medium text-(--fg-muted)">Cierra:</span>
-                    <span className="capitalize">{formatDate(task.dueDate)}</span>
-                  </div>
-                )}
-                {!task.openDate && !task.dueDate && (
-                  <span className="text-(--fg-muted)">Sin fechas límite establecidas.</span>
-                )}
-              </div>
-            </Card>
-
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => window.open(task.viewUrl, '_blank')}
-            >
-              {isQuiz ? 'Intento cuestionario' : 'Entregar tarea'}
-            </Button>
-
-            <Card className="flex flex-col gap-3 p-6">
-              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--fg-muted)">
-                <Trophy className="size-4" />
-                <span>Calificación</span>
-              </div>
-
-              <div className="flex flex-col gap-1.5 text-sm text-(--fg)">
-                {isQuiz && task.gradingMethod && (
-                  <div className="flex gap-2">
-                    <span className="font-medium text-(--fg-muted)">Método de calificación:</span>
-                    <span>{task.gradingMethod}</span>
-                  </div>
-                )}
-                {task.gradePass != null && (
-                  <div className="flex gap-2">
-                    <span className="font-medium text-(--fg-muted)">Calificación para aprobar:</span>
-                    <span>
-                      {formatGrade(task.gradePass)} de {formatGrade(task.gradeMax)}
-                    </span>
-                  </div>
-                )}
-                {task.gradePass == null && (
-                  <div className="flex gap-2">
-                    <span className="font-medium text-(--fg-muted)">Calificación máxima:</span>
-                    <span>{formatGrade(task.gradeMax)}</span>
-                  </div>
-                )}
-                {task.status.graded && task.status.grade != null && (
-                  <div className="flex gap-2">
-                    <span className="font-medium text-(--fg-muted)">Tu calificación:</span>
-                    <span className="font-semibold text-(--color-pr)">
-                      {formatGrade(task.status.grade)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-        )}
+      )}
     </main>
   );
 }

@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from "react";
-import { cn } from "../../shared/utils/cn";
+import { cn } from "@/shared/utils/cn";
 import { buttonStyles, type ButtonVariant } from "./button.styles";
 
 export type { ButtonVariant };

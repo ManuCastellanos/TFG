@@ -1,5 +1,5 @@
-import { Surface } from "@/components/surface/Surface";
-import { Text } from "@/components/text/Text";
+import { Surface } from "@/components/ui/surface/Surface";
+import { Text } from "@/components/ui/text/Text";
 import { progressBarClasses as c } from "./progressBar.styles";
 import type { ProgressBarViewModel } from "./progressBar.types";
 

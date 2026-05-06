@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { Avatar } from '@/components/avatar/Avatar';
-import { Surface } from '@/components/surface/Surface';
-import { Text } from '@/components/text/Text';
-import { Card } from '@/components/card/Card';
+import { Avatar } from '@/components/ui/avatar/Avatar';
+import { Surface } from '@/components/ui/surface/Surface';
+import { Text } from '@/components/ui/text/Text';
+import { Card } from '@/components/ui/card/Card';
 import type { Participant } from '@/modules/course/domain/Participant';
 
 export type ParticipantsViewProps = {

@@ -1,6 +1,6 @@
 import { Bell, Mail } from 'lucide-react';
-import { Avatar } from '@/components/avatar/Avatar';
-import { IconButton } from '@/components/button/IconButton';
+import { Avatar } from '@/components/ui/avatar/Avatar';
+import { IconButton } from '@/components/ui/button/IconButton';
 import type { TopBarProps } from './topbar.types';
 
 export const TopBar = ({ user, onMessageClick, onNotificationClick }: TopBarProps) => (
