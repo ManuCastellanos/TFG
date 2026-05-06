@@ -5,13 +5,13 @@ import { Banner } from '@/components/banner/Banner';
 import { Button } from '@/components/button/Button';
 import { Text } from '@/components/text/Text';
 import { useSession } from '@/shared/hooks/useSession';
-import { useCoursePageData } from './hooks/useCoursePageData';
-import { useParticipants } from './hooks/useParticipants';
-import { CoursePageNav, type CoursePageSection } from './coursePage/CoursePageNav';
-import { TemarioView } from './coursePage/TemarioView';
-import { TaskView } from './coursePage/TaskView';
-import { ParticipantsView } from './coursePage/ParticipantsView';
-import { toProgressBarViewModel } from './course.utils';
+import { useCoursePageData } from '../hooks/useCoursePage';
+import { useParticipants } from '../sections/participants/hooks/useParticipants';
+import { CoursePageNav, type CoursePageSection } from './CoursePageNav';
+import { TemarioView } from '../sections/outline/TemarioView';
+import { TaskView } from '../sections/task/TaskView';
+import { ParticipantsView } from '../sections/participants/ParticipantsView';
+import { toProgressBarViewModel } from '../../courses/utils/course.utils';
 
 export default function CoursePage() {
   const navigate = useNavigate();

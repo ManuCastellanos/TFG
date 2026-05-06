@@ -8,19 +8,43 @@ export type CourseCardProps = {
   onClick?: () => void;
 };
 
-const clampProgress = (value: number) => Math.min(100, Math.max(0, value));
+const clamp = (value: number) => Math.min(100, Math.max(0, value));
 
-const ProgressBar = ({ value }: { value: number }) => (
+type ProgressBarProps = {
+  value: number;
+};
+
+const ProgressBar = ({ value }: ProgressBarProps) => (
   <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/35">
     <div
       className="h-full rounded-full transition-all"
       style={{
-        width: `${clampProgress(value)}%`,
+        width: `${clamp(value)}%`,
         backgroundColor: 'rgba(255,255,255,0.92)',
       }}
     />
   </div>
 );
+
+const CourseImage = ({ course }: { course: Course }) => {
+  if (course.imageUrl) {
+    return (
+      <img
+        src={course.imageUrl}
+        alt={course.fullname}
+        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+      />
+    );
+  }
+
+  return (
+    <div className="flex h-full w-full items-center justify-center bg-white/95">
+      <span className="text-4xl font-extrabold tracking-tight text-black/25">
+        {course.shortname.slice(0, 2).toUpperCase()}
+      </span>
+    </div>
+  );
+};
 
 export const CourseCard = ({
   course,
@@ -47,19 +71,7 @@ export const CourseCard = ({
           className="relative h-34 w-full overflow-hidden rounded-[1.15rem] bg-white"
           style={{ border: '2px solid rgba(255,255,255,0.75)' }}
         >
-          {course.imageUrl ? (
-            <img
-              src={course.imageUrl}
-              alt={course.fullname}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-white/95">
-              <span className="text-4xl font-extrabold tracking-tight text-black/25">
-                {course.shortname.slice(0, 2).toUpperCase()}
-              </span>
-            </div>
-          )}
+          <CourseImage course={course} />
         </div>
 
         <div className="flex flex-col gap-2 px-1 pb-1">

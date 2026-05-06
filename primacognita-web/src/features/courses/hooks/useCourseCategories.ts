@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-
-import type { CourseCategory } from "@/modules/course/domain/CourseCategory";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { useCallback, useEffect, useState } from 'react';
+import type { CourseCategory } from '@/modules/course/domain/CourseCategory';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { useSession } from '@/shared/hooks/useSession';
 
 type UseAllCategoriesResult = {
   categories: CourseCategory[];
@@ -9,7 +9,8 @@ type UseAllCategoriesResult = {
   error: string | null;
 };
 
-export const useAllCategories = (token: string | null): UseAllCategoriesResult => {
+export const useAllCategories = (): UseAllCategoriesResult => {
+  const { token } = useSession();
   const { courseRepository } = useDependencies();
 
   const [categories, setCategories] = useState<CourseCategory[]>([]);
@@ -17,12 +18,7 @@ export const useAllCategories = (token: string | null): UseAllCategoriesResult =
   const [error, setError] = useState<string | null>(null);
 
   const fetchCategories = useCallback(async () => {
-    if (!token) {
-      setCategories([]);
-      setError(null);
-      setLoading(false);
-      return;
-    }
+    if (!token) return;
 
     setLoading(true);
     setError(null);
@@ -31,7 +27,7 @@ export const useAllCategories = (token: string | null): UseAllCategoriesResult =
       const data = await courseRepository.getAllCategories(token);
       setCategories(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unknown error");
+      setError(e instanceof Error ? e.message : 'Unknown error');
       setCategories([]);
     } finally {
       setLoading(false);

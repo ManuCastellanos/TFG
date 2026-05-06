@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { CoursesList } from '../courses/CoursesList';
+import { CoursesList } from '@/features/courses/components/CoursesList';
 import { Card } from '@/components/card/Card';
 import { useUserCourses } from '@/shared/hooks/useUserCourses';
 import { useSession } from '@/shared/hooks/useSession';

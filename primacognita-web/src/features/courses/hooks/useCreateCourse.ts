@@ -1,50 +1,43 @@
-import { useCallback, useState } from "react";
-
-import type { Course, CourseId } from "@/modules/course/domain/Course";
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { useCallback, useState } from 'react';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { useSession } from '@/shared/hooks/useSession';
+import type { CreateCourseInput } from '@/modules/course/domain/CreateCourseInput';
+import type { CourseId } from '@/modules/course/domain/Course';
 
 type UseCreateCourseResult = {
-  createCourse: (input: Course, imageFile?: File) => Promise<CourseId>;
+  submit: (input: CreateCourseInput, imageFile?: File) => Promise<CourseId>;
   loading: boolean;
   error: string | null;
 };
 
-export const useCreateCourse = (
-  token: string | null,
-  userId: string | null,
-): UseCreateCourseResult => {
+export const useCreateCourse = (): UseCreateCourseResult => {
+  const { token, userId } = useSession();
   const { courseRepository } = useDependencies();
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createCourse = useCallback(
-    async (input: Course, imageFile?: File): Promise<CourseId> => {
-      if (!token || !userId) throw new Error("No token");
-
+  const submit = useCallback(
+    async (input: CreateCourseInput, imageFile?: File): Promise<CourseId> => {
+      if (!token || !userId) throw new Error('No hay sesión activa');
       setLoading(true);
       setError(null);
-
       try {
         let imageItemId: number | undefined;
         if (imageFile) {
-
           imageItemId = await courseRepository.uploadCourseImage(token, imageFile, userId);
         }
-
         const courseId = await courseRepository.createCourse(token, input, imageItemId);
         await courseRepository.enrollTeacherInCourse(token, userId, courseId);
         return courseId;
       } catch (e) {
-        const message = e instanceof Error ? e.message : "Unknown error";
-        setError(message);
+        setError(e instanceof Error ? e.message : 'Error desconocido');
         throw e;
       } finally {
         setLoading(false);
       }
     },
-    [courseRepository, token, userId],
+    [token, userId, courseRepository],
   );
 
-  return { createCourse, loading, error };
+  return { submit, loading, error };
 };

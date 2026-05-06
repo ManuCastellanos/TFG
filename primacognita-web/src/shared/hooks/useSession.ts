@@ -1,8 +1,9 @@
-import { useDependencies } from "@/shared/providers/DependenciesProvider";
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
 type UseSessionResult = {
   token: string | null;
   userId: string | null;
+  roleName: string | null;
   isAuthenticated: boolean;
 };
 
@@ -14,6 +15,7 @@ export const useSession = (): UseSessionResult => {
   return {
     token: auth?.token ?? null,
     userId: user?.id ?? null,
+    roleName: user?.roleName ?? null,
     isAuthenticated: !!auth?.token,
   };
 };

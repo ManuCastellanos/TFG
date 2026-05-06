@@ -1,6 +1,6 @@
 import { createRoute } from '@tanstack/react-router';
 import { layoutRoute } from './layout.route';
-import Courses from '@/features/courses/Courses';
+import Courses from '@/features/courses/pages/CoursesPage';
 
 export const coursesRoute = createRoute({
   getParentRoute: () => layoutRoute,

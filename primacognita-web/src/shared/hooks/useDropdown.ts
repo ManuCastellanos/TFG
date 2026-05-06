@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CourseCategory } from '@/modules/course/domain/CourseCategory';
 
-interface UseCategoryDropdownResult {
+interface UseDropdownResult {
   categoryId: string | null;
   categorySearch: string;
   dropdownOpen: boolean;
@@ -12,7 +12,7 @@ interface UseCategoryDropdownResult {
   onSelect: (category: CourseCategory) => void;
 }
 
-export function useCategoryDropdown(categories: CourseCategory[]): UseCategoryDropdownResult {
+export function useDropdown(categories: CourseCategory[]): UseDropdownResult {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [categorySearch, setCategorySearch] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);

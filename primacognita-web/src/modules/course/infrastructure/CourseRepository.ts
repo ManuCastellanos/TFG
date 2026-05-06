@@ -1,6 +1,8 @@
 import type ICourseRepository from '@/modules/course/domain/ICourseRepository';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
-import type { Course, CourseId } from '@/modules/course/domain/Course';
+import type { CourseId } from '@/modules/course/domain/Course';
+import type { Course } from '@/modules/course/domain/Course';
+import type { CreateCourseInput, UpdateCourseInput } from '@/modules/course/domain/CreateCourseInput';
 import type { CourseResponse, CreateCourseResponse } from '@/modules/course/infrastructure/CourseResponse';
 import type { CourseCategory, CourseCategoryId } from '@/modules/course/domain/CourseCategory';
 import type { CategoryResponse } from '@/modules/course/infrastructure/CategoryResponse';
@@ -47,7 +49,7 @@ export default class CourseRepository implements ICourseRepository {
     return response.map((c) => ({ id: String(c.id), name: c.name }));
   }
 
-  async createCourse(token: string, input: Course, imageItemId?: number): Promise<CourseId> {
+  async createCourse(token: string, input: CreateCourseInput, imageItemId?: number): Promise<CourseId> {
     const params: Record<string, string> = {
       'courses[0][fullname]': input.fullname,
       'courses[0][shortname]': input.shortname,
@@ -67,7 +69,7 @@ export default class CourseRepository implements ICourseRepository {
     return String(response[0].id);
   }
 
-  async updateCourse(token: string, input: Course): Promise<void> {
+  async updateCourse(token: string, input: UpdateCourseInput): Promise<void> {
     const params: Record<string, string> = {
       'courses[0][id]': input.id,
       'courses[0][fullname]': input.fullname,
