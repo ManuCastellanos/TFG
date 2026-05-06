@@ -1,5 +1,5 @@
 import type { ReactNode, InputHTMLAttributes } from "react";
-import { cn } from "../../shared/utils/cn";
+import { cn } from "../../../shared/utils/cn";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   rightAdornment?: ReactNode;
