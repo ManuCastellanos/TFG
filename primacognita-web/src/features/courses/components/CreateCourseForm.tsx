@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input/Input';
 import { Banner } from '@/components/feedback/banner/Banner';
@@ -40,6 +40,28 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
   } = useForm<FormValues>({ defaultValues: { visible: '1' } });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    const file = e.target.files?.[0] ?? null;
+    setImageFile(file);
+    setPreviewUrl(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleRemoveImage = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setImageFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const submit = ({ fullname, shortname, categoryId, summary, visible, startdate, enddate, idnumber }: FormValues) => {
     const input: CreateCourseInput = {
@@ -82,11 +104,7 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
             control={control}
             rules={{ required: 'La categoría es obligatoria' }}
             render={({ field }) => (
-              <CategoryDropdown
-                categories={categories}
-                loading={loadingCategories}
-                onChange={field.onChange}
-              />
+              <CategoryDropdown categories={categories} loading={loadingCategories} onChange={field.onChange} />
             )}
           />
           <FieldError message={errors.categoryId?.message} />
@@ -97,15 +115,48 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
         <Input type="date" {...register('enddate')} placeholder="Fecha de fin" />
         <Input {...register('idnumber')} placeholder="Número de identificación" />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-        />
+        <div className="space-y-3">
+          <label className="text-sm font-medium">Imagen del curso</label>
+          <div className="flex items-center gap-3">
+            <input
+              id="course-image-input"
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleImageChange}
+            />
+            <label
+              htmlFor="course-image-input"
+              className="cursor-pointer inline-flex items-center px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              Seleccionar imagen
+            </label>
+            {imageFile && (
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="inline-flex items-center justify-center w-8 h-8 text-red-500 hover:text-red-700 rounded-full hover:bg-red-50 transition-colors"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+          {previewUrl && (
+            <div className="inline-block">
+              <img src={previewUrl} alt="Preview" className="w-48 h-32 object-cover rounded-lg border" />
+              <p className="mt-1 text-xs text-gray-500 truncate max-w-48">{imageFile?.name}</p>
+            </div>
+          )}
+        </div>
 
         <div className="flex gap-3">
-          <Button type="button" onClick={onCancel}>Cancelar</Button>
-          <Button type="submit" disabled={isLoading}>{isLoading ? 'Creando...' : 'Crear'}</Button>
+          <Button type="button" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Creando...' : 'Crear'}
+          </Button>
         </div>
       </form>
     </>

@@ -18,7 +18,7 @@ export default function CreateCoursePage() {
   };
 
   return (
-    <Page>
+    <Page className='w-full'>
       <Card className="w-full max-w-lg">
         <Text className="mb-6 text-2xl font-bold">Crear Curso</Text>
         <CreateCourseForm

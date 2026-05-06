@@ -22,11 +22,7 @@ export const useCreateCourse = (): UseCreateCourseResult => {
       setLoading(true);
       setError(null);
       try {
-        let imageItemId: number | undefined;
-        if (imageFile) {
-          imageItemId = await courseRepository.uploadCourseImage(token, imageFile, userId);
-        }
-        const courseId = await courseRepository.createCourse(token, input, imageItemId);
+        const courseId = await courseRepository.createCourseWithImage(token, input, imageFile);
         await courseRepository.enrollTeacherInCourse(token, userId, courseId);
         return courseId;
       } catch (e) {

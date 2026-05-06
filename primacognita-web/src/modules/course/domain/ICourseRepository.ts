@@ -10,7 +10,6 @@ export default interface ICourseRepository {
   getAllCategories(token: string): Promise<CourseCategory[]>;
   createCourse(token: string, input: CreateCourseInput, imageItemId?: number): Promise<CourseId>;
   updateCourse(token: string, input: UpdateCourseInput): Promise<void>;
-  uploadCourseImage(token: string, file: File, userId: string): Promise<number>;
   enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void>;
   getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]>;
   getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]>;
