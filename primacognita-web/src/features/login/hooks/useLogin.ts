@@ -1,37 +1,27 @@
 import { useCallback, useState } from 'react';
 import { Constants } from '@/shared/constants/Constants';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { loginUser } from '@/features/auth/loginUser';
+import type { LoginCredentials } from '../types/login.types';
 
 type UseLoginResult = {
   error: string | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
-  clearError: () => void;
+  login: (credentials: LoginCredentials) => Promise<boolean>;
 };
 
 export const useLogin = (): UseLoginResult => {
-  const { authRepository, authSessionStore, userRepository, userSessionStore } = useDependencies();
+  const dependencies = useDependencies();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
-
   const login = useCallback(
-    async (username: string, password: string): Promise<boolean> => {
+    async (credentials: LoginCredentials): Promise<boolean> => {
       setError(null);
       setIsLoading(true);
 
       try {
-        const auth = await authRepository.login(username, password);
-        authSessionStore.save(auth);
-
-        const user = await userRepository.getCurrentUser(auth.token);
-
-      
-        userSessionStore.save(user);
-
+        await loginUser(credentials, dependencies);
         return true;
       } catch {
         setError(Constants.INVALID_ACCESS_MSG);
@@ -40,8 +30,8 @@ export const useLogin = (): UseLoginResult => {
         setIsLoading(false);
       }
     },
-    [authRepository, authSessionStore, userRepository, userSessionStore],
+    [dependencies],
   );
 
-  return { error, isLoading, login, clearError };
+  return { error, isLoading, login };
 };

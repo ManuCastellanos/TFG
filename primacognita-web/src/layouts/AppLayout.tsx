@@ -4,6 +4,7 @@ import { Sidebar } from './components/sidebar/Sidebar';
 import { TopBar } from './components/topbar/TopBar';
 import { NAV_ITEMS } from './appLayout.constants';
 import { useAppLayout } from './useAppLayout';
+import { useLogout } from '@/features/auth/hooks/useLogout';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -14,13 +15,14 @@ export function AppLayout({ children, rightPanel }: AppLayoutProps) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAppLayout();
+  const { logout } = useLogout();
 
   return (
     <div className="flex h-screen overflow-hidden bg-(--surface)">
       <Sidebar
         navItems={NAV_ITEMS}
         activePath={pathname}
-        onNavigate={(path) => navigate({ to: path })}
+        onNavigate={(path) => path === '/logout' ? logout() : navigate({ to: path })}
       />
 
       {children}
