@@ -1,4 +1,3 @@
-import { Surface } from '@/components/ui/surface/Surface';
 import type { RecentlyAccessedItemVM } from './RecentlyAccessed.types';
 
 interface Props {
@@ -7,24 +6,24 @@ interface Props {
 }
 
 export const RecentlyAccessedItem = ({ item, onClick }: Props) => (
-  <Surface
-    as="button"
+  <button
+    type="button"
     onClick={onClick}
-    className="flex w-full items-center gap-4 px-4 py-3 text-left shadow-md transition hover:shadow-lg focus-visible:outline-2 focus-visible:outline-(--color-pr)"
+    className="flex w-full items-center gap-3 rounded-2xl p-2 text-left transition hover:bg-(--tint-50) focus-visible:outline-2 focus-visible:outline-(--color-pr)"
   >
     <div
-      className={`flex size-10 shrink-0 items-center justify-center rounded-xl text-xs font-bold text-white ${item.accentColor}`}
+      className={`flex size-10 shrink-0 items-center justify-center rounded-xl text-xl ${item.accentSoft}`}
     >
-      {item.code}
+      {item.emoji}
     </div>
 
     <div className="flex min-w-0 flex-1 flex-col">
-      <span className="truncate text-sm font-semibold text-(--fg)">{item.title}</span>
+      <span className="truncate text-sm font-bold text-(--fg)">{item.title}</span>
       <span className="truncate text-xs text-(--fg-muted)">
         {item.time}
-        <span className="mx-1.5 opacity-40">|</span>
+        <span className="mx-1 opacity-40">·</span>
         {item.subtitle}
       </span>
     </div>
-  </Surface>
+  </button>
 );

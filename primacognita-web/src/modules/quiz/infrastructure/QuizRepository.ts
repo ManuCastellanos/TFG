@@ -1,5 +1,5 @@
 import type IQuizRepository from '../domain/IQuizRepository';
-import type { AttemptData, ProcessResult } from '../domain/IQuizRepository';
+import type { AttemptData, ProcessResult, UserAttempt, AttemptReviewData } from '../domain/IQuizRepository';
 import type { QuizAttempt } from '../domain/QuizAttempt';
 import type { QuizAnswers } from '../domain/QuizQuestion';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
@@ -7,8 +7,10 @@ import type {
   QuizAttemptRaw,
   StartAttemptResponse,
   GetAttemptDataResponse,
+  GetUserAttemptsResponse,
   SaveAttemptResponse,
   ProcessAttemptResponse,
+  GetAttemptReviewResponse,
 } from './QuizAttemptResponse';
 
 export default class QuizRepository implements IQuizRepository {
@@ -21,6 +23,15 @@ export default class QuizRepository implements IQuizRepository {
       { quizid: String(quizId) },
     );
     return this.mapAttempt(response.attempt);
+  }
+
+  async getUserAttempts(token: string, quizId: number, userId: number): Promise<UserAttempt[]> {
+    const response = await this.moodleClient.call<GetUserAttemptsResponse>(
+      token,
+      'mod_quiz_get_user_quiz_attempts',
+      { quizid: String(quizId), userid: String(userId), status: 'all' },
+    );
+    return response.attempts.map((a) => this.mapAttempt(a));
   }
 
   async getAttemptData(token: string, attemptId: number, page: number): Promise<AttemptData> {
@@ -61,9 +72,27 @@ export default class QuizRepository implements IQuizRepository {
         timeup: '0',
       },
     );
+    return { state: response.state };
+  }
+
+  async getAttemptReview(token: string, attemptId: number): Promise<AttemptReviewData> {
+    const response = await this.moodleClient.call<GetAttemptReviewResponse>(
+      token,
+      'mod_quiz_get_attempt_review',
+      { attemptid: String(attemptId) },
+    );
     return {
-      attempt: this.mapAttempt(response.attempt),
       grade: response.grade,
+      questions: response.questions.map((q) => ({
+        slot: q.slot,
+        type: q.type,
+        page: q.page,
+        html: q.html,
+        state: q.state,
+        mark: q.mark,
+        maxmark: q.maxmark,
+        number: q.number,
+      })),
     };
   }
 

@@ -40,7 +40,7 @@
   /* -------------------------
      Semantic app tokens - light
      ------------------------- */
-  --bg: var(--tint-100);
+  --bg: var(--neutral-50);
   --panel: var(--tint-150);
   --surface: var(--neutral-0);
   --surface-muted: var(--neutral-50);
@@ -419,6 +419,7 @@ body,
 body {
   margin: 0;
   font-family: var(--font-sans);
+  font-size: 17px;
   background: var(--bg);
   color: var(--fg);
 }
@@ -427,4 +428,92 @@ body {
 ::selection {
   background: color-mix(in srgb, var(--course-emerald) 24%, white);
   color: var(--fg);
+}
+
+/* ─── Moodle question HTML renderer ───────────────────────────────────────── */
+/* Applied inside .moodle-q wrapper. Hides Moodle chrome, styles the answer   */
+/* block so it looks native in our app UI.                                     */
+
+/* Hide Moodle chrome we don't want (controls, feedback, metadata) */
+.moodle-q .info,
+.moodle-q .outcome,
+.moodle-q .comment,
+.moodle-q .specificfeedback,
+.moodle-q .generalfeedback,
+.moodle-q .im-controls,
+.moodle-q h3,
+.moodle-q h4.accesshide,
+.moodle-q .prompt,
+.moodle-q .ablock > .prompt {
+  display: none !important;
+}
+
+/* Hide .qtext inside the rendered block — we display it separately in our <h2> */
+.moodle-q .qtext {
+  display: none !important;
+}
+
+/* Answer block container */
+.moodle-q .answer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Each option row (Moodle uses .r0 .r1 … as direct children of .answer) */
+.moodle-q .answer > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.moodle-q .answer > div:has(input:checked) {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.moodle-q .answer > div:hover:not(:has(input:checked)) {
+  border-color: var(--border-strong);
+  background: var(--tint-50);
+}
+
+/* Inputs inside answer rows */
+.moodle-q .answer input[type="radio"],
+.moodle-q .answer input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #f97316;
+  flex-shrink: 0;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Labels */
+.moodle-q .answer label {
+  flex: 1;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--fg);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Moodle 4.x uses .d-flex/.flex-fill/.flex-shrink-0 inside each row.
+   We flatten those wrappers so the radio + label sit side by side in our own flex row. */
+.moodle-q .answer > div > div {
+  display: contents;
+}
+
+/* Answer letter prefix (a. b. c. …) */
+.moodle-q .answer .answernumber {
+  font-weight: 800;
+  color: var(--fg-muted);
+  margin-right: 2px;
 }

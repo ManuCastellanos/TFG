@@ -43,8 +43,30 @@ export type SaveAttemptResponse = {
   warnings: unknown[];
 };
 
+export type GetUserAttemptsResponse = {
+  attempts: QuizAttemptRaw[];
+  warnings: unknown[];
+};
+
 export type ProcessAttemptResponse = {
+  state: string;
+  warnings: unknown[];
+};
+
+export type ReviewQuestionRaw = {
+  slot: number;
+  type: string;
+  page: number;
+  html: string;
+  state: string;
+  mark: number | null;
+  maxmark: number;
+  number: number;
+};
+
+export type GetAttemptReviewResponse = {
+  grade: string;
   attempt: QuizAttemptRaw;
-  grade: number;
+  questions: ReviewQuestionRaw[];
   warnings: unknown[];
 };

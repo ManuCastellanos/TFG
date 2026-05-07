@@ -5,34 +5,42 @@ import { TopBar } from './components/topbar/TopBar';
 import { NAV_ITEMS } from './appLayout.constants';
 import { useAppLayout } from './useAppLayout';
 import { useLogout } from '@/features/session/hooks/useLogout';
+import { PageHeaderProvider, usePageHeader } from './pageHeader.context';
+
+function AppHeader({ user }: { user: Parameters<typeof TopBar>[0]['user'] }) {
+  const { node } = usePageHeader();
+  return (
+    <header className="flex items-center gap-4 px-8 py-5 shrink-0">
+      <div className="flex-1 min-w-0">{node}</div>
+      <TopBar user={user} />
+    </header>
+  );
+}
 
 interface AppLayoutProps {
   children: ReactNode;
-  rightPanel: ReactNode;
 }
 
-export function AppLayout({ children, rightPanel }: AppLayoutProps) {
+export function AppLayout({ children }: AppLayoutProps) {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAppLayout();
   const { logout } = useLogout();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-(--surface)">
+    <div className="flex h-screen overflow-hidden bg-(--bg)">
       <Sidebar
         navItems={NAV_ITEMS}
         activePath={pathname}
-        onNavigate={(path) => path === '/logout' ? logout() : navigate({ to: path })}
+        onNavigate={(path) => (path === '/logout' ? logout() : navigate({ to: path }))}
       />
 
-      {children}
-
-      {rightPanel && (
-        <div className="flex w-85 shrink-0 flex-col gap-4 overflow-y-auto bg-(--panel) p-6">
-          <TopBar user={user} />
-          {rightPanel}
+      <PageHeaderProvider>
+        <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
+          <AppHeader user={user} />
+          {children}
         </div>
-      )}
+      </PageHeaderProvider>
     </div>
   );
 }

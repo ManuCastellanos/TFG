@@ -3,7 +3,8 @@ export type RecentlyAccessedItemVM = {
   title: string;
   subtitle: string;
   time: string;
-  accentColor: string;
-  code: string;
+  accentSoft: string;
+  accentText: string;
+  emoji: string;
   viewUrl: string | null;
 };

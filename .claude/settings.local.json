@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Get-ChildItem -Path . -Recurse -Directory)",
-      "Bash(Select-Object -ExpandProperty FullName)"
-    ]
-  }
-}

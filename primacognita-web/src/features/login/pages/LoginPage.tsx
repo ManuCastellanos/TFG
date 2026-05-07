@@ -7,7 +7,7 @@ import { useLogin } from '../hooks/useLogin';
 import { LoginForm } from '../components/LoginForm';
 import type { LoginCredentials } from '../types/login.types';
 
-export default function LoginPage() {
+function LoginPage() {
   const navigate = useNavigate();
   const { login, error, isLoading } = useLogin();
 
@@ -43,3 +43,5 @@ export default function LoginPage() {
     </Page>
   );
 }
+
+export default LoginPage;

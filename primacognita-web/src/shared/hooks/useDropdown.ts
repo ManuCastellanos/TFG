@@ -31,9 +31,7 @@ export function useDropdown(categories: CourseCategory[]): UseDropdownResult {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownOpen]);
 
-  const filteredCategories = categories.filter((c) =>
-    c.name.toLowerCase().includes(categorySearch.toLowerCase()),
-  );
+  const filteredCategories = categories.filter((c) => c.name.toLowerCase().includes(categorySearch.toLowerCase()));
 
   const onSearchChange = (value: string) => {
     setCategorySearch(value);

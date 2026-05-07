@@ -3,27 +3,26 @@ import type { QuizAttempt } from '@/modules/quiz/domain/QuizAttempt';
 import type { QuizQuestion, QuizAnswers } from '@/modules/quiz/domain/QuizQuestion';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { useSession } from '@/shared/hooks/useSession';
+import { parseQuizQuestion } from '@/features/quiz/utils/parseQuizQuestion';
 
 type UseQuizAttemptResult = {
   attempt: QuizAttempt | null;
   questions: QuizQuestion[];
-  nextPage: number;
   answers: QuizAnswers;
   loading: boolean;
   saving: boolean;
   error: string | null;
   setAnswer: (name: string, value: string) => void;
-  navigateTo: (page: number) => void;
+  clearAnswer: (name: string) => void;
   submit: () => void;
 };
 
 export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
   const { quizRepository } = useDependencies();
-  const { token } = useSession();
+  const { token, userId } = useSession();
 
   const [attempt, setAttempt] = useState<QuizAttempt | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [nextPage, setNextPage] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswers>({});
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -32,26 +31,52 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const attemptRef = useRef<QuizAttempt | null>(null);
   const answersRef = useRef<QuizAnswers>({});
+  const hiddenRef = useRef<QuizAnswers>({});
+
   useLayoutEffect(() => {
     attemptRef.current = attempt;
     answersRef.current = answers;
   });
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !userId) return;
     let cancelled = false;
 
     const init = async () => {
       setLoading(true);
       setError(null);
       try {
-        const started = await quizRepository.startAttempt(token, quizId);
+        const existing = await quizRepository.getUserAttempts(token, quizId, userId);
         if (cancelled) return;
-        const data = await quizRepository.getAttemptData(token, started.id, 0);
+        const inprogress = existing.find((a) => a.state === 'inprogress');
+        const attemptId = inprogress
+          ? inprogress.id
+          : (await quizRepository.startAttempt(token, quizId)).id;
         if (cancelled) return;
-        setAttempt(data.attempt);
-        setQuestions(data.questions);
-        setNextPage(data.nextPage);
+        // Fetch all pages until nextPage === -1
+        const allQuestions: import('@/modules/quiz/domain/QuizQuestion').QuizQuestion[] = [];
+        let page = 0;
+        let lastAttempt = null;
+        do {
+          const data = await quizRepository.getAttemptData(token, attemptId, page);
+          if (cancelled) return;
+          allQuestions.push(...data.questions);
+          lastAttempt = data.attempt;
+          page = data.nextPage === -1 ? -1 : data.nextPage;
+        } while (page !== -1);
+
+        // Extract hidden inputs (sequencecheck etc.) from every question's HTML
+        const hidden: QuizAnswers = {};
+        allQuestions.forEach((q) => {
+          const parsed = parseQuizQuestion(q.html);
+          parsed.hiddenInputs.forEach(({ name, value }) => {
+            hidden[name] = value;
+          });
+        });
+        hiddenRef.current = hidden;
+
+        setAttempt(lastAttempt);
+        setQuestions(allQuestions);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Error al iniciar el cuestionario.');
       } finally {
@@ -64,14 +89,19 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
       cancelled = true;
       if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
     };
-  }, [quizRepository, token, quizId]);
+  }, [quizRepository, token, userId, quizId]);
+
+  const buildPayload = (): QuizAnswers => ({
+    ...hiddenRef.current,
+    ...answersRef.current,
+  });
 
   const save = useCallback(async () => {
     const current = attemptRef.current;
     if (!token || !current) return;
     setSaving(true);
     try {
-      await quizRepository.saveAttempt(token, current.id, answersRef.current);
+      await quizRepository.saveAttempt(token, current.id, buildPayload());
     } catch {
       // silent fail on autosave
     } finally {
@@ -88,29 +118,17 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
     [save],
   );
 
-  const navigateTo = useCallback(
-    async (page: number) => {
-      if (autosaveTimer.current) {
-        clearTimeout(autosaveTimer.current);
-        autosaveTimer.current = null;
-      }
-      await save();
-      const current = attemptRef.current;
-      if (!token || !current) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await quizRepository.getAttemptData(token, current.id, page);
-        setAttempt(data.attempt);
-        setQuestions(data.questions);
-        setNextPage(data.nextPage);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Error al cargar las preguntas.');
-      } finally {
-        setLoading(false);
-      }
+  const clearAnswer = useCallback(
+    (name: string) => {
+      setAnswers((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+      if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+      autosaveTimer.current = setTimeout(() => void save(), 2000);
     },
-    [quizRepository, token, save],
+    [save],
   );
 
   const submit = useCallback(async () => {
@@ -124,25 +142,25 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
     setLoading(true);
     setError(null);
     try {
-      const result = await quizRepository.processAttempt(token, current.id, answersRef.current);
-      setAttempt(result.attempt);
+      await quizRepository.processAttempt(token, current.id, buildPayload());
+      setAttempt((prev) => (prev ? { ...prev, state: 'finished' } : prev));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error al enviar el cuestionario.');
     } finally {
       setLoading(false);
     }
+
   }, [quizRepository, token]);
 
   return {
     attempt,
     questions,
-    nextPage,
     answers,
     loading,
     saving,
     error,
     setAnswer,
-    navigateTo: (page) => void navigateTo(page),
+    clearAnswer,
     submit: () => void submit(),
   };
 }
