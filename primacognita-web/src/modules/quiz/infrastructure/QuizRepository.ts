@@ -1,5 +1,5 @@
 import type IQuizRepository from '../domain/IQuizRepository';
-import type { AttemptData, ProcessResult, UserAttempt, AttemptReviewData } from '../domain/IQuizRepository';
+import type { AttemptData, ProcessResult, UserAttempt, AttemptReviewData, QuizMeta } from '../domain/IQuizRepository';
 import type { QuizAttempt } from '../domain/QuizAttempt';
 import type { QuizAnswers } from '../domain/QuizQuestion';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
@@ -12,9 +12,37 @@ import type {
   ProcessAttemptResponse,
   GetAttemptReviewResponse,
 } from './QuizAttemptResponse';
+import type { QuizzesApiResponse } from './QuizResponse';
+import { QUIZ_GRADING_METHOD } from './QuizResponse';
+import { env } from '@/shared/utils/env';
 
 export default class QuizRepository implements IQuizRepository {
   constructor(private readonly moodleClient: IMoodleClient) {}
+
+  async getQuizByCmid(token: string, courseId: number, cmid: number): Promise<QuizMeta | null> {
+    const response = await this.moodleClient.call<QuizzesApiResponse>(
+      token,
+      'mod_quiz_get_quizzes_by_courses',
+      { 'courseids[0]': String(courseId) },
+    );
+
+    const raw = response.quizzes?.find((q) => q.coursemodule === cmid);
+    if (!raw) return null;
+
+    return {
+      id: raw.id,
+      cmid,
+      courseId,
+      title: raw.name,
+      description: raw.intro ?? '',
+      openDate: raw.timeopen ? new Date(raw.timeopen * 1000) : undefined,
+      dueDate: raw.timeclose ? new Date(raw.timeclose * 1000) : undefined,
+      gradeMax: raw.grade ?? 10,
+      gradePass: raw.gradepass,
+      gradingMethod: raw.grademethod != null ? QUIZ_GRADING_METHOD[raw.grademethod] : undefined,
+      viewUrl: `${env.baseUrl}/mod/quiz/view.php?id=${cmid}`,
+    };
+  }
 
   async startAttempt(token: string, quizId: number): Promise<QuizAttempt> {
     const response = await this.moodleClient.call<StartAttemptResponse>(
@@ -119,4 +147,5 @@ export default class QuizRepository implements IQuizRepository {
     });
     return params;
   }
+
 }

@@ -6,7 +6,7 @@ import CalendarRepository from '@/modules/calendar/infrastructure/CalendarReposi
 import AuthStorage from '@/modules/auth/infrastructure/AuthStorage';
 import UserRepository from '@/modules/user/infrastructure/UserRepository';
 import RecentlyAccessedRepository from '@/modules/recentlyAccessed/infrastructure/RecentlyAccessedRepository';
-import TaskRepository from '@/modules/task/infrastructure/TaskRepository';
+import AssignmentRepository from '@/modules/assignment/infrastructure/AssignmentRepository';
 import UserStorage from '@/modules/user/infrastructure/UserStorage';
 import QuizRepository from '@/modules/quiz/infrastructure/QuizRepository';
 
@@ -17,7 +17,7 @@ import type ICalendarRepository from '@/modules/calendar/domain/ICalendarReposit
 import type IAuthSessionStore from '@/modules/auth/domain/IAuthSessionStore';
 import type IUserRepository from '@/modules/user/domain/IUserRepository';
 import type IRecentlyAccessedRepository from '@/modules/recentlyAccessed/domain/IRecentlyAccessedRepository';
-import type ITaskRepository from '@/modules/task/domain/ITaskRepository';
+import type IAssignmentRepository from '@/modules/assignment/domain/IAssignmentRepository';
 import type IUserSessionStore from '@/modules/user/domain/IUserSessionStore';
 import type IQuizRepository from '@/modules/quiz/domain/IQuizRepository';
 
@@ -30,7 +30,7 @@ export default class Dependencies {
   readonly authSessionStore: IAuthSessionStore;
   readonly userRepository: IUserRepository;
   readonly recentlyAccessedRepository: IRecentlyAccessedRepository;
-  readonly taskRepository: ITaskRepository;
+  readonly assignmentRepository: IAssignmentRepository;
   readonly userSessionStore: IUserSessionStore;
   readonly quizRepository: IQuizRepository;
 
@@ -42,7 +42,7 @@ export default class Dependencies {
     authSessionStore: IAuthSessionStore;
     userRepository: IUserRepository;
     recentlyAccessedRepository: IRecentlyAccessedRepository;
-    taskRepository: ITaskRepository;
+    assignmentRepository: IAssignmentRepository;
     userSessionStore: IUserSessionStore;
     quizRepository: IQuizRepository;
   }) {
@@ -53,7 +53,7 @@ export default class Dependencies {
     this.authSessionStore = params.authSessionStore;
     this.userRepository = params.userRepository;
     this.recentlyAccessedRepository = params.recentlyAccessedRepository;
-    this.taskRepository = params.taskRepository;
+    this.assignmentRepository = params.assignmentRepository;
     this.userSessionStore = params.userSessionStore;
     this.quizRepository = params.quizRepository;
   }
@@ -69,7 +69,7 @@ export default class Dependencies {
       authSessionStore: new AuthStorage(),
       userRepository: new UserRepository(moodleClient),
       recentlyAccessedRepository: new RecentlyAccessedRepository(moodleClient),
-      taskRepository: new TaskRepository(moodleClient),
+      assignmentRepository: new AssignmentRepository(moodleClient),
       userSessionStore: new UserStorage(),
       quizRepository: new QuizRepository(moodleClient),
     });

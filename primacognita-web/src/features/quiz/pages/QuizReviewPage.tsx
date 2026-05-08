@@ -237,8 +237,8 @@ export default function QuizReviewPage() {
           type="button"
           onClick={() =>
             navigate({
-              to: '/courses/$courseId/exercise/$modName/$cmid',
-              params: { courseId, modName: 'quiz', cmid: quizId },
+              to: '/courses/$courseId/quiz/$quizId',
+              params: { courseId, quizId },
             })
           }
           className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"

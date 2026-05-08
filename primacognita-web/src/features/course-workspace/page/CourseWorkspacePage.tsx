@@ -61,11 +61,19 @@ export default function CoursePage() {
     return { section, colorIdx, sectionNumber };
   });
 
-  const handleModuleClick = (module: CourseModule) =>
-    navigate({
-      to: '/courses/$courseId/exercise/$modName/$cmid',
-      params: { courseId, modName: module.modName, cmid: String(module.cmid) },
-    });
+  const handleModuleClick = (module: CourseModule) => {
+    if (module.modName === 'quiz') {
+      void navigate({
+        to: '/courses/$courseId/quiz/$quizId',
+        params: { courseId, quizId: String(module.cmid) },
+      });
+    } else {
+      void navigate({
+        to: '/courses/$courseId/assignment/$cmid',
+        params: { courseId, cmid: String(module.cmid) },
+      });
+    }
+  };
 
   return (
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">

@@ -29,7 +29,22 @@ export type AttemptReviewData = {
   questions: ReviewQuestion[];
 };
 
+export interface QuizMeta {
+  id: number;
+  cmid: number;
+  courseId: number;
+  title: string;
+  description: string;
+  openDate?: Date;
+  dueDate?: Date;
+  gradeMax: number;
+  gradePass?: number;
+  gradingMethod?: string;
+  viewUrl: string;
+}
+
 export default interface IQuizRepository {
+  getQuizByCmid(token: string, courseId: number, cmid: number): Promise<QuizMeta | null>;
   startAttempt(token: string, quizId: number): Promise<QuizAttempt>;
   getUserAttempts(token: string, quizId: number, userId: number): Promise<UserAttempt[]>;
   getAttemptData(token: string, attemptId: number, page: number): Promise<AttemptData>;
