@@ -7,6 +7,8 @@ export type UseQuizPreviewResult = {
   attempts: UserAttempt[];
   loading: boolean;
   attemptsError: string | null;
+  bestGrade: string | null;
+  attemptGrades: Record<number, string>;
 };
 
 export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
@@ -16,6 +18,8 @@ export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
   const [attempts, setAttempts] = useState<UserAttempt[]>([]);
   const [loading, setLoading] = useState(false);
   const [attemptsError, setAttemptsError] = useState<string | null>(null);
+  const [bestGrade, setBestGrade] = useState<string | null>(null);
+  const [attemptGrades, setAttemptGrades] = useState<Record<number, string>>({});
 
   useEffect(() => {
     if (!token || !userId || quizId == null) return;
@@ -25,8 +29,35 @@ export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
       setLoading(true);
       setAttemptsError(null);
       try {
-        const result = await quizRepository.getUserAttempts(token, quizId, userId);
-        if (!cancelled) setAttempts(result);
+        const result = await quizRepository.getUserAttempts(token, quizId, Number(userId));
+        if (cancelled) return;
+        setAttempts(result);
+
+        const finished = result.filter((a) => a.state === 'finished');
+        if (finished.length > 0) {
+          const reviews = await Promise.allSettled(
+            finished.map((a) => quizRepository.getAttemptReview(token, a.id)),
+          );
+
+          const gradesMap: Record<number, string> = {};
+          finished.forEach((a, i) => {
+            const r = reviews[i];
+            if (r.status === 'fulfilled' && r.value.grade) {
+              gradesMap[a.id] = r.value.grade;
+            }
+          });
+
+          if (!cancelled) {
+            setAttemptGrades(gradesMap);
+            const gradeValues = Object.values(gradesMap);
+            if (gradeValues.length > 0) {
+              const best = gradeValues.reduce((b, g) =>
+                parseFloat(g) > parseFloat(b) ? g : b,
+              );
+              setBestGrade(best);
+            }
+          }
+        }
       } catch (e) {
         if (!cancelled) {
           const msg = e instanceof Error ? e.message : 'Error al cargar intentos';
@@ -41,5 +72,5 @@ export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
     return () => { cancelled = true; };
   }, [quizRepository, token, userId, quizId]);
 
-  return { attempts, loading, attemptsError };
+  return { attempts, loading, attemptsError, bestGrade, attemptGrades };
 }

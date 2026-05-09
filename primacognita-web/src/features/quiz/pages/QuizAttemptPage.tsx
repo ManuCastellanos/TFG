@@ -3,6 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
+import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseQuizQuestion } from '../utils/parseQuizQuestion';
 
 export default function QuizAttemptPage() {
@@ -14,6 +15,7 @@ export default function QuizAttemptPage() {
 
   const { attempt, questions, answers, loading, saving, error, setAnswer, clearAnswer, submit } =
     useQuizAttempt(Number(quizId));
+  const { set: setPageHeader } = usePageHeader();
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [flagged, setFlagged] = useState<Record<number, boolean>>({});
@@ -34,6 +36,29 @@ export default function QuizAttemptPage() {
   const isLast = currentIdx === total - 1;
   const isFinished = attempt?.state === 'finished';
 
+  const titleLabel = isFinished ? 'Enviado' : 'Resolviendo';
+  useEffect(() => {
+    setPageHeader(
+      <div className="flex items-center gap-4 min-w-0">
+        <button
+          type="button"
+          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
+          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
+          aria-label="Volver al curso"
+        >
+          <ArrowLeft className="size-5" />
+        </button>
+        <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
+        <div className="flex flex-col min-w-0">
+          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
+          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">{titleLabel}</h1>
+        </div>
+        {saving && <span className="ml-2 text-xs font-bold text-(--fg-muted)">Guardando...</span>}
+      </div>,
+    );
+    return () => setPageHeader(null);
+  }, [courseId, isFinished, saving]);
+
   const isAnswered = (idx: number) => {
     const q = parsed[idx];
     if (!q) return false;
@@ -47,20 +72,6 @@ export default function QuizAttemptPage() {
   if (isFinished) {
     return (
       <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-        <div className="flex items-center gap-4 mb-5">
-          <button
-            type="button"
-            onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-            className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
-          >
-            <ArrowLeft className="size-5" />
-          </button>
-          <div className="size-14 rounded-2xl bg-orange-100 grid place-items-center text-2xl shrink-0">✏️</div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-            <h1 className="text-2xl font-extrabold text-(--fg)">Enviado</h1>
-          </div>
-        </div>
         <div className="max-w-md bg-white rounded-3xl border border-(--border) p-8 text-center">
           <div className="text-5xl mb-4">🎉</div>
           <h2 className="text-2xl font-extrabold text-(--fg) mb-2">¡Cuestionario enviado!</h2>
@@ -91,26 +102,6 @@ export default function QuizAttemptPage() {
 
   return (
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-5">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </button>
-        <div className="size-14 rounded-2xl bg-orange-100 grid place-items-center text-2xl shrink-0">✏️</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight">Resolviendo</h1>
-        </div>
-        {saving && (
-          <span className="ml-auto text-xs font-bold text-(--fg-muted)">Guardando...</span>
-        )}
-      </div>
-
       {error && <Banner variant="error" className="mb-4">{error}</Banner>}
 
       {/* Progress bar */}

@@ -7,4 +7,7 @@ export type RecentlyAccessedItemVM = {
   accentText: string;
   emoji: string;
   viewUrl: string | null;
+  modName: string;
+  courseId?: number;
+  cmId?: number;
 };

@@ -9,7 +9,7 @@ export const SECTION_COLORS = [
 
 const MODULE_META: Record<string, { label: string; emoji: string; soft: string; text: string }> = {
   lesson: { label: 'Lección', emoji: '📖', soft: 'bg-sky-100', text: 'text-sky-700' },
-  quiz: { label: 'Cuestionario', emoji: '✏️', soft: 'bg-orange-100', text: 'text-orange-700' },
+  quiz: { label: 'Cuestionario', emoji: '🧩', soft: 'bg-green-100', text: 'text-green-700' },
   assign: { label: 'Tarea', emoji: '📝', soft: 'bg-violet-100', text: 'text-violet-700' },
   workshop: { label: 'Taller', emoji: '🤝', soft: 'bg-pink-100', text: 'text-pink-700' },
   h5pactivity: { label: 'Actividad', emoji: '🎨', soft: 'bg-lime-100', text: 'text-lime-700' },

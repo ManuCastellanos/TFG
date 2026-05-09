@@ -20,6 +20,8 @@ export default class RecentlyAccessedRepository implements IRecentlyAccessedRepo
       modName: item.modname ?? "unknown",
       timeAccess: item.timeaccess ?? 0,
       viewUrl: item.viewurl ?? "",
+      courseId: item.courseid,
+      cmId: item.cmid,
     }));
   }
 }

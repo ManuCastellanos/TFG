@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Play } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
+import { ResultBanner } from '@/components/feedback/ResultBanner/ResultBanner';
 import { useQuizMeta } from '../hooks/useQuizMeta';
 import { useQuizPreview } from '../hooks/useQuizPreview';
+import { usePageHeader } from '@/layouts/pageHeader.context';
 import type { UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { QuizMeta } from '@/modules/quiz/domain/IQuizRepository';
 
@@ -98,87 +101,52 @@ function QuizPreviewWithAttempts({
   courseId,
   meta,
   attempts,
+  bestGrade,
+  attemptGrades,
   onStart,
 }: {
   courseId: string;
   meta: QuizMeta;
   attempts: UserAttempt[];
+  bestGrade: string | null;
+  attemptGrades: Record<number, string>;
   onStart: () => void;
 }) {
   const navigate = useNavigate();
 
   const passGrade = meta.gradePass ?? meta.gradeMax * 0.5;
+  const normalizedGrade = bestGrade != null ? parseFloat(bestGrade) : null;
+  const passed = normalizedGrade != null && normalizedGrade >= passGrade;
 
-  const bestAttempt = attempts.reduce<UserAttempt | null>((b, a) =>
-    b == null || (a.sumGrades ?? 0) > (b.sumGrades ?? 0) ? a : b
-  , null);
-  const displayGrade = bestAttempt?.sumGrades ?? null;
-  const passed = displayGrade != null && displayGrade >= passGrade;
-  const pct = displayGrade != null ? Math.round((displayGrade / meta.gradeMax) * 100) : null;
+  const bestAttemptId: number | null =
+    Object.keys(attemptGrades).length > 0
+      ? Number(
+          Object.entries(attemptGrades).reduce((best, curr) =>
+            parseFloat(curr[1]) >= parseFloat(best[1]) ? curr : best,
+          )[0],
+        )
+      : null;
 
   return (
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      <div className="flex items-center gap-4 mb-5">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </button>
-        <div className="size-14 rounded-2xl bg-orange-100 grid place-items-center text-2xl shrink-0">✏️</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate">{meta.title}</h1>
-        </div>
-      </div>
-
       <div className="grid grid-cols-[1fr_300px] gap-6">
         <div className="flex flex-col gap-5">
-          <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-200 bg-linear-to-br from-emerald-50 via-white to-amber-50 p-7">
-            <svg viewBox="0 0 800 200" className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
-              {(
-                [
-                  ['8%', '20%', '#10b981'], ['15%', '55%', '#f59e0b'], ['22%', '10%', '#ec4899'],
-                  ['32%', '70%', '#8b5cf6'], ['44%', '25%', '#06b6d4'], ['56%', '65%', '#10b981'],
-                  ['66%', '12%', '#f59e0b'], ['76%', '45%', '#ec4899'], ['86%', '28%', '#8b5cf6'],
-                  ['94%', '72%', '#10b981'], ['5%', '80%', '#f59e0b'], ['28%', '88%', '#06b6d4'],
-                  ['50%', '82%', '#ec4899'], ['70%', '85%', '#8b5cf6'], ['88%', '90%', '#10b981'],
-                ] as [string, string, string][]
-              ).map((c, i) => (
-                <circle key={i} cx={c[0]} cy={c[1]} r={i % 3 === 0 ? 6 : 4} fill={c[2]} opacity="0.75" />
-              ))}
-            </svg>
-            <div className="relative flex items-center gap-5">
-              <div className="size-20 rounded-3xl bg-linear-to-br from-emerald-300 to-emerald-600 grid place-items-center text-4xl shadow-lg shrink-0">
-                {passed ? '👍' : '💪'}
-              </div>
-              <div className="flex-1">
-                <div className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-0.5">
-                  {passed ? '¡Bien hecho!' : '¡Sigue intentándolo!'}
-                </div>
-                <h2 className="text-2xl font-extrabold text-(--fg) leading-tight mb-2">
-                  {passed ? 'Has aprobado el cuestionario' : 'No has llegado a la nota mínima'}
-                </h2>
-                {displayGrade != null && (
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-extrabold text-emerald-700 leading-none">
-                      {formatGrade(displayGrade)}
-                    </span>
-                    <span className="text-xl font-bold text-(--fg-muted)">/ {formatGrade(meta.gradeMax)}</span>
-                    {pct != null && (
-                      <span className={`text-sm font-extrabold rounded-full px-3 py-1 ml-1 ${
-                        passed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
-                      }`}>
-                        {pct}%
-                      </span>
-                    )}
-                  </div>
-                )}
+          {normalizedGrade != null ? (
+            <ResultBanner
+              grade={normalizedGrade}
+              maxGrade={meta.gradeMax}
+              passGrade={passGrade}
+              title={meta.title}
+            />
+          ) : (
+            <div className="bg-white rounded-3xl border border-(--border) p-6 flex items-center gap-4">
+              <div className="size-14 rounded-2xl bg-emerald-100 grid place-items-center text-2xl shrink-0">✅</div>
+              <div>
+                <div className="font-extrabold text-(--fg)">Cuestionario completado</div>
+                <p className="text-sm text-(--fg-muted) mt-0.5">La nota estará disponible en breve.</p>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="bg-white rounded-3xl border border-(--border) p-6">
             <div className="flex items-center justify-between mb-4">
@@ -189,9 +157,9 @@ function QuizPreviewWithAttempts({
             </div>
             <div className="flex flex-col gap-2">
               {[...attempts].reverse().map((a) => {
-                const score = a.sumGrades;
-                const attemptPassed = score != null && score >= passGrade;
-                const isBest = bestAttempt?.id === a.id;
+                const normalizedScore = attemptGrades[a.id] != null ? parseFloat(attemptGrades[a.id]) : null;
+                const attemptPassed = normalizedScore != null && normalizedScore >= passGrade;
+                const isBest = bestAttemptId === a.id;
                 const started = new Date(a.timeStart * 1000).toLocaleDateString('es-ES', {
                   day: 'numeric',
                   month: 'short',
@@ -234,11 +202,13 @@ function QuizPreviewWithAttempts({
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      {score != null ? (
+                      {attemptGrades[a.id] != null ? (
                         <span className="text-lg font-extrabold text-(--fg)">
-                          {formatGrade(score)}
+                          {parseFloat(attemptGrades[a.id]).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           <span className="text-xs font-bold text-(--fg-subtle)"> / {formatGrade(meta.gradeMax)}</span>
                         </span>
+                      ) : a.sumGrades != null ? (
+                        <span className="text-sm font-bold text-(--fg-muted)">{formatGrade(a.sumGrades)}</span>
                       ) : (
                         <span className="text-sm font-bold text-(--fg-muted)">—</span>
                       )}
@@ -278,12 +248,12 @@ function QuizPreviewWithAttempts({
             label="Para aprobar"
             value={`${formatGrade(passGrade)} / ${formatGrade(meta.gradeMax)}`}
           />
-          {displayGrade != null && (
+          {normalizedGrade != null && (
             <InfoChip
               icon="⭐"
               label="Tu mejor"
-              value={`${formatGrade(displayGrade)} / ${formatGrade(meta.gradeMax)}`}
-              tone="success"
+              value={`${parseFloat(normalizedGrade.toFixed(2)).toLocaleString('es-ES', { minimumFractionDigits: 2 })} / ${formatGrade(meta.gradeMax)}`}
+              tone={passed ? 'success' : 'warning'}
             />
           )}
           {meta.dueDate && (
@@ -298,40 +268,21 @@ function QuizPreviewWithAttempts({
 // ─── Quiz preview — no previous attempts ─────────────────────────────────────
 
 function QuizPreviewEmpty({
-  courseId,
   meta,
   onStart,
 }: {
-  courseId: string;
   meta: QuizMeta;
   onStart: () => void;
 }) {
-  const navigate = useNavigate();
   const passGrade = meta.gradePass ?? meta.gradeMax * 0.5;
 
   return (
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      <div className="flex items-center gap-4 mb-5">
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </button>
-        <div className="size-14 rounded-2xl bg-orange-100 grid place-items-center text-2xl shrink-0">✏️</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate">{meta.title}</h1>
-        </div>
-      </div>
-
       <div className="grid grid-cols-[1fr_300px] gap-6">
         <div className="flex flex-col gap-5">
           <div className="bg-white rounded-3xl border border-(--border) p-6">
             <div className="flex items-start gap-4 mb-5">
-              <div className="size-12 rounded-2xl bg-orange-100 text-orange-700 grid place-items-center text-2xl shrink-0">✏️</div>
+              <div className="size-12 rounded-2xl bg-orange-100 text-orange-700 grid place-items-center text-2xl shrink-0">🧩</div>
               <div className="flex-1">
                 <h2 className="text-xl font-extrabold text-(--fg) mb-1">¿Listo para empezar?</h2>
                 <p className="text-sm text-(--fg-muted)">
@@ -408,7 +359,31 @@ export default function QuizPreviewPage() {
   const navigate = useNavigate();
   const { courseId, quizId: cmid } = useParams({ strict: false }) as { courseId: string; quizId: string };
   const { meta, loading, error } = useQuizMeta(courseId, cmid);
-  const { attempts } = useQuizPreview(meta ? meta.id : null);
+  const { attempts, bestGrade, attemptGrades } = useQuizPreview(meta ? meta.id : null);
+  const { set: setPageHeader } = usePageHeader();
+
+  useEffect(() => {
+    setPageHeader(
+      <div className="flex items-center gap-4 min-w-0">
+        <button
+          type="button"
+          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
+          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
+          aria-label="Volver al curso"
+        >
+          <ArrowLeft className="size-5" />
+        </button>
+        <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
+        <div className="flex flex-col min-w-0">
+          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
+          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">
+            {meta?.title ?? (loading ? '…' : 'Cuestionario')}
+          </h1>
+        </div>
+      </div>,
+    );
+    return () => setPageHeader(null);
+  }, [meta?.title, courseId, loading]);
 
   const handleStart = () => {
     if (!meta) return;
@@ -442,6 +417,8 @@ export default function QuizPreviewPage() {
         courseId={courseId}
         meta={meta}
         attempts={attempts}
+        bestGrade={bestGrade}
+        attemptGrades={attemptGrades}
         onStart={handleStart}
       />
     );
@@ -449,7 +426,6 @@ export default function QuizPreviewPage() {
 
   return (
     <QuizPreviewEmpty
-      courseId={courseId}
       meta={meta}
       onStart={handleStart}
     />

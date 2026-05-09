@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
+import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { useSession } from '@/shared/hooks/useSession';
 import { useCoursePageData } from '../hooks/useCoursePage';
 import { useParticipants } from '../sections/participants/hooks/useParticipants';
@@ -10,12 +11,13 @@ import { TaskView } from '../sections/task/TaskView';
 import { RecentlyAccessedPanel } from '@/features/recently-accessed/RecentlyAccessedPanel';
 import { useCourseCustomization, COLOR_META } from '@/shared/hooks/useCourseCustomization';
 import { usePageHeader } from '@/layouts/pageHeader.context';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import type { CourseModule } from '@/modules/course/domain/CourseSection';
 import { isTeacherRole } from '@/modules/user/domain/User';
+import { UpcomingAssignmentsPanel } from '../components/UpcomingAssignmentsPanel';
 
 import type { WorkspaceTab } from '../types/workspace.types';
 import CourseSectionCard from '../components/CourseSectionCard';
-import CourseBanner from '../components/CourseBanner';
 import WorkspaceTabs from '../components/WorkspaceTabs';
 
 export default function CoursePage() {
@@ -24,8 +26,9 @@ export default function CoursePage() {
 
   const { token, userId, roleName } = useSession();
   const isTeacher = isTeacherRole(roleName);
-  const { course, sections, exercises, loading, error } = useCoursePageData(courseId, userId, token);
+  const { course, sections, exercises, loading, error, updateModuleCompletion } = useCoursePageData(courseId, userId, token);
   const { participants, loading: participantsLoading } = useParticipants(token, courseId);
+  const { courseRepository } = useDependencies();
 
   const [tab, setTab] = useState<WorkspaceTab>('temario');
   const { emoji: courseEmoji, color: courseColor } = useCourseCustomization(courseId);
@@ -52,14 +55,44 @@ export default function CoursePage() {
     return () => setPageHeader(null);
   }, [course?.fullname, courseEmoji, courseColor, isTeacher]);
 
+  const handleToggleComplete = useCallback(
+    async (module: CourseModule) => {
+      if (!token) return;
+      const currentState = module.completion?.state ?? 0;
+      const nowCompleted = currentState < 1;
+      updateModuleCompletion(module.cmid, nowCompleted);
+      try {
+        await courseRepository.markActivityComplete(token, module.cmid, nowCompleted);
+      } catch {
+        updateModuleCompletion(module.cmid, !nowCompleted);
+      }
+    },
+    [token, courseRepository, updateModuleCompletion],
+  );
+
   let nonGenIdx = 0;
   const enrichedSections = sections.map((section) => {
     const isGeneral = section.id === 0;
     const colorIdx = isGeneral ? -1 : nonGenIdx;
     const sectionNumber = isGeneral ? 0 : nonGenIdx + 1;
     if (!isGeneral) nonGenIdx++;
-    return { section, colorIdx, sectionNumber };
+
+    const modulesWithCompletion = section.modules.filter((m) => m.completion?.hasCompletion);
+    const progress =
+      modulesWithCompletion.length > 0
+        ? Math.round(
+            (modulesWithCompletion.filter((m) => (m.completion?.state ?? 0) >= 1).length /
+              modulesWithCompletion.length) *
+              100,
+          )
+        : undefined;
+
+    return { section, colorIdx, sectionNumber, progress };
   });
+
+  const bannerProgress = course?.progress ?? 0;
+  const bannerTotal = sections.reduce((t, s) => t + s.modules.length, 0);
+  const bannerDone = Math.round((bannerProgress / 100) * bannerTotal);
 
   const handleModuleClick = (module: CourseModule) => {
     if (module.modName === 'quiz') {
@@ -79,7 +112,18 @@ export default function CoursePage() {
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
       {error && <Banner variant="error">{error}</Banner>}
 
-      {course && !isTeacher && <CourseBanner course={course} sections={sections} color={courseColor} />}
+      {course && !isTeacher && (
+        <ProgressBanner
+          color={courseColor}
+          label="Tu progreso del trimestre"
+          progress={bannerProgress}
+          subtitle={bannerTotal > 0 ? `${bannerDone} de ${bannerTotal} actividades` : undefined}
+          stats={[
+            { icon: '🏅', value: '—', label: 'Insignias' },
+            { icon: '📈', value: '—', label: 'Puesto' },
+          ]}
+        />
+      )}
       <WorkspaceTabs active={tab} onChange={setTab} isTeacher={isTeacher} />
 
       <div className="grid grid-cols-[1fr_300px] gap-6">
@@ -91,14 +135,16 @@ export default function CoursePage() {
               {sections.length === 0 ? (
                 <p className="text-sm text-(--fg-subtle)">Este curso aún no tiene temas.</p>
               ) : (
-                enrichedSections.map(({ section, colorIdx, sectionNumber }, idx) => (
+                enrichedSections.map(({ section, colorIdx, sectionNumber, progress }, idx) => (
                   <CourseSectionCard
                     key={section.id}
                     section={section}
                     sectionNumber={sectionNumber}
                     colorIdx={colorIdx}
                     defaultOpen={idx === 1}
+                    progress={progress}
                     onModuleClick={handleModuleClick}
+                    onToggleComplete={handleToggleComplete}
                   />
                 ))
               )}
@@ -122,6 +168,7 @@ export default function CoursePage() {
           {!isTeacher && (
             <>
               <RecentlyAccessedPanel />
+              <UpcomingAssignmentsPanel courseId={courseId} />
               <div className="bg-white rounded-3xl p-5 border border-(--border)">
                 <h3 className="font-extrabold text-(--fg) mb-3">Tu profe</h3>
                 <div className="flex items-center gap-3">

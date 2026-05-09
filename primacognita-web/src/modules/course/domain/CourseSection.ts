@@ -8,6 +8,12 @@ export interface ModuleContent {
   mimetype?: string;
 }
 
+export interface ModuleCompletion {
+  state: 0 | 1 | 2 | 3;
+  hasCompletion: boolean;
+  isAutomatic: boolean;
+}
+
 export interface CourseModule {
   id: number;
   cmid: number;
@@ -19,6 +25,7 @@ export interface CourseModule {
 
   icon?: string;
   contents?: ModuleContent[];
+  completion?: ModuleCompletion;
 }
 
 export interface CourseSection {

@@ -3,7 +3,7 @@ import type { RecentlyAccessedItemVM } from './RecentlyAccessed.types';
 
 const MOD_META: Record<string, { soft: string; text: string; emoji: string }> = {
   resource:    { soft: 'bg-blue-100',    text: 'text-blue-700',    emoji: '📄' },
-  quiz:        { soft: 'bg-orange-100',  text: 'text-orange-700',  emoji: '✏️' },
+  quiz:        { soft: 'bg-sky-100',  text: 'text-sky-700',  emoji: '🧩' },
   assign:      { soft: 'bg-violet-100',  text: 'text-violet-700',  emoji: '📝' },
   forum:       { soft: 'bg-teal-100',    text: 'text-teal-700',    emoji: '📣' },
   page:        { soft: 'bg-amber-100',   text: 'text-amber-700',   emoji: '📖' },
@@ -35,5 +35,8 @@ export function toRecentlyAccessedItemVM(item: RecentItem, index: number): Recen
     }),
     subtitle: item.courseName,
     viewUrl: item.viewUrl || null,
+    modName: item.modName,
+    courseId: item.courseId,
+    cmId: item.cmId,
   };
 }

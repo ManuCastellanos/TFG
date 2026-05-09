@@ -1,5 +1,6 @@
 import type IAssignmentRepository from '../domain/IAssignmentRepository';
 import type { Assignment } from '../domain/Assignment';
+import type { UpcomingAssignment } from '../domain/UpcomingAssignment';
 import type { AssignmentsApiResponse } from './AssignmentResponse';
 import type { SubmissionStatusResponse } from './SubmissionResponse';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
@@ -104,5 +105,37 @@ export default class AssignmentRepository implements IAssignmentRepository {
       assignmentid: String(assignId),
       acceptsubmissionstatement: '1',
     });
+  }
+
+  async getUpcomingAssignments(token: string, courseId: number, userId: number): Promise<UpcomingAssignment[]> {
+    const assignResponse = await this.moodleClient.call<AssignmentsApiResponse>(
+      token,
+      'mod_assign_get_assignments',
+      { 'courseids[0]': String(courseId) },
+    );
+
+    const assignments = assignResponse.courses?.[0]?.assignments ?? [];
+    const nowSecs = Date.now() / 1000;
+    const future = assignments.filter((a) => a.duedate && a.duedate > nowSecs);
+
+    const statuses = await Promise.all(
+      future.map((a) =>
+        this.moodleClient
+          .call<SubmissionStatusResponse>(token, 'mod_assign_get_submission_status', {
+            assignid: String(a.id),
+            userid: String(userId),
+          })
+          .catch(() => null),
+      ),
+    );
+
+    return future
+      .filter((_, i) => {
+        const raw = statuses[i]?.lastattempt?.submission?.status;
+        return raw !== 'submitted';
+      })
+      .map((a) => ({ id: a.id, cmId: a.cmid, name: a.name, dueDate: a.duedate! }))
+      .sort((a, b) => a.dueDate - b.dueDate)
+      .slice(0, 3);
   }
 }

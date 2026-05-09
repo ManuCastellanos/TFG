@@ -7,6 +7,12 @@ export type ModuleContentResponse = {
   content?: string;
 };
 
+export type CompletionDataResponse = {
+  state: number;
+  hascompletion: boolean;
+  isautomatic: boolean;
+};
+
 export type CourseModuleResponse = {
   id: number;
   cmid: number;
@@ -20,6 +26,7 @@ export type CourseModuleResponse = {
   visible?: number;
   uservisible?: boolean;
   instance?: number;
+  completiondata?: CompletionDataResponse;
 };
 
 export type CourseSectionResponse = {

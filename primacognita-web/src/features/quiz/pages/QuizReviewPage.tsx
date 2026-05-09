@@ -3,6 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
 import { useQuizReview } from '../hooks/useQuizReview';
+import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseReviewQuestion } from '../utils/parseQuizQuestion';
 import type { ReviewQuestion } from '@/modules/quiz/domain/IQuizRepository';
 import type { ReviewOption } from '../utils/parseQuizQuestion';
@@ -200,6 +201,7 @@ export default function QuizReviewPage() {
   };
 
   const { review, loading, error } = useQuizReview(Number(attemptId));
+  const { set: setPageHeader } = usePageHeader();
   const [currentIdx, setCurrentIdx] = useState(0);
 
   const questions = review?.questions ?? [];
@@ -221,6 +223,34 @@ export default function QuizReviewPage() {
     return () => window.removeEventListener('keydown', handleKey);
   }, [total]);
 
+  useEffect(() => {
+    setPageHeader(
+      <div className="flex items-center gap-4 min-w-0">
+        <button
+          type="button"
+          onClick={() => navigate({ to: '/courses/$courseId/quiz/$quizId', params: { courseId, quizId } })}
+          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
+          aria-label="Volver al cuestionario"
+        >
+          <ArrowLeft className="size-5" />
+        </button>
+        <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex flex-col min-w-0">
+            <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
+            <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">Revisión del intento</h1>
+          </div>
+          {review && (
+            <span className="rounded-xl bg-(--tint-100) border border-(--border) px-2.5 py-1 text-base font-extrabold text-(--fg) leading-none shrink-0">
+              {review.grade}
+            </span>
+          )}
+        </div>
+      </div>,
+    );
+    return () => setPageHeader(null);
+  }, [courseId, quizId, review?.grade]);
+
   if (loading) {
     return (
       <main className="flex flex-1 items-center justify-center">
@@ -231,35 +261,6 @@ export default function QuizReviewPage() {
 
   return (
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-5">
-        <button
-          type="button"
-          onClick={() =>
-            navigate({
-              to: '/courses/$courseId/quiz/$quizId',
-              params: { courseId, quizId },
-            })
-          }
-          className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
-          aria-label="Volver al cuestionario"
-        >
-          <ArrowLeft className="size-5" />
-        </button>
-        <div className="size-14 rounded-2xl bg-orange-100 grid place-items-center text-2xl shrink-0">📋</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="text-2xl font-extrabold text-(--fg) leading-tight">Revisión del intento</h1>
-            {review && (
-              <span className="rounded-xl bg-(--tint-100) border border-(--border) px-2.5 py-1 text-base font-extrabold text-(--fg) leading-none">
-                {review.grade}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
       {error && <Banner variant="error" className="mb-4">{error}</Banner>}
 
       {/* Progress bar */}

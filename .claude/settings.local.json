@@ -18,7 +18,15 @@
       "Bash(Remove-Item \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\features\\\\task\\\\AssignmentPage.tsx\" -Force)",
       "Bash(Remove-Item \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\features\\\\task\\\\hooks\\\\useTask.ts\" -Force)",
       "Bash(Remove-Item \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\router\\\\routes\\\\app\\\\task.route.tsx\" -Force)",
-      "Bash(Write-Host \"Archivos eliminados\")"
+      "Bash(Write-Host \"Archivos eliminados\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\" -Recurse -Directory)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\" -Recurse -Depth 2 -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -First 50)",
+      "PowerShell(head *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(cd /tmp)",
+      "Bash(grep -n \"block_accessreview\" \"C:/Users/manui/Desktop/TFG/primacognita-web/src/features/course-workspace/sections/outline/TemarioView.tsx\")"
     ]
   }
 }

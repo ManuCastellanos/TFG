@@ -7,4 +7,6 @@ export interface RecentItem {
   modName: string;
   timeAccess: number;
   viewUrl: string;
+  courseId?: number;
+  cmId?: number;
 }

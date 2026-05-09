@@ -3,31 +3,43 @@ import { SECTION_COLORS, stripHtml } from '../types/workspace.types';
 import { useState } from 'react';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
 import CourseModuleRow from './CourseModuleRow';
+import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
 
 type CourseSectionCardProps = {
   section: CourseSection;
   sectionNumber: number;
   colorIdx: number;
   defaultOpen: boolean;
+  progress?: number;
   onModuleClick?: (module: CourseModule) => void;
+  onToggleComplete?: (module: CourseModule) => void;
 };
+
+const RING_COLORS = [
+  '#10b981', '#0ea5e9', '#8b5cf6', '#f97316', '#ec4899',
+];
 
 const CourseSectionCard = ({
   section,
   sectionNumber,
   colorIdx,
   defaultOpen,
+  progress,
   onModuleClick,
+  onToggleComplete,
 }: CourseSectionCardProps) => {
   const [open, setOpen] = useState(defaultOpen);
 
   const isGeneral = section.id === 0;
-
   const safeColorIndex = colorIdx >= 0 ? colorIdx % SECTION_COLORS.length : 0;
-
   const sectionColor = SECTION_COLORS[safeColorIndex];
-
+  const ringColor = RING_COLORS[safeColorIndex % RING_COLORS.length];
   const summary = stripHtml(section.summary);
+
+  const hasRing =
+    !isGeneral &&
+    progress != null &&
+    section.modules.some((m) => m.completion?.hasCompletion);
 
   const toggleOpen = () => {
     setOpen((isOpen) => !isOpen);
@@ -62,9 +74,12 @@ const CourseSectionCard = ({
 
         <div className="flex-1 min-w-0">
           <h3 className="font-extrabold text-(--fg) text-lg leading-tight">{section.name}</h3>
-
           {summary && <p className="text-sm text-(--fg-subtle) mt-0.5 line-clamp-1">{summary}</p>}
         </div>
+
+        {hasRing && (
+          <ProgressRing value={progress!} size={56} color={ringColor} />
+        )}
 
         <ChevronDown
           className={`
@@ -83,7 +98,12 @@ const CourseSectionCard = ({
             <p className="text-sm text-(--fg-subtle) px-4 py-3">Aún no hay contenido en este tema.</p>
           ) : (
             section.modules.map((module) => (
-              <CourseModuleRow key={module.id} module={module} onModuleClick={onModuleClick} />
+              <CourseModuleRow
+                key={module.id}
+                module={module}
+                onModuleClick={onModuleClick}
+                onToggleComplete={onToggleComplete}
+              />
             ))
           )}
         </div>

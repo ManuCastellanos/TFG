@@ -27,6 +27,8 @@ export function parseAssignment(raw: AssignmentRaw) {
     openDate: raw.allowsubmissionsfromdate ? raw.allowsubmissionsfromdate * 1000 : undefined,
     dueDate: raw.duedate ? raw.duedate * 1000 : undefined,
     cutoffDate: raw.cutoffdate ? raw.cutoffdate * 1000 : undefined,
+    maxGrade: raw.grade ?? 10,
+    passGrade: raw.gradepass ?? undefined,
     maxFiles,
     maxFileSizeBytes,
     acceptedTypes,

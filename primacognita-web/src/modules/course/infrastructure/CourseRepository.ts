@@ -150,6 +150,14 @@ export default class CourseRepository implements ICourseRepository {
     });
   }
 
+  async markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void> {
+    await this.moodleClient.call<unknown>(
+      token,
+      'core_completion_update_activity_completion_status_manually',
+      { cmid: String(cmId), completed: completed ? '1' : '0' },
+    );
+  }
+
   async getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]> {
     const response = await this.moodleClient.call<CourseSectionResponse[]>(token, 'core_course_get_contents', {
       courseid: courseId,
@@ -181,6 +189,12 @@ export default class CourseRepository implements ICourseRepository {
             filesize: c.filesize,
             mimetype: c.mimetype,
           })),
+
+          completion: m.completiondata ? {
+            state: m.completiondata.state as 0 | 1 | 2 | 3,
+            hasCompletion: m.completiondata.hascompletion,
+            isAutomatic: m.completiondata.isautomatic,
+          } : undefined,
         })),
     }));
   }

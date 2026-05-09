@@ -12,6 +12,7 @@ type UseCoursePageDataResult = {
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
+  updateModuleCompletion: (cmid: number, completed: boolean) => void;
 };
 
 export const useCoursePageData = (
@@ -65,5 +66,18 @@ export const useCoursePageData = (
     [sections],
   );
 
-  return { course, sections, exercises, loading, error, refetch: fetchData };
+  const updateModuleCompletion = useCallback((cmid: number, completed: boolean) => {
+    setSections((prev) =>
+      prev.map((section) => ({
+        ...section,
+        modules: section.modules.map((m) =>
+          m.cmid === cmid && m.completion
+            ? { ...m, completion: { ...m.completion, state: (completed ? 1 : 0) as 0 | 1 | 2 | 3 } }
+            : m,
+        ),
+      })),
+    );
+  }, []);
+
+  return { course, sections, exercises, loading, error, refetch: fetchData, updateModuleCompletion };
 };

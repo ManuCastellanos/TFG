@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Pencil, Plus, Search } from 'lucide-react';
+import { usePageHeader } from '@/layouts/pageHeader.context';
 import { Banner } from '@/components/feedback/banner/Banner';
 import { useCourses } from '../hooks/useCourses';
 import { useCreateCourse } from '../hooks/useCreateCourse';
@@ -419,6 +420,19 @@ export default function CoursesPage() {
   const [filter, setFilter] = useState<'todos' | 'pendientes'>('todos');
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const { set: setPageHeader } = usePageHeader();
+
+  useEffect(() => {
+    setPageHeader(
+      <div className="flex items-center gap-4 min-w-0">
+        <div className="flex flex-col min-w-0">
+          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tu biblioteca</span>
+          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">Mis cursos</h1>
+        </div>
+      </div>,
+    );
+    return () => setPageHeader(null);
+  }, []);
 
   const filtered = courses.filter((c) => {
     const matchesSearch =
@@ -433,16 +447,19 @@ export default function CoursesPage() {
 
   return (
     <main className="flex flex-1 flex-col overflow-y-auto px-8 pt-5 pb-8">
-      {/* Page header */}
-      <div className="flex items-end justify-between mb-5">
-        <div>
-          <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">
-            Tu biblioteca
-          </div>
-          <h1 className="text-3xl font-extrabold text-(--fg) leading-tight">Mis cursos</h1>
-          <p className="text-sm text-(--fg-muted) mt-1">
-            {courses.length} {courses.length === 1 ? 'curso' : 'cursos'} este trimestre
-          </p>
+      {/* Filter chips + search + actions */}
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <FilterChip
+            label={`Todos · ${courses.length}`}
+            active={filter === 'todos'}
+            onClick={() => setFilter('todos')}
+          />
+          <FilterChip
+            label={`Sin completar · ${pendingCount}`}
+            active={filter === 'pendientes'}
+            onClick={() => setFilter('pendientes')}
+          />
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">
@@ -466,20 +483,6 @@ export default function CoursesPage() {
             </button>
           )}
         </div>
-      </div>
-
-      {/* Filter chips */}
-      <div className="flex flex-wrap items-center gap-2 mb-6">
-        <FilterChip
-          label={`Todos · ${courses.length}`}
-          active={filter === 'todos'}
-          onClick={() => setFilter('todos')}
-        />
-        <FilterChip
-          label={`Sin completar · ${pendingCount}`}
-          active={filter === 'pendientes'}
-          onClick={() => setFilter('pendientes')}
-        />
       </div>
 
       {error && <Banner variant="error">{error}</Banner>}

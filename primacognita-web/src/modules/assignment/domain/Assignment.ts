@@ -12,6 +12,9 @@ export type Assignment = {
   openDate?: number;
   cutoffDate?: number;
 
+  maxGrade: number;
+  passGrade?: number;
+
   maxFiles: number;
   maxFileSizeBytes: number;
 
