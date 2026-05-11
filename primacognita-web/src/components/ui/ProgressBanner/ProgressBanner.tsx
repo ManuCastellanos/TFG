@@ -1,4 +1,4 @@
-import { COLOR_META, type CourseColor } from '@/shared/hooks/useCourseCustomization';
+import { COLOR_META, type CourseColor } from '@/shared/theme/courseColors';
 
 type Stat = { icon: string; value: string; label: string };
 

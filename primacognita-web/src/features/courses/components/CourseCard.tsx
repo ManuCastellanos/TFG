@@ -1,5 +1,6 @@
 import { cn } from '@/shared/utils/cn';
 import { Surface } from '@/components/ui/surface/Surface';
+import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
 import type { Course } from '@/modules/course/domain/Course';
 
 export type CourseCardProps = {
@@ -7,24 +8,6 @@ export type CourseCardProps = {
   gradient?: string;
   onClick?: () => void;
 };
-
-const clamp = (value: number) => Math.min(100, Math.max(0, value));
-
-type ProgressBarProps = {
-  value: number;
-};
-
-const ProgressBar = ({ value }: ProgressBarProps) => (
-  <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/35">
-    <div
-      className="h-full rounded-full transition-all"
-      style={{
-        width: `${clamp(value)}%`,
-        backgroundColor: 'rgba(255,255,255,0.92)',
-      }}
-    />
-  </div>
-);
 
 const CourseImage = ({ course }: { course: Course }) => {
   if (course.imageUrl) {
@@ -77,7 +60,7 @@ export const CourseCard = ({
         <div className="flex flex-col gap-2 px-1 pb-1">
           <p className="line-clamp-2 text-shadow-md font-extrabold leading-tight text-white">{course.fullname}</p>
 
-          <ProgressBar value={progress} />
+          <InlineProgressBar value={progress} trackClass="bg-white/35" colorClass="bg-white/90" />
 
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-medium text-white/80">Completed:</span>

@@ -1,4 +1,4 @@
-import { COLOR_META, COURSE_COLORS, COURSE_EMOJIS } from '@/shared/hooks/useCourseCustomization';
+import { COLOR_META, COURSE_COLORS, COURSE_EMOJIS } from '@/shared/theme/courseColors';
 
 type CourseCustomizerPopoverProps = {
   emoji: string;

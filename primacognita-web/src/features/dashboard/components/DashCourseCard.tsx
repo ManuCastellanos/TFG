@@ -1,8 +1,10 @@
 import { Pencil } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
+import { COLOR_META, COURSE_COLORS } from '@/shared/theme/courseColors';
+import { useClickOutside } from '@/shared/hooks/useClickOutside';
+import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
 import CourseCustomizerPopover from './CourseCustomizerPopover';
-import { useEffect, useRef, useState } from 'react';
-import { COLOR_META, COURSE_COLORS, useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
-import ProgressBar from '@/components/ui/progressBar/ProgressBar';
 import type { Course } from '@/modules/course/domain/Course';
 
 const DashCourseCard = ({ course, index, onClick }: { course: Course; index: number; onClick: () => void }) => {
@@ -12,16 +14,7 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
   const [pickerOpen, setPickerOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!pickerOpen) return;
-    const close = (e: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
-        setPickerOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', close);
-    return () => document.removeEventListener('mousedown', close);
-  }, [pickerOpen]);
+  useClickOutside(cardRef, () => setPickerOpen(false));
 
   return (
     <div ref={cardRef} className="relative group">
@@ -42,7 +35,7 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
               <h3 className="font-black text-(--fg) text-base leading-tight truncate">{course.fullname}</h3>
             </div>
           </div>
-          <ProgressBar.Core value={progress} colorClass={c.grad} height="h-2" className="mb-1.5" />
+          <InlineProgressBar value={progress} colorClass={c.grad} height="h-2" className="mb-1.5" />
           <div className="flex items-center justify-between text-xs">
             <span className={`font-black ${c.text}`}>Progreso</span>
             <span className={`font-black ${c.text}`}>{progress}%</span>

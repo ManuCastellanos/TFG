@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
 import CourseModuleRow from './CourseModuleRow';
 import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
-import ProgressBar from '@/components/ui/progressBar/ProgressBar';
+import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
 
 type CourseSectionCardProps = {
   section: CourseSection;
@@ -80,7 +80,7 @@ const CourseSectionCard = ({
         )}
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-(--fg) text-lg leading-tight">{section.name}</h3>
+          <h3 className="font-black text-(--fg) text-lg leading-tight">{section.name}</h3>
           {summary && <p className="text-sm text-(--fg-subtle) mt-0.5 line-clamp-1">{summary}</p>}
         </div>
 
@@ -93,7 +93,7 @@ const CourseSectionCard = ({
               <span className="text-xs text-(--fg-subtle) font-bold">Avance medio</span>
               <span className={`font-extrabold ${sectionColor.text}`}>{teacherSectionProgress}%</span>
             </div>
-            <ProgressBar.Core value={teacherSectionProgress} colorClass={sectionColor.grad} height="h-2" className="w-20" />
+            <InlineProgressBar value={teacherSectionProgress} colorClass={sectionColor.grad} height="h-2" className="w-20" />
           </div>
         )}
 

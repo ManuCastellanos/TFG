@@ -1,6 +1,6 @@
 import type { Course } from '@/modules/course/domain/Course';
 import type { CourseSection } from '@/modules/course/domain/CourseSection';
-import { COLOR_META, type CourseColor } from '@/shared/hooks/useCourseCustomization';
+import { COLOR_META, type CourseColor } from '@/shared/theme/courseColors';
 
 type CourseBannerProps = {
   course: Course;

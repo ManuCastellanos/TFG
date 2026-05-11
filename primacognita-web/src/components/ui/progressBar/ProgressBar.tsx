@@ -4,29 +4,32 @@ import { cn } from "@/shared/utils/cn";
 import { progressBarClasses as c } from "./progressBar.styles";
 import type { ProgressBarViewModel } from "./progressBar.types";
 
-// ─── ProgressBar.Core — inline bar primitive ─────────────────────────────────
-// Use this for compact inline progress indicators inside cards and lists.
+// ─── InlineProgressBar — compact inline bar primitive ────────────────────────
+// Use for compact inline progress indicators inside cards and lists.
 // Use ProgressBar (below) for full-widget accessibility-ready displays.
 
-type ProgressBarCoreProps = {
+type InlineProgressBarProps = {
   value: number;
   /** Solid color class ("bg-emerald-400") or gradient fragment ("from-sky-300 to-sky-500") */
   colorClass?: string;
+  /** Track background class. Defaults to "bg-neutral-100". */
+  trackClass?: string;
   height?: "h-1" | "h-1.5" | "h-2" | "h-3";
   className?: string;
 };
 
-function ProgressBarCore({
+export function InlineProgressBar({
   value,
   colorClass = "bg-emerald-400",
+  trackClass = "bg-neutral-100",
   height = "h-1.5",
   className,
-}: ProgressBarCoreProps) {
+}: InlineProgressBarProps) {
   const isGradient = colorClass.startsWith("from-");
   const fillClass = isGradient ? cn("bg-linear-to-r", colorClass) : colorClass;
 
   return (
-    <div className={cn("rounded-full bg-neutral-100 overflow-hidden", height, className)} aria-hidden>
+    <div className={cn("rounded-full overflow-hidden", trackClass, height, className)} aria-hidden>
       <div
         className={cn("h-full rounded-full transition-all", fillClass)}
         style={{ width: `${value}%` }}
@@ -75,6 +78,4 @@ function ProgressBarWidget({ viewModel }: Props) {
   );
 }
 
-const ProgressBar = Object.assign(ProgressBarWidget, { Core: ProgressBarCore });
-
-export default ProgressBar;
+export default ProgressBarWidget;

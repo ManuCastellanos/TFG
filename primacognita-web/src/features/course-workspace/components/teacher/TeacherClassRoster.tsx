@@ -2,7 +2,7 @@ import { isStudentRole } from '@/modules/user/domain/User';
 import { getStudentColor } from '../../types/workspace.types';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
-import ProgressBar from '@/components/ui/progressBar/ProgressBar';
+import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
 import type { Participant } from '@/modules/course/domain/Participant';
 
 function getInitials(fullName: string): string {
@@ -41,7 +41,7 @@ export function TeacherClassRoster({ participants, progressByStudent }: Props) {
                 </AvatarBox>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-sm text-(--fg) truncate">{s.fullName}</div>
-                  <ProgressBar.Core value={progress} height="h-1.5" className="mt-1" />
+                  <InlineProgressBar value={progress} height="h-1.5" className="mt-1" />
                 </div>
                 <span className="text-xs font-extrabold text-(--fg-muted) w-10 text-right shrink-0">{progress}%</span>
               </div>

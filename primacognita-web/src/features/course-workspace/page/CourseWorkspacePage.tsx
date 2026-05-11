@@ -12,7 +12,8 @@ import { useTeacherStats } from '../hooks/useTeacherStats';
 import { ParticipantsView } from '../sections/participants/ParticipantsView';
 import { TaskView } from '../sections/task/TaskView';
 
-import { useCourseCustomization, COLOR_META } from '@/shared/hooks/useCourseCustomization';
+import { useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
+import { COLOR_META } from '@/shared/theme/courseColors';
 import { usePageHeader } from '@/layouts/pageHeader.context';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import type { CourseModule } from '@/modules/course/domain/CourseSection';
