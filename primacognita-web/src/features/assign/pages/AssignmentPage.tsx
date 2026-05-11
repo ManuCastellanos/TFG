@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
+import { Page } from '@/components/ui/page/Page';
 import { useSession } from '@/shared/hooks/useSession';
 import { isTeacherRole } from '@/modules/user/domain/User';
 import { useAssignment } from '../hooks/useAssignment';
@@ -44,17 +45,17 @@ function AssignmentStudentView() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 items-center justify-center">
+      <Page>
         <span className="text-sm text-(--fg-muted)">Cargando…</span>
-      </main>
+      </Page>
     );
   }
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col p-8">
-        <Banner variant="error">{error}</Banner>
-      </main>
+      <Page>
+        <Alert variant="error">{error}</Alert>
+      </Page>
     );
   }
 
@@ -69,7 +70,7 @@ function AssignmentStudentView() {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
+    <Page>
       {showUpload ? (
         <AssignUpload assignment={assignment} onCancel={() => setEditing(false)} onSubmitted={handleSubmitted} />
       ) : showSubmitted ? (
@@ -77,7 +78,7 @@ function AssignmentStudentView() {
       ) : (
         <AssignPreview assignment={assignment} onStartUpload={() => setEditing(true)} />
       )}
-    </main>
+    </Page>
   );
 }
 

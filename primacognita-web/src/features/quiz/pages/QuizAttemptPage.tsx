@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
+import { Page } from '@/components/ui/page/Page';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
 import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseQuizQuestion } from '../utils/parseQuizQuestion';
@@ -71,8 +72,8 @@ export default function QuizAttemptPage() {
 
   if (isFinished) {
     return (
-      <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-        <div className="max-w-md bg-white rounded-3xl border border-(--border) p-8 text-center">
+      <Page>
+        <div className="max-w-md mx-auto bg-white rounded-3xl border border-(--border) p-8 text-center">
           <div className="text-5xl mb-4">🎉</div>
           <h2 className="text-2xl font-semibold text-(--fg) mb-2">¡Cuestionario enviado!</h2>
           <p className="text-sm text-(--fg-muted) mb-6">Tus respuestas han sido registradas correctamente.</p>
@@ -84,7 +85,7 @@ export default function QuizAttemptPage() {
             Volver al curso
           </button>
         </div>
-      </main>
+      </Page>
     );
   }
 
@@ -92,17 +93,17 @@ export default function QuizAttemptPage() {
 
   if (loading && questions.length === 0) {
     return (
-      <main className="flex flex-1 items-center justify-center">
+      <Page>
         <span className="text-sm text-(--fg-muted)">Cargando cuestionario…</span>
-      </main>
+      </Page>
     );
   }
 
   // ── Resolution screen ─────────────────────────────────────────────────────
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      {error && <Banner variant="error" className="mb-4">{error}</Banner>}
+    <Page>
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
 
       {/* Progress bar */}
       {total > 0 && (
@@ -312,6 +313,6 @@ export default function QuizAttemptPage() {
           </div>
         </div>
       )}
-    </main>
+    </Page>
   );
 }

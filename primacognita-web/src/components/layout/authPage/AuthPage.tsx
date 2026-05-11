@@ -1,9 +1,9 @@
 import type { HTMLAttributes } from "react";
 import { cn } from "@/shared/utils/cn";
 
-export type PageProps = HTMLAttributes<HTMLDivElement>;
+export type AuthPageProps = HTMLAttributes<HTMLDivElement>;
 
-export const Page = ({ className, ...props }: PageProps) => {
+export const AuthPage = ({ className, ...props }: AuthPageProps) => {
   return (
     <div
       className={cn(

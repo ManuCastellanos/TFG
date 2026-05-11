@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Play } from 'lucide-react';
-import { Banner } from '@/components/feedback/banner/Banner';
-import { ResultBanner } from '@/components/feedback/ResultBanner/ResultBanner';
+import { Alert } from '@/components/ui/alert/Alert';
+import { Page } from '@/components/ui/page/Page';
+import { ResultBanner } from '@/features/quiz/components/ResultBanner';
 import { useQuizMeta } from '../hooks/useQuizMeta';
 import { useQuizPreview } from '../hooks/useQuizPreview';
 import { usePageHeader } from '@/layouts/pageHeader.context';
@@ -128,7 +129,7 @@ function QuizPreviewWithAttempts({
       : null;
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
+    <Page>
       <div className="grid grid-cols-[1fr_300px] gap-6">
         <div className="flex flex-col gap-5">
           {normalizedGrade != null ? (
@@ -261,7 +262,7 @@ function QuizPreviewWithAttempts({
           )}
         </div>
       </div>
-    </main>
+    </Page>
   );
 }
 
@@ -277,7 +278,7 @@ function QuizPreviewEmpty({
   const passGrade = meta.gradePass ?? meta.gradeMax * 0.5;
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
+    <Page>
       <div className="grid grid-cols-[1fr_300px] gap-6">
         <div className="flex flex-col gap-5">
           <div className="bg-white rounded-3xl border border-(--border) p-6">
@@ -349,7 +350,7 @@ function QuizPreviewEmpty({
           </div>
         </div>
       </div>
-    </main>
+    </Page>
   );
 }
 
@@ -395,17 +396,17 @@ export default function QuizPreviewPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 items-center justify-center">
+      <Page>
         <span className="text-sm text-(--fg-muted)">Cargando…</span>
-      </main>
+      </Page>
     );
   }
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col p-8">
-        <Banner variant="error">{error}</Banner>
-      </main>
+      <Page>
+        <Alert variant="error">{error}</Alert>
+      </Page>
     );
   }
 

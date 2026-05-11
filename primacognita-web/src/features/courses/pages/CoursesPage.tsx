@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { usePageHeader } from '@/layouts/pageHeader.context';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
+import { Page } from '@/components/ui/page/Page';
 import { useCourses } from '../hooks/useCourses';
 import { useCourseFilters } from '../hooks/useCourseFilters';
 import CoursesToolbar from '../components/CoursesToolbar';
@@ -28,7 +29,7 @@ export default function CoursesPage() {
   }, [setPageHeader]);
 
   return (
-    <main className="flex flex-1 flex-col overflow-y-auto px-8 pt-5 pb-8">
+    <Page>
       <CoursesToolbar
         coursesCount={courses.length}
         pendingCount={pendingCount}
@@ -40,7 +41,7 @@ export default function CoursesPage() {
         onCreateCourse={() => setShowModal(true)}
       />
 
-      {error && <Banner variant="error">{error}</Banner>}
+      {error && <Alert variant="error">{error}</Alert>}
 
       <CoursesGrid
         loading={loading}
@@ -53,6 +54,6 @@ export default function CoursesPage() {
       {showModal && (
         <CreateCourseModal onClose={() => setShowModal(false)} onCreated={() => setShowModal(false)} />
       )}
-    </main>
+    </Page>
   );
 }

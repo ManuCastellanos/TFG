@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
+import { Page } from '@/components/ui/page/Page';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { useSession } from '@/shared/hooks/useSession';
 import { useCoursePageData } from '../hooks/useCoursePage';
@@ -34,14 +35,13 @@ export default function CoursePage() {
 
   const { token, userId, roleName } = useSession();
   const isTeacher = isTeacherRole(roleName);
-  const { course, sections, exercises, loading, error, updateModuleCompletion } = useCoursePageData(courseId, userId, token);
-  const { participants, loading: participantsLoading } = useParticipants(token, courseId);
-  const teacherStats = useTeacherStats(
-    isTeacher ? token : null,
+  const { course, sections, exercises, loading, error, updateModuleCompletion } = useCoursePageData(
     courseId,
-    sections,
-    participants,
+    userId,
+    token,
   );
+  const { participants, loading: participantsLoading } = useParticipants(token, courseId);
+  const teacherStats = useTeacherStats(isTeacher ? token : null, courseId, sections, participants);
   const { courseRepository } = useDependencies();
 
   const [tab, setTab] = useState<WorkspaceTab>('temario');
@@ -132,8 +132,8 @@ export default function CoursePage() {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      {error && <Banner variant="error">{error}</Banner>}
+    <Page>
+      {error && <Alert variant="error">{error}</Alert>}
 
       {course && !isTeacher && (
         <ProgressBanner
@@ -232,6 +232,6 @@ export default function CoursePage() {
           )}
         </div>
       </div>
-    </main>
+    </Page>
   );
 }

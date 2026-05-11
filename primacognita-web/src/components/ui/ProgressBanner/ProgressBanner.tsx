@@ -1,3 +1,4 @@
+import { Banner } from '@/components/ui/banner/Banner';
 import { COLOR_META, type CourseColor } from '@/shared/theme/courseColors';
 
 type Stat = { icon: string; value: string; label: string };
@@ -23,10 +24,8 @@ export const ProgressBanner = ({
   const hasProgress = progress != null;
 
   return (
-    <div className={`relative overflow-hidden rounded-3xl border ${c.border} ${c.softBanner} p-6 mb-6`}>
-      <div className={`absolute top-0 -right-8 size-48 rounded-full opacity-30 blur-2xl ${c.glow}`} />
-
-      <div className="relative grid grid-cols-[1fr_auto] items-center gap-6">
+    <Banner variant="neutral" className={`${c.border} ${c.softBanner} mb-6`}>
+      <div className="grid grid-cols-[1fr_auto] items-center gap-6">
         <div>
           <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-(--fg-subtle)">
             {label}
@@ -71,6 +70,6 @@ export const ProgressBanner = ({
           </div>
         )}
       </div>
-    </div>
+    </Banner>
   );
 };

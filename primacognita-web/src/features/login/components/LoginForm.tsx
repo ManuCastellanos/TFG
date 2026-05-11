@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input/Input';
 import { PasswordInput } from '@/components/ui/input/PasswordInput';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 import { Button } from '@/components/ui/button/Button';
 import { Text } from '@/components/ui/text/Text';
 import type { LoginCredentials } from '../types/login.types';
@@ -27,7 +27,7 @@ export const LoginForm = ({ onSubmit, onForgotPassword, isLoading, error }: Prop
     <>
       <Text className="text-2xl font-bold text-(--fg)">Acceder a Prima Cognita</Text>
 
-      {error && <Banner variant="error">{error}</Banner>}
+      {error && <Alert variant="error">{error}</Alert>}
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
         <div className="space-y-1">

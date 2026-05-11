@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
+import { Page } from '@/components/ui/page/Page';
 import { useQuizReview } from '../hooks/useQuizReview';
 import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseReviewQuestion } from '../utils/parseQuizQuestion';
@@ -253,15 +254,15 @@ export default function QuizReviewPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 items-center justify-center">
+      <Page>
         <span className="text-sm text-(--fg-muted)">Cargando revisión…</span>
-      </main>
+      </Page>
     );
   }
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      {error && <Banner variant="error" className="mb-4">{error}</Banner>}
+    <Page>
+      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
 
       {/* Progress bar */}
       {total > 0 && (
@@ -361,6 +362,6 @@ export default function QuizReviewPage() {
           </div>
         </div>
       )}
-    </main>
+    </Page>
   );
 }

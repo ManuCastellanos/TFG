@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
+import { Page } from '@/components/ui/page/Page';
 import { Button } from '@/components/ui/button/Button';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
@@ -235,17 +236,25 @@ export default function AssignmentReviewPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col">
+      <Page>
         <LoadingState label="Cargando entregas…" className="py-8" />
-      </main>
+      </Page>
     );
   }
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col p-8">
-        <Banner variant="error">{error}</Banner>
-      </main>
+      <Page>
+        <Alert variant="error">{error}</Alert>
+      </Page>
+    );
+  }
+
+  if (error) {
+    return (
+      <Page>
+        <Alert variant="error">{error}</Alert>
+      </Page>
     );
   }
 
@@ -266,8 +275,8 @@ export default function AssignmentReviewPage() {
   ];
 
   return (
-    <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
-      {error && <Banner variant="error">{error}</Banner>}
+    <Page>
+      {error && <Alert variant="error">{error}</Alert>}
 
       <div className="grid grid-cols-4 gap-3 mb-5">
         <div className="rounded-2xl bg-white border border-(--border) p-4">
@@ -383,6 +392,6 @@ export default function AssignmentReviewPage() {
           )}
         </div>
       )}
-    </main>
+    </Page>
   );
 }

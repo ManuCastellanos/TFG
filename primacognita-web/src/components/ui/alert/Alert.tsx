@@ -1,16 +1,16 @@
 import { cn } from "@/shared/utils/cn";
 import type { HTMLAttributes } from "react";
 
-export type BannerProps = HTMLAttributes<HTMLDivElement> & {
+export type AlertProps = HTMLAttributes<HTMLDivElement> & {
   variant?: "error" | "success" | "warning" | "info";
 };
 
-export const Banner = ({
+export const Alert = ({
   variant = "info",
   className,
   children,
   ...rest
-}: BannerProps) => {
+}: AlertProps) => {
   
   const getVariantStyles = () => {
     

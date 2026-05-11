@@ -3,7 +3,7 @@ import { AssignmentStatusCards } from '../components/AssignmentStatusCards';
 import { AssignmentFilesList } from '../components/AssignmentFilesList';
 import { AssignInfoChip } from '../components/AssignInfoChip';
 import { AssignCountdown } from '../components/AssignCountdown';
-import { ResultBanner } from '@/components/feedback/ResultBanner/ResultBanner';
+import { ResultBanner } from '@/features/quiz/components/ResultBanner';
 
 function formatDate(ts: number): string {
   return new Date(ts).toLocaleDateString('es-ES', {

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input/Input';
 import { Card } from '@/components/ui/card/Card';
-import { Page } from '@/components/layout/page/Page';
+import { AuthPage } from '@/components/layout/authPage/AuthPage';
 import { Text } from '@/components/ui/text/Text';
 import { Button } from '@/components/ui/button/Button';
 import { useNavigate } from '@tanstack/react-router';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Page>
+    <AuthPage>
       <Card variant="auth">
         {!submitted ? (
           <>
@@ -87,9 +87,9 @@ export default function ForgotPassword() {
             <Text className="text-xl font-bold text-(--fg)">Recuperación de contraseña (PoC)</Text>
 
             {info && (
-              <Banner className="text-md" variant="info">
+              <Alert className="text-md" variant="info">
                 {info}
-              </Banner>
+              </Alert>
             )}
 
             <div className="flex items-center justify-center pt-2">
@@ -98,6 +98,6 @@ export default function ForgotPassword() {
           </div>
         )}
       </Card>
-    </Page>
+    </AuthPage>
   );
 }

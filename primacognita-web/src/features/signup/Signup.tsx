@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Input } from '@/components/ui/input/Input';
 import { PasswordInput } from '@/components/ui/input/PasswordInput';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 import { Button } from '@/components/ui/button/Button';
 import { Card } from '@/components/ui/card/Card';
-import { Page } from '@/components/layout/page/Page';
+import { AuthPage } from '@/components/layout/authPage/AuthPage';
 import { Text } from '@/components/ui/text/Text';
 import { cn } from '@/shared/utils/cn';
 import { useSignup } from './useSignup';
@@ -46,14 +46,14 @@ export default function Signup() {
   };
 
   return (
-    <Page>
+    <AuthPage>
       <Card variant="auth">
         <Text className="text-2xl font-bold text-(--fg)">Crear cuenta</Text>
         <Text className="mt-1 text-sm text-(--muted)">
           Crea tu cuenta para acceder al campus virtual.
         </Text>
 
-        {globalError && <Banner variant="error">{globalError}</Banner>}
+        {globalError && <Alert variant="error">{globalError}</Alert>}
 
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <div className="space-y-2">
@@ -151,6 +151,6 @@ export default function Signup() {
           </Button>
         </form>
       </Card>
-    </Page>
+    </AuthPage>
   );
 }

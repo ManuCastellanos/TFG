@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Card } from '@/components/ui/card/Card';
-import { Page } from '@/components/layout/page/Page';
+import { AuthPage } from '@/components/layout/authPage/AuthPage';
 import { Text } from '@/components/ui/text/Text';
 import { Button } from '@/components/ui/button/Button';
 import { useLogin } from '../hooks/useLogin';
@@ -20,7 +20,7 @@ function LoginPage() {
   };
 
   return (
-    <Page>
+    <AuthPage>
       <Card variant="auth">
         <LoginForm
           onSubmit={handleSubmit}
@@ -40,7 +40,7 @@ function LoginPage() {
           </Button>
         </section>
       </Card>
-    </Page>
+    </AuthPage>
   );
 }
 

@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Page } from '@/components/layout/page/Page';
+import { Page } from '@/components/ui/page/Page';
 import { Card } from '@/components/ui/card/Card';
 import { Text } from '@/components/ui/text/Text';
 import { useCreateCourse } from '../hooks/useCreateCourse';
@@ -18,7 +18,7 @@ export default function CreateCoursePage() {
   };
 
   return (
-    <Page className='w-full'>
+    <Page fullWidth>
       <Card className="w-full max-w-lg">
         <Text className="mb-6 text-2xl font-bold">Crear Curso</Text>
         <CreateCourseForm

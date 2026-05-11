@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button/Button';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { StepBadge } from '@/components/ui/stepBadge/StepBadge';
 import { FormField } from '@/components/ui/formField/FormField';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 import { useCreateCourse } from '../hooks/useCreateCourse';
 import { useAllCategories } from '../hooks/useCourseCategories';
 import { dateStringToUnix } from '../utils/course.utils';
@@ -71,7 +71,7 @@ export function CreateCourseModal({ onClose, onCreated }: Props) {
         onSubmit={handleSubmit}
         className="flex-1 overflow-y-auto px-7 py-6 flex flex-col gap-6"
       >
-        {error && <Banner variant="error">{error}</Banner>}
+        {error && <Alert variant="error">{error}</Alert>}
 
         {/* Sección 1 — Identidad */}
         <div>

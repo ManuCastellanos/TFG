@@ -5,7 +5,7 @@ import { useAssignmentSubmission } from '../hooks/useAssignmentSubmission';
 import { AssignmentDropzone } from '../components/AssignmentDropzone';
 import { AssignCountdown } from '../components/AssignCountdown';
 import { AssignInfoChip } from '../components/AssignInfoChip';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 import { Button } from '@/components/ui/button/Button';
 import { StepBadge } from '@/components/ui/stepBadge/StepBadge';
 import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
@@ -62,7 +62,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
     <div className="grid grid-cols-[1fr_320px] gap-6">
       <div className="flex flex-col gap-5">
         {(uploadError ?? submitError) && (
-          <Banner variant="error">{uploadError ?? submitError}</Banner>
+          <Alert variant="error">{uploadError ?? submitError}</Alert>
         )}
 
         <div className="bg-white rounded-3xl border border-(--border) p-7">

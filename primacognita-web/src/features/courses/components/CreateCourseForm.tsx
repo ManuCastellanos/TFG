@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Input } from '@/components/ui/input/Input';
-import { Banner } from '@/components/feedback/banner/Banner';
+import { Alert } from '@/components/ui/alert/Alert';
 import { Button } from '@/components/ui/button/Button';
 import { CategoryDropdown } from './CategoryDropdown';
 import { dateStringToUnix } from '../utils/course.utils';
@@ -79,7 +79,7 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
 
   return (
     <>
-      {error && <Banner variant="error">{error}</Banner>}
+      {error && <Alert variant="error">{error}</Alert>}
 
       <form onSubmit={handleSubmit(submit)} className="mt-6 space-y-4">
         <div className="space-y-1">
