@@ -37,7 +37,7 @@ export const Input = ({
         className="
           pointer-events-none
           absolute left-4 top-1/2 -translate-y-1/2 text-base transition-all duration-200
-          text-gray-500
+          text-zinc-500
 
           peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-sm peer-focus:text-(--color-pr)
 

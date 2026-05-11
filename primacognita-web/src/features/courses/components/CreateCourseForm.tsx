@@ -116,7 +116,7 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
         <Input {...register('idnumber')} placeholder="Número de identificación" />
 
         <div className="space-y-3">
-          <label className="text-sm font-medium">Imagen del curso</label>
+          <p className="text-sm font-medium">Imagen del curso</p>
           <div className="flex items-center gap-3">
             <input
               id="course-image-input"
@@ -136,7 +136,7 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
               <button
                 type="button"
                 onClick={handleRemoveImage}
-                className="inline-flex items-center justify-center w-8 h-8 text-red-500 hover:text-red-700 rounded-full hover:bg-red-50 transition-colors"
+                className="inline-flex items-center justify-center size-8 text-red-500 hover:text-red-700 rounded-full hover:bg-red-50 transition-colors"
               >
                 ✕
               </button>
@@ -145,7 +145,7 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
           {previewUrl && (
             <div className="inline-block">
               <img src={previewUrl} alt="Preview" className="w-48 h-32 object-cover rounded-lg border" />
-              <p className="mt-1 text-xs text-gray-500 truncate max-w-48">{imageFile?.name}</p>
+              <p className="mt-1 text-xs text-zinc-500 truncate max-w-48">{imageFile?.name}</p>
             </div>
           )}
         </div>

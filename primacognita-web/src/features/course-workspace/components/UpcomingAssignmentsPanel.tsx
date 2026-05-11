@@ -24,7 +24,7 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
 
   return (
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
-      <h3 className="font-extrabold text-(--fg) mb-3">Próximas entregas</h3>
+      <h3 className="font-semibold text-(--fg) mb-3">Próximas entregas</h3>
       <div className="flex flex-col gap-2">
         {upcoming.map((a) => {
           const daysLeft = Math.round((a.dueDate - Date.now() / 1000) / 86400);

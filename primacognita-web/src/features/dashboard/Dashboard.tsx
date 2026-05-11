@@ -23,7 +23,7 @@ export const Dashboard = () => {
               <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">
                 ¡Hola, {user?.firstName ?? 'estudiante'}!
               </div>
-              <h1 className="text-2xl font-extrabold text-(--fg) leading-tight mb-2">¿Qué aprendemos hoy?</h1>
+              <h1 className="text-2xl font-black text-(--fg) leading-tight mb-2">¿Qué aprendemos hoy?</h1>
               <p className="text-sm font-bold text-(--fg-muted)">
                 {courses.length} {courses.length === 1 ? 'curso activo' : 'cursos activos'}
               </p>
@@ -47,7 +47,7 @@ export const Dashboard = () => {
           {/* Left: Courses */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-extrabold text-(--fg) text-xl">Mis cursos</h2>
+              <h2 className="font-black text-(--fg) text-xl">Mis cursos</h2>
               <button
                 type="button"
                 onClick={() => navigate({ to: '/courses' })}

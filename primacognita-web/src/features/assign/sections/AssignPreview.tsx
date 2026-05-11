@@ -31,7 +31,7 @@ export function AssignPreview({ assignment, onStartUpload }: Props) {
               📝
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-extrabold text-(--fg) mb-1">{title}</h2>
+              <h2 className="text-xl font-semibold text-(--fg) mb-1">{title}</h2>
               {description && (
                 <p
                   className="text-sm text-(--fg-muted)"
@@ -57,7 +57,7 @@ export function AssignPreview({ assignment, onStartUpload }: Props) {
         </div>
 
         <div className="bg-white rounded-3xl border border-(--border) p-6">
-          <h3 className="font-extrabold text-(--fg) mb-4">Estado de la entrega</h3>
+          <h3 className="font-semibold text-(--fg) mb-4">Estado de la entrega</h3>
           <AssignmentStatusCards
             submissionStatus={submissionStatus}
             grade={grade}

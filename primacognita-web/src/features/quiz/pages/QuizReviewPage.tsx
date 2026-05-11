@@ -238,7 +238,7 @@ export default function QuizReviewPage() {
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="flex flex-col min-w-0">
             <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-            <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">Revisión del intento</h1>
+            <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">Revisión del intento</h1>
           </div>
           {review && (
             <span className="rounded-xl bg-(--tint-100) border border-(--border) px-2.5 py-1 text-base font-extrabold text-(--fg) leading-none shrink-0">
@@ -254,7 +254,7 @@ export default function QuizReviewPage() {
   if (loading) {
     return (
       <main className="flex flex-1 items-center justify-center">
-        <span className="text-sm text-(--fg-muted)">Cargando revisión...</span>
+        <span className="text-sm text-(--fg-muted)">Cargando revisión…</span>
       </main>
     );
   }
@@ -316,7 +316,7 @@ export default function QuizReviewPage() {
           <div className="flex flex-col gap-4">
             <div className="bg-white rounded-3xl border border-(--border) p-5">
               <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">Navegación</div>
-              <h3 className="font-extrabold text-(--fg) mb-4">Preguntas</h3>
+              <h3 className="font-semibold text-(--fg) mb-4">Preguntas</h3>
               <div className="grid grid-cols-5 gap-2 mb-4">
                 {questions.map((q, i) => {
                   const isActive = i === currentIdx;

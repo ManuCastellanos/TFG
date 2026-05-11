@@ -91,7 +91,7 @@ export function ResultBanner({ grade, maxGrade, passGrade, title, feedback }: Pr
       {level.showConfetti && (
         <svg viewBox="0 0 800 200" className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
           {CONFETTI.map((c, i) => (
-            <circle key={i} cx={c[0]} cy={c[1]} r={i % 2 ? 5 : 3.5} fill={c[2]} opacity="0.8" />
+            <circle key={`${c[0]},${c[1]}`} cx={c[0]} cy={c[1]} r={i % 2 ? 5 : 3.5} fill={c[2]} opacity="0.8" />
           ))}
         </svg>
       )}
@@ -105,7 +105,7 @@ export function ResultBanner({ grade, maxGrade, passGrade, title, feedback }: Pr
             {level.message}
           </div>
           {title && (
-            <h2 className="text-2xl font-extrabold text-(--fg) leading-tight mb-1">{title}</h2>
+            <h2 className="text-2xl font-semibold text-(--fg) leading-tight mb-1">{title}</h2>
           )}
           <div className="flex items-baseline gap-2 mt-1">
             <span className={`text-4xl font-extrabold leading-none ${level.textColor}`}>

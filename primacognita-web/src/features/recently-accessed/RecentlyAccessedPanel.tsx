@@ -38,7 +38,7 @@ export function RecentlyAccessedPanel() {
   return (
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-extrabold text-(--fg)">Sigue por aquí</h3>
+        <h3 className="font-semibold text-(--fg)">Sigue por aquí</h3>
         <button type="button" className="text-xs font-bold text-emerald-700 hover:text-emerald-800 transition">
           Ver todo
         </button>

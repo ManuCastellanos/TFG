@@ -32,7 +32,7 @@ const DashboardView = ({ user, courses, onNavigateToCourses, onCourseClick }: Da
         <div className="grid grid-cols-[1fr_320px] gap-6">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-(--fg)">Mis cursos</h2>
+              <h2 className="text-xl font-black ">Mis cursos</h2>
 
               <button
                 type="button"

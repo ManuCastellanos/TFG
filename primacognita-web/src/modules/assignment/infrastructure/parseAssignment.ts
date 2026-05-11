@@ -16,7 +16,7 @@ export function parseAssignment(raw: AssignmentRaw) {
   const maxFiles = maxFilesStr ? parseInt(maxFilesStr, 10) : DEFAULT_MAX_FILES;
   const maxFileSizeBytes = maxSizeStr ? parseInt(maxSizeStr, 10) : DEFAULT_MAX_SIZE;
   const acceptedTypes = fileTypesStr
-    ? fileTypesStr.split(',').map((t) => t.trim()).filter(Boolean)
+    ? fileTypesStr.split(',').flatMap((t) => (t.trim() ? [t.trim()] : []))
     : [];
 
   return {

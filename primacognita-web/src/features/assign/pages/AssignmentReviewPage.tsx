@@ -58,7 +58,7 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
           {sub.userInitials}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-extrabold text-(--fg) leading-tight truncate">{sub.userFullName}</h3>
+          <h3 className="font-semibold text-(--fg) leading-tight truncate">{sub.userFullName}</h3>
           <div className="text-xs text-(--fg-muted)">
             {sub.submittedAt ? `Entregado ${formatRelativeDate(sub.submittedAt)}` : 'Sin entrega'}
           </div>
@@ -89,8 +89,8 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
         <div className="rounded-2xl border border-(--border) bg-(--tint-50) p-4 mb-4">
           <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-2">Archivos entregados</div>
           <div className="flex flex-col gap-2">
-            {sub.files.map((f, i) => (
-              <div key={i} className="flex items-center gap-3">
+            {sub.files.map((f) => (
+              <div key={f.fileUrl ?? f.filename} className="flex items-center gap-3">
                 <div className="size-10 rounded-xl bg-rose-100 text-rose-700 grid place-items-center text-lg shrink-0">
                   📄
                 </div>
@@ -126,10 +126,11 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
       )}
 
       <div className="mb-4">
-        <label className="text-xs font-extrabold uppercase tracking-wider text-(--fg-subtle) block mb-2">
+        <label htmlFor="grade-input" className="text-xs font-extrabold uppercase tracking-wider text-(--fg-subtle) block mb-2">
           Calificación · sobre {maxGrade}
         </label>
         <input
+          id="grade-input"
           type="text"
           inputMode="decimal"
           value={gradeInput}
@@ -140,10 +141,11 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
       </div>
 
       <div className="mb-4">
-        <label className="text-xs font-extrabold uppercase tracking-wider text-(--fg-subtle) block mb-2">
+        <label htmlFor="feedback-input" className="text-xs font-extrabold uppercase tracking-wider text-(--fg-subtle) block mb-2">
           Comentario para el alumno
         </label>
         <textarea
+          id="feedback-input"
           rows={3}
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
@@ -220,7 +222,7 @@ export default function AssignmentReviewPage() {
         <div className="size-14 shrink-0 rounded-2xl bg-violet-100 grid place-items-center text-2xl">📝</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tarea · Calificar</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">
+          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
             {assignment?.title ?? (loading ? '…' : 'Tarea')}
           </h1>
         </div>
@@ -232,7 +234,7 @@ export default function AssignmentReviewPage() {
   if (loading) {
     return (
       <main className="flex flex-1 items-center justify-center">
-        <span className="text-sm text-(--fg-muted)">Cargando entregas...</span>
+        <span className="text-sm text-(--fg-muted)">Cargando entregas…</span>
       </main>
     );
   }

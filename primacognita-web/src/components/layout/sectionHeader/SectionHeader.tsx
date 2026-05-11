@@ -13,7 +13,7 @@ export const SectionHeader = ({
   className,
 }: SectionHeaderProps) => (
   <div className={cn("flex items-center justify-between", className)}>
-    <h2 className="text-2xl font-bold text-(--fg)">{title}</h2>
+    <h2 className="text-2xl font-semibold text-(--fg)">{title}</h2>
     {action}
   </div>
 );

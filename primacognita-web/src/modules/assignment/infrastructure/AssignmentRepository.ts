@@ -226,11 +226,10 @@ export default class AssignmentRepository implements IAssignmentRepository {
     );
 
     return future
-      .filter((_, i) => {
+      .flatMap((a, i) => {
         const raw = statuses[i]?.lastattempt?.submission?.status;
-        return raw !== 'submitted';
+        return raw !== 'submitted' ? [{ id: a.id, cmId: a.cmid, name: a.name, dueDate: a.duedate! }] : [];
       })
-      .map((a) => ({ id: a.id, cmId: a.cmid, name: a.name, dueDate: a.duedate! }))
       .sort((a, b) => a.dueDate - b.dueDate)
       .slice(0, 3);
   }

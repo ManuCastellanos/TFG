@@ -25,6 +25,7 @@ const CourseColorPicker = ({
   onColorChange: (c: string) => void;
 }) => (
   <div
+    role="presentation"
     className="absolute top-10 right-2 z-30 bg-white rounded-2xl p-3 shadow-2xl border border-(--border)"
     onClick={(e) => e.stopPropagation()}
   >
@@ -98,7 +99,7 @@ const CourseLibCard = ({
         {/* Body */}
         <div className="flex-1 p-4 flex flex-col gap-3">
           <div>
-            <h3 className="font-extrabold text-(--fg) text-base leading-tight line-clamp-2 mb-1">
+            <h3 className="font-semibold text-(--fg) text-base leading-tight line-clamp-2 mb-1">
               {course.fullname}
             </h3>
             <p className={`text-xs font-bold ${c.text}`}>{course.shortname}</p>
@@ -227,10 +228,12 @@ const CreateCourseModal = ({ onClose, onCreated }: CreateCourseModalProps) => {
 
   return (
     <div
+      role="presentation"
       className="fixed inset-0 z-50 grid place-items-center bg-neutral-900/40 backdrop-blur-sm p-8"
       onClick={onClose}
     >
       <div
+        role="presentation"
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-3xl bg-white rounded-3xl border border-(--border) shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
       >
@@ -243,7 +246,7 @@ const CreateCourseModal = ({ onClose, onCreated }: CreateCourseModalProps) => {
             </svg>
           </div>
           <div className="flex-1">
-            <h2 className="text-2xl font-extrabold text-(--fg) leading-tight">Crear curso</h2>
+            <h2 className="text-2xl font-semibold text-(--fg) leading-tight">Crear curso</h2>
             <p className="text-sm text-(--fg-muted) mt-0.5">
               Define lo esencial. Podrás añadir temas y actividades después.
             </p>
@@ -271,7 +274,7 @@ const CreateCourseModal = ({ onClose, onCreated }: CreateCourseModalProps) => {
               <span className="size-6 rounded-lg bg-emerald-100 text-emerald-700 grid place-items-center text-xs font-extrabold">
                 1
               </span>
-              <h3 className="font-extrabold text-(--fg)">Identidad</h3>
+              <h3 className="font-semibold text-(--fg)">Identidad</h3>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <FieldShell label="Nombre completo" required>
@@ -326,7 +329,7 @@ const CreateCourseModal = ({ onClose, onCreated }: CreateCourseModalProps) => {
               <span className="size-6 rounded-lg bg-emerald-100 text-emerald-700 grid place-items-center text-xs font-extrabold">
                 2
               </span>
-              <h3 className="font-extrabold text-(--fg)">Calendario y visibilidad</h3>
+              <h3 className="font-semibold text-(--fg)">Calendario y visibilidad</h3>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <FieldShell label="Visible desde" hint="Cuándo aparece en la biblioteca de los alumnos.">
@@ -427,7 +430,7 @@ export default function CoursesPage() {
       <div className="flex items-center gap-4 min-w-0">
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tu biblioteca</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">Mis cursos</h1>
+          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">Mis cursos</h1>
         </div>
       </div>,
     );
@@ -488,7 +491,7 @@ export default function CoursesPage() {
       {error && <Banner variant="error">{error}</Banner>}
 
       {loading ? (
-        <p className="text-sm text-(--fg-muted)">Cargando cursos...</p>
+        <p className="text-sm text-(--fg-muted)">Cargando cursos…</p>
       ) : filtered.length === 0 ? (
         <p className="text-sm text-(--fg-subtle)">No hay cursos que coincidan.</p>
       ) : (

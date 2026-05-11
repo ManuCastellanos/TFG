@@ -79,6 +79,8 @@ export function useTeacherStats(
       const items: PendingItem[] = [];
       let total = 0;
 
+      const participantMap = new Map(participants.map((p) => [parseInt(p.id, 10), p]));
+
       for (const assign of assignments) {
         const subs = submissionsByAssign[assign.id] ?? [];
         const grades = gradesByAssign[assign.id] ?? [];
@@ -91,7 +93,7 @@ export function useTeacherStats(
         total += pending.length;
 
         for (const sub of pending) {
-          const participant = participants.find((p) => parseInt(p.id, 10) === sub.userId);
+          const participant = participantMap.get(sub.userId);
           items.push({
             activityName: assign.title,
             activityKind: 'assign',

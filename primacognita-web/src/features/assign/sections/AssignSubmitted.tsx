@@ -48,7 +48,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
                   ['18%', '75%', '#f59e0b'], ['48%', '78%', '#8b5cf6'], ['78%', '80%', '#ec4899'],
                 ] as [string, string, string][]
               ).map((c, i) => (
-                <circle key={i} cx={c[0]} cy={c[1]} r={i % 2 ? 5 : 3.5} fill={c[2]} opacity="0.8" />
+                <circle key={`${c[0]},${c[1]}`} cx={c[0]} cy={c[1]} r={i % 2 ? 5 : 3.5} fill={c[2]} opacity="0.8" />
               ))}
             </svg>
             <div className="relative flex items-center gap-5">
@@ -57,7 +57,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
               </div>
               <div className="flex-1">
                 <div className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">¡Entregado!</div>
-                <h2 className="text-2xl font-extrabold text-(--fg) leading-tight mb-1">{title}</h2>
+                <h2 className="text-2xl font-semibold text-(--fg) leading-tight mb-1">{title}</h2>
                 <p className="text-sm text-(--fg-muted)">
                   {submittedAt
                     ? <>Lo enviaste el <strong>{formatDate(submittedAt)}</strong>.</>
@@ -72,7 +72,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
 
         <div className="bg-white rounded-3xl border border-(--border) p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-extrabold text-(--fg)">Tu entrega</h3>
+            <h3 className="font-semibold text-(--fg)">Tu entrega</h3>
             {canEdit && !isGraded && (
               <button
                 type="button"
@@ -97,7 +97,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
         </div>
 
         <div className="bg-white rounded-3xl border border-(--border) p-6">
-          <h3 className="font-extrabold text-(--fg) mb-4">Estado de la entrega</h3>
+          <h3 className="font-semibold text-(--fg) mb-4">Estado de la entrega</h3>
           <AssignmentStatusCards
             submissionStatus={submissionStatus}
             grade={grade}
@@ -114,7 +114,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
         {dueDate && <AssignInfoChip icon="🔴" label="Cierre" value={formatDate(dueDate)} />}
         {!isGraded && (
           <div className="bg-white rounded-2xl border border-(--border) p-4">
-            <h4 className="text-sm font-extrabold text-(--fg) mb-2">¿Y ahora?</h4>
+            <h4 className="text-sm font-semibold text-(--fg) mb-2">¿Y ahora?</h4>
             <p className="text-xs text-(--fg-muted) leading-relaxed">
               Tu profe va a revisar la entrega.{canEdit ? ' Mientras, puedes editarla si te das cuenta de algo.' : ''} Te avisaremos cuando esté calificada.
             </p>

@@ -62,7 +62,7 @@ export const useCoursePageData = (
   }, [fetchData]);
 
   const exercises = useMemo<CourseModule[]>(
-    () => sections.flatMap((s) => s.modules).filter(isExerciseModule),
+    () => sections.flatMap((s) => s.modules.filter(isExerciseModule)),
     [sections],
   );
 

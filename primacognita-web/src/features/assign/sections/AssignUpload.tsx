@@ -56,7 +56,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
       <div className="flex flex-1 items-center justify-center py-16">
         <div className="text-center">
           <div className="text-3xl mb-3">📂</div>
-          <p className="text-sm text-(--fg-muted) font-bold">Cargando archivos enviados...</p>
+          <p className="text-sm text-(--fg-muted) font-bold">Cargando archivos enviados…</p>
         </div>
       </div>
     );
@@ -74,7 +74,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
             <div className="size-10 rounded-2xl bg-violet-100 text-violet-700 grid place-items-center font-extrabold">
               1
             </div>
-            <h2 className="text-xl font-extrabold text-(--fg)">Sube tus archivos</h2>
+            <h2 className="text-xl font-semibold text-(--fg)">Sube tus archivos</h2>
           </div>
 
           <AssignmentDropzone
@@ -87,12 +87,12 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
           {files.length > 0 && (
             <div className="mt-6">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-extrabold text-(--fg)">Archivos subidos ({files.length})</h4>
+                <h4 className="text-sm font-semibold text-(--fg)">Archivos subidos ({files.length})</h4>
                 <span className="text-xs font-bold text-(--fg-muted)">{remaining} espacios libres</span>
               </div>
               <div className="flex flex-col gap-2">
-                {files.map((f, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border border-(--border) bg-(--tint-50)">
+                {files.map((f) => (
+                  <div key={f.file.name} className="flex items-center gap-3 p-3 rounded-2xl border border-(--border) bg-(--tint-50)">
                     <div className="size-11 rounded-xl bg-rose-100 text-rose-700 grid place-items-center text-xl shrink-0">
                       📄
                     </div>
@@ -126,7 +126,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
             <div className="size-10 rounded-2xl bg-violet-100 text-violet-700 grid place-items-center font-extrabold">
               2
             </div>
-            <h2 className="text-xl font-extrabold text-(--fg)">
+            <h2 className="text-xl font-semibold text-(--fg)">
               Añade una nota <span className="text-sm font-bold text-(--fg-subtle)">(opcional)</span>
             </h2>
           </div>
@@ -173,7 +173,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
         {dueDate && <AssignInfoChip icon="🔴" label="Cierre" value={formatDate(dueDate)} />}
         {cutoffDate && <AssignInfoChip icon="🔒" label="Límite edición" value={formatDate(cutoffDate)} />}
         <div className="bg-white rounded-2xl border border-(--border) p-4">
-          <h4 className="text-sm font-extrabold text-(--fg) mb-2">Antes de enviar</h4>
+          <h4 className="text-sm font-semibold text-(--fg) mb-2">Antes de enviar</h4>
           <ul className="text-xs text-(--fg-muted) space-y-1.5 leading-relaxed">
             <li>✅ Revisa que el archivo correcto esté arriba.</li>
             <li>✅ Pon tu nombre en la primera página.</li>

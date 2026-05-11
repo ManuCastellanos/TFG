@@ -57,7 +57,7 @@ export default function CoursePage() {
           <ArrowLeft className="size-5" />
         </button>
         <div className={`size-14 shrink-0 rounded-2xl ${c.soft} grid place-items-center text-4xl`}>{courseEmoji}</div>
-        <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">
+        <h1 className="text-2xl font-black text-(--fg) leading-tight truncate min-w-0">
           {course?.fullname ?? (loading ? '…' : 'Curso')}
         </h1>
       </div>,
@@ -157,7 +157,7 @@ export default function CoursePage() {
 
       <div className="grid grid-cols-[1fr_300px] gap-6">
         <div className="flex flex-col gap-3 min-w-0">
-          {loading && <p className="text-sm text-(--fg-muted)">Cargando contenido...</p>}
+          {loading && <p className="text-sm text-(--fg-muted)">Cargando contenido…</p>}
 
           {!loading && tab === 'temario' && (
             <>
@@ -201,7 +201,7 @@ export default function CoursePage() {
               <RecentlyAccessedPanel />
               <UpcomingAssignmentsPanel courseId={courseId} />
               <div className="bg-white rounded-3xl p-5 border border-(--border)">
-                <h3 className="font-extrabold text-(--fg) mb-3">Tu profe</h3>
+                <h3 className="font-semibold text-(--fg) mb-3">Tu profe</h3>
                 <div className="flex items-center gap-3">
                   <div className="size-12 rounded-2xl bg-linear-to-br from-emerald-300 to-emerald-500 grid place-items-center text-white font-extrabold text-sm">
                     PC

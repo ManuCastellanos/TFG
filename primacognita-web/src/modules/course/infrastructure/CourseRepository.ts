@@ -169,9 +169,9 @@ export default class CourseRepository implements ICourseRepository {
       name: s.name,
       summary: s.summary?.trim() ? s.summary : null,
 
-      modules: (s.modules ?? [])
-        .filter((m) => m.uservisible !== false && m.visible !== 0)
-        .map((m) => ({
+      modules: (s.modules ?? []).flatMap((m) => {
+        if (m.uservisible === false || m.visible === 0) return [];
+        return [{
           id: m.id,
           cmid: m.cmid ?? m.id,
           name: m.name,
@@ -196,7 +196,8 @@ export default class CourseRepository implements ICourseRepository {
             hasCompletion: m.completiondata.hascompletion,
             isAutomatic: m.completiondata.isautomatic,
           } : undefined,
-        })),
+        }];
+      }),
     }));
   }
 }

@@ -29,7 +29,7 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
         />
       </div>
 
-      {loading && <Text className="text-(--fg-muted)">Cargando participantes...</Text>}
+      {loading && <Text className="text-(--fg-muted)">Cargando participantes…</Text>}
 
       {!loading && filtered.length === 0 && (
         <Text className="text-(--fg-muted)">

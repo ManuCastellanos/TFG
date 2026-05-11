@@ -94,6 +94,9 @@ export default function Calendar({
                 }
                 onMouseLeave={() => onDayHover?.(null)}
                 onClick={() => cell.hasEvents && onDayClick?.(cell.timestamp)}
+                onKeyDown={(e) =>
+                  (e.key === 'Enter' || e.key === ' ') && cell.hasEvents && onDayClick?.(cell.timestamp)
+                }
                 role={cell.hasEvents ? "button" : undefined}
                 tabIndex={cell.hasEvents ? 0 : -1}
               >

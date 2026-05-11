@@ -19,7 +19,7 @@ export function TeacherPendingPanel({ courseId, items }: Props) {
   return (
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-extrabold text-(--fg)">Por revisar</h3>
+        <h3 className="font-semibold text-(--fg)">Por revisar</h3>
         {items.length > 0 && (
           <span className="rounded-full bg-orange-100 text-orange-700 text-xs font-extrabold px-2 py-0.5">
             {items.length}
@@ -31,11 +31,11 @@ export function TeacherPendingPanel({ courseId, items }: Props) {
         <p className="text-sm text-(--fg-muted) text-center py-4">Sin entregas pendientes</p>
       ) : (
         <div className="flex flex-col gap-1">
-          {items.slice(0, 5).map((item, i) => {
+          {items.slice(0, 5).map((item) => {
             const meta = MODULE_META[item.activityKind] ?? MODULE_META.assign;
             return (
               <button
-                key={i}
+                key={`${item.userId}-${item.cmId}`}
                 type="button"
                 onClick={() =>
                   void navigate({

@@ -41,7 +41,7 @@ export function AssignmentDropzone({ maxFiles, maxSizeBytes, currentCount, onFil
       <div className="size-16 rounded-2xl bg-violet-100 text-violet-700 grid place-items-center text-3xl mx-auto mb-4">
         ⬆️
       </div>
-      <h3 className="text-lg font-extrabold text-(--fg) mb-1">Arrastra y suelta tus archivos aquí</h3>
+      <h3 className="text-lg font-semibold text-(--fg) mb-1">Arrastra y suelta tus archivos aquí</h3>
       <p className="text-sm text-(--fg-muted) mb-5">o haz clic para elegirlos del ordenador</p>
       <button
         type="button"

@@ -21,7 +21,7 @@ const ModuleRow = ({
     <>
       <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-(--surface-muted) text-(--fg-muted)"></span>
       <span className="flex flex-1 flex-col">
-        <span className="text-sm font-semibold text-(--fg)">{module.name}</span>
+        <span className="text-sm font-black text-(--fg)">{module.name}</span>
         <span className="text-xs text-(--fg-subtle) capitalize">{module.modName}</span>
       </span>
     </>
@@ -72,7 +72,7 @@ const SectionCard = ({
 }) => (
   <Surface className="flex flex-col gap-4 border border-(--border) p-5">
     <div className="flex items-baseline gap-3">
-      <h3 className="text-lg font-extrabold text-(--fg)">{section.name}</h3>
+      <h3 className="text-lg font-semibold text-(--fg)">{section.name}</h3>
     </div>
 
     {section.modules.length === 0 ? (

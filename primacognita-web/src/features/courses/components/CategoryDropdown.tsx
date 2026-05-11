@@ -29,7 +29,7 @@ export const CategoryDropdown = ({ categories, loading, onChange }: Props) => {
       {dropdownOpen && (
         <div className="absolute top-full z-10 mt-1 w-full rounded-xl border bg-(--surface)">
           {loading ? (
-            <p className="p-2 text-sm">Cargando...</p>
+            <p className="p-2 text-sm">Cargando…</p>
           ) : (
             filteredCategories.map((c) => (
               <button

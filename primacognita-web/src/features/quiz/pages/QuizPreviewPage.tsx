@@ -150,7 +150,7 @@ function QuizPreviewWithAttempts({
 
           <div className="bg-white rounded-3xl border border-(--border) p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-extrabold text-(--fg)">Tus intentos</h3>
+              <h3 className="font-semibold text-(--fg)">Tus intentos</h3>
               <span className="text-xs font-bold text-(--fg-subtle)">
                 {attempts.length} {attempts.length === 1 ? 'intento' : 'intentos'} · te quedan ilimitados
               </span>
@@ -284,7 +284,7 @@ function QuizPreviewEmpty({
             <div className="flex items-start gap-4 mb-5">
               <div className="size-12 rounded-2xl bg-orange-100 text-orange-700 grid place-items-center text-2xl shrink-0">🧩</div>
               <div className="flex-1">
-                <h2 className="text-xl font-extrabold text-(--fg) mb-1">¿Listo para empezar?</h2>
+                <h2 className="text-xl font-semibold text-(--fg) mb-1">¿Listo para empezar?</h2>
                 <p className="text-sm text-(--fg-muted)">
                   Cuestionario de opción múltiple. Tienes todos los intentos que quieras.
                 </p>
@@ -340,7 +340,7 @@ function QuizPreviewEmpty({
             value={`${formatGrade(passGrade)} / ${formatGrade(meta.gradeMax)}`}
           />
           <div className="bg-white rounded-2xl border border-(--border) p-4">
-            <h4 className="text-sm font-extrabold text-(--fg) mb-2">¿Cómo funciona?</h4>
+            <h4 className="text-sm font-semibold text-(--fg) mb-2">¿Cómo funciona?</h4>
             <ul className="text-xs text-(--fg-muted) space-y-1.5 leading-relaxed">
               <li>• Una pregunta por pantalla.</li>
               <li>• Puedes volver atrás antes de enviar.</li>
@@ -376,7 +376,7 @@ export default function QuizPreviewPage() {
         <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">
+          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
             {meta?.title ?? (loading ? '…' : 'Cuestionario')}
           </h1>
         </div>
@@ -396,7 +396,7 @@ export default function QuizPreviewPage() {
   if (loading) {
     return (
       <main className="flex flex-1 items-center justify-center">
-        <span className="text-sm text-(--fg-muted)">Cargando...</span>
+        <span className="text-sm text-(--fg-muted)">Cargando…</span>
       </main>
     );
   }

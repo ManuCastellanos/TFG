@@ -33,7 +33,7 @@ function AssignmentStudentView() {
         <div className="size-14 shrink-0 rounded-2xl bg-violet-100 grid place-items-center text-2xl">📝</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tarea</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">
+          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
             {assignment?.title ?? (loading ? '…' : 'Tarea')}
           </h1>
         </div>
@@ -45,7 +45,7 @@ function AssignmentStudentView() {
   if (loading) {
     return (
       <main className="flex flex-1 items-center justify-center">
-        <span className="text-sm text-(--fg-muted)">Cargando...</span>
+        <span className="text-sm text-(--fg-muted)">Cargando…</span>
       </main>
     );
   }

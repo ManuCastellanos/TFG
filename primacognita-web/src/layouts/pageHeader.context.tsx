@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, use, useState, type ReactNode } from 'react';
 
 type Ctx = { node: ReactNode; set: (n: ReactNode) => void };
 
@@ -13,4 +13,4 @@ export function PageHeaderProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export const usePageHeader = () => useContext(PageHeaderContext);
+export const usePageHeader = () => use(PageHeaderContext);

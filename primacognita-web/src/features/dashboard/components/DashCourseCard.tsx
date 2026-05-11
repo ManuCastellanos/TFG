@@ -38,7 +38,7 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
               {emoji}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-extrabold text-(--fg) text-base leading-tight truncate">{course.fullname}</h3>
+              <h3 className="font-black text-(--fg) text-base leading-tight truncate">{course.fullname}</h3>
             </div>
           </div>
           <div className="h-2 rounded-full bg-neutral-100 mb-1.5">
@@ -48,8 +48,8 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
             />
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className={`font-extrabold ${c.text}`}>Progreso</span>
-            <span className={`font-extrabold ${c.text}`}>{progress}%</span>
+            <span className={`font-black ${c.text}`}>Progreso</span>
+            <span className={`font-black ${c.text}`}>{progress}%</span>
           </div>
         </div>
       </button>

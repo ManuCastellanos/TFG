@@ -19,7 +19,7 @@ export function TeacherClassRoster({ participants, progressByStudent }: Props) {
   return (
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-extrabold text-(--fg)">Tu clase</h3>
+        <h3 className="font-semibold text-(--fg)">Tu clase</h3>
         <span className="text-xs font-bold text-(--fg-subtle)">{students.length} alumnos</span>
       </div>
 

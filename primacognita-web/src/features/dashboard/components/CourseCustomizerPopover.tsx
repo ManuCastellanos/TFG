@@ -16,6 +16,7 @@ const CourseCustomizerPopover = ({
   onClose,
 }: CourseCustomizerPopoverProps) => (
   <div
+    role="presentation"
     className="absolute top-12 right-2 z-30 bg-white rounded-2xl p-3 shadow-2xl border border-(--border) w-52"
     onClick={(e) => e.stopPropagation()}
   >

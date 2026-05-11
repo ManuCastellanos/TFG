@@ -39,7 +39,10 @@ export const useUserCourses = (userId: string | null, token: string | null): Use
       setLoading(false);
 
       const categoryIds = unique(
-        data.map((c) => c.categoryId).filter((id): id is CourseCategoryId => Boolean(id && id.trim().length > 0)),
+        data.flatMap((c) => {
+          const id = c.categoryId;
+          return id && id.trim().length > 0 ? [id as CourseCategoryId] : [];
+        }),
       );
 
       if (categoryIds.length === 0) {

@@ -51,9 +51,9 @@ export default function QuizAttemptPage() {
         <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-extrabold text-(--fg) leading-tight truncate min-w-0">{titleLabel}</h1>
+          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">{titleLabel}</h1>
         </div>
-        {saving && <span className="ml-2 text-xs font-bold text-(--fg-muted)">Guardando...</span>}
+        {saving && <span className="ml-2 text-xs font-bold text-(--fg-muted)">Guardando…</span>}
       </div>,
     );
     return () => setPageHeader(null);
@@ -74,7 +74,7 @@ export default function QuizAttemptPage() {
       <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
         <div className="max-w-md bg-white rounded-3xl border border-(--border) p-8 text-center">
           <div className="text-5xl mb-4">🎉</div>
-          <h2 className="text-2xl font-extrabold text-(--fg) mb-2">¡Cuestionario enviado!</h2>
+          <h2 className="text-2xl font-semibold text-(--fg) mb-2">¡Cuestionario enviado!</h2>
           <p className="text-sm text-(--fg-muted) mb-6">Tus respuestas han sido registradas correctamente.</p>
           <button
             type="button"
@@ -93,7 +93,7 @@ export default function QuizAttemptPage() {
   if (loading && questions.length === 0) {
     return (
       <main className="flex flex-1 items-center justify-center">
-        <span className="text-sm text-(--fg-muted)">Cargando cuestionario...</span>
+        <span className="text-sm text-(--fg-muted)">Cargando cuestionario…</span>
       </main>
     );
   }
@@ -259,7 +259,7 @@ export default function QuizAttemptPage() {
               <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">
                 Navegación
               </div>
-              <h3 className="font-extrabold text-(--fg) mb-4">Preguntas</h3>
+              <h3 className="font-semibold text-(--fg) mb-4">Preguntas</h3>
               <div className="grid grid-cols-5 gap-2 mb-4">
                 {parsed.map((_, i) => {
                   const isActive = i === currentIdx;

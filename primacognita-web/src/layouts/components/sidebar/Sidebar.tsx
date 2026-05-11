@@ -8,17 +8,17 @@ export const Sidebar = ({ navItems, activePath, onNavigate }: SidebarProps) => (
     </div>
 
     <nav className="flex flex-1 flex-col gap-1.5">
-      {navItems
-        .filter((item) => item.id !== 'logout')
-        .map((item) => (
-          <NavItem key={item.id} item={item} isActive={activePath === item.path} onClick={onNavigate} />
-        ))}
+      {navItems.flatMap((item) =>
+        item.id !== 'logout'
+          ? [<NavItem key={item.id} item={item} isActive={activePath === item.path} onClick={onNavigate} />]
+          : []
+      )}
       <div className="mt-auto">
-        {navItems
-          .filter((item) => item.id === 'logout')
-          .map((item) => (
-            <NavItem key={item.id} item={item} danger onClick={onNavigate} />
-          ))}
+        {navItems.flatMap((item) =>
+          item.id === 'logout'
+            ? [<NavItem key={item.id} item={item} danger onClick={onNavigate} />]
+            : []
+        )}
       </div>
     </nav>
   </aside>
