@@ -1,4 +1,4 @@
-import type { RecentlyAccessedItemVM } from './RecentlyAccessed.types';
+import type { RecentlyAccessedItemVM } from '../types/recentlyAccessed.types';
 
 interface Props {
   item: RecentlyAccessedItemVM;

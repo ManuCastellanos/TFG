@@ -1,8 +1,12 @@
 import type { ReactNode, InputHTMLAttributes } from "react";
+import { Search } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+
+export type InputVariant = "default" | "search";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   rightAdornment?: ReactNode;
+  variant?: InputVariant;
 };
 
 export const Input = ({
@@ -10,8 +14,28 @@ export const Input = ({
   placeholder,
   className,
   required,
+  variant = "default",
   ...rest
 }: InputProps) => {
+  if (variant === "search") {
+    return (
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-(--fg-muted) pointer-events-none" />
+        <input
+          {...rest}
+          required={required}
+          placeholder={placeholder}
+          className={cn(
+            "w-full rounded-2xl border border-(--border) bg-white pl-9 pr-4 py-2.5 text-sm",
+            "text-(--fg) placeholder:text-(--fg-subtle)",
+            "focus:outline-none focus:border-emerald-400",
+            className,
+          )}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <input
@@ -19,17 +43,15 @@ export const Input = ({
         required={required}
         placeholder=" "
         className={cn(
-          `
-          peer w-full rounded-xl border
+          `peer w-full rounded-xl border
           bg-(--surface) text-(--fg)
           border-(--border)
           px-4 pt-7 pb-3 outline-none
           focus:border-(--color-pr)
           focus:ring-2 focus:ring-(--color-ring)
-          transition-colors duration-200
-          `,
+          transition-colors duration-200`,
           rightAdornment ? "pr-12" : "",
-          className
+          className,
         )}
       />
 
@@ -50,7 +72,6 @@ export const Input = ({
         {placeholder}
         {required && <span className="ml-0.5 text-red-500">*</span>}
       </label>
-
 
       {rightAdornment && (
         <div className="absolute inset-y-0 right-3 flex items-center">

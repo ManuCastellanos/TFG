@@ -19,7 +19,7 @@ const DashboardPage = () => {
     navigate({ to: '/courses' });
   };
 
-  const handleCourseClick = (courseId: number) => {
+  const handleCourseClick = (courseId: string) => {
     navigate({
       to: '/courses/$id',
       params: { id: courseId },

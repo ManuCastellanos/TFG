@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
 import CourseModuleRow from './CourseModuleRow';
 import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
+import ProgressBar from '@/components/ui/progressBar/ProgressBar';
 
 type CourseSectionCardProps = {
   section: CourseSection;
@@ -92,12 +93,7 @@ const CourseSectionCard = ({
               <span className="text-xs text-(--fg-subtle) font-bold">Avance medio</span>
               <span className={`font-extrabold ${sectionColor.text}`}>{teacherSectionProgress}%</span>
             </div>
-            <div className="w-20 h-2 rounded-full bg-neutral-100 overflow-hidden">
-              <div
-                className={`h-full bg-gradient-to-r ${sectionColor.grad}`}
-                style={{ width: `${teacherSectionProgress}%` }}
-              />
-            </div>
+            <ProgressBar.Core value={teacherSectionProgress} colorClass={sectionColor.grad} height="h-2" className="w-20" />
           </div>
         )}
 

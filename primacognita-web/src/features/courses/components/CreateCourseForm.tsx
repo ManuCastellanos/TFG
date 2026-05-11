@@ -151,10 +151,10 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
         </div>
 
         <div className="flex gap-3">
-          <Button type="button" onClick={onCancel}>
+          <Button variant="outline" size="md" type="button" onClick={onCancel}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button size="md" type="submit" disabled={isLoading}>
             {isLoading ? 'Creando...' : 'Crear'}
           </Button>
         </div>

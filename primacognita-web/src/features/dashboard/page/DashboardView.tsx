@@ -1,18 +1,19 @@
 import { ChevronRight } from 'lucide-react';
 
 import type { Course } from '@/modules/course/domain/Course';
+import type { User } from '@/modules/user/domain/User';
 
 import { CalendarWidget } from '@/features/calendar/CalendarWidget';
-import { RecentlyAccessedPanel } from '@/features/recently-accessed/RecentlyAccessedPanel';
+import { RecentlyAccessedPanel } from '@/features/recently-accessed/components/RecentlyAccessedPanel';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 
 import DashCourseCard from '../components/DashCourseCard';
 
 type DashboardViewProps = {
-  user: CurrentUser | null;
+  user: User | null;
   courses: Course[];
   onNavigateToCourses: () => void;
-  onCourseClick: (courseId: number) => void;
+  onCourseClick: (courseId: string) => void;
 };
 
 const DashboardView = ({ user, courses, onNavigateToCourses, onCourseClick }: DashboardViewProps) => {

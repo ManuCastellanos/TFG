@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
+import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
+import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { useSession } from '@/shared/hooks/useSession';
 import { useCoursePageData } from '../hooks/useCoursePage';
@@ -9,7 +11,7 @@ import { useParticipants } from '../sections/participants/hooks/useParticipants'
 import { useTeacherStats } from '../hooks/useTeacherStats';
 import { ParticipantsView } from '../sections/participants/ParticipantsView';
 import { TaskView } from '../sections/task/TaskView';
-import { RecentlyAccessedPanel } from '@/features/recently-accessed/RecentlyAccessedPanel';
+
 import { useCourseCustomization, COLOR_META } from '@/shared/hooks/useCourseCustomization';
 import { usePageHeader } from '@/layouts/pageHeader.context';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
@@ -23,6 +25,7 @@ import { TeacherClassRoster } from '../components/teacher/TeacherClassRoster';
 import type { WorkspaceTab } from '../types/workspace.types';
 import CourseSectionCard from '../components/CourseSectionCard';
 import WorkspaceTabs from '../components/WorkspaceTabs';
+import { RecentlyAccessedPanel } from '@/features/recently-accessed/components/RecentlyAccessedPanel';
 
 export default function CoursePage() {
   const navigate = useNavigate();
@@ -185,11 +188,11 @@ export default function CoursePage() {
           {!loading && tab === 'ejercicios' && <TaskView exercises={exercises} onExerciseClick={handleModuleClick} />}
 
           {(tab === 'logros' || tab === 'anuncios') && (
-            <div className="rounded-3xl border border-(--border) bg-white p-8 text-center">
-              <div className="text-4xl mb-3">{tab === 'logros' ? '🏆' : '📣'}</div>
-              <p className="font-bold text-(--fg)">Próximamente disponible</p>
-              <p className="text-sm text-(--fg-muted) mt-1">Esta sección estará disponible en una próxima versión.</p>
-            </div>
+            <EmptyState
+              emoji={tab === 'logros' ? '🏆' : '📣'}
+              title="Próximamente disponible"
+              subtitle="Esta sección estará disponible en una próxima versión."
+            />
           )}
 
           {tab === 'companeros' && <ParticipantsView participants={participants} loading={participantsLoading} />}
@@ -203,9 +206,9 @@ export default function CoursePage() {
               <div className="bg-white rounded-3xl p-5 border border-(--border)">
                 <h3 className="font-semibold text-(--fg) mb-3">Tu profe</h3>
                 <div className="flex items-center gap-3">
-                  <div className="size-12 rounded-2xl bg-linear-to-br from-emerald-300 to-emerald-500 grid place-items-center text-white font-extrabold text-sm">
+                  <AvatarBox gradient="emerald" size="size-12" className="text-sm">
                     PC
-                  </div>
+                  </AvatarBox>
                   <div>
                     <div className="font-bold text-sm text-(--fg)">Profesor del curso</div>
                     <button type="button" className="text-xs font-bold text-emerald-700 hover:text-emerald-800">

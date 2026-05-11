@@ -2,6 +2,7 @@ import { Pencil } from 'lucide-react';
 import CourseCustomizerPopover from './CourseCustomizerPopover';
 import { useEffect, useRef, useState } from 'react';
 import { COLOR_META, COURSE_COLORS, useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
+import ProgressBar from '@/components/ui/progressBar/ProgressBar';
 import type { Course } from '@/modules/course/domain/Course';
 
 const DashCourseCard = ({ course, index, onClick }: { course: Course; index: number; onClick: () => void }) => {
@@ -41,12 +42,7 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
               <h3 className="font-black text-(--fg) text-base leading-tight truncate">{course.fullname}</h3>
             </div>
           </div>
-          <div className="h-2 rounded-full bg-neutral-100 mb-1.5">
-            <div
-              className={`h-full rounded-full bg-linear-to-r ${c.grad} transition-all`}
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+          <ProgressBar.Core value={progress} colorClass={c.grad} height="h-2" className="mb-1.5" />
           <div className="flex items-center justify-between text-xs">
             <span className={`font-black ${c.text}`}>Progreso</span>
             <span className={`font-black ${c.text}`}>{progress}%</span>

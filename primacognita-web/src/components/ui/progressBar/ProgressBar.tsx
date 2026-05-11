@@ -1,13 +1,47 @@
 import { Surface } from "@/components/ui/surface/Surface";
 import { Text } from "@/components/ui/text/Text";
+import { cn } from "@/shared/utils/cn";
 import { progressBarClasses as c } from "./progressBar.styles";
 import type { ProgressBarViewModel } from "./progressBar.types";
+
+// ─── ProgressBar.Core — inline bar primitive ─────────────────────────────────
+// Use this for compact inline progress indicators inside cards and lists.
+// Use ProgressBar (below) for full-widget accessibility-ready displays.
+
+type ProgressBarCoreProps = {
+  value: number;
+  /** Solid color class ("bg-emerald-400") or gradient fragment ("from-sky-300 to-sky-500") */
+  colorClass?: string;
+  height?: "h-1" | "h-1.5" | "h-2" | "h-3";
+  className?: string;
+};
+
+function ProgressBarCore({
+  value,
+  colorClass = "bg-emerald-400",
+  height = "h-1.5",
+  className,
+}: ProgressBarCoreProps) {
+  const isGradient = colorClass.startsWith("from-");
+  const fillClass = isGradient ? cn("bg-linear-to-r", colorClass) : colorClass;
+
+  return (
+    <div className={cn("rounded-full bg-neutral-100 overflow-hidden", height, className)} aria-hidden>
+      <div
+        className={cn("h-full rounded-full transition-all", fillClass)}
+        style={{ width: `${value}%` }}
+      />
+    </div>
+  );
+}
+
+// ─── ProgressBar — full widget ────────────────────────────────────────────────
 
 interface Props {
   viewModel: ProgressBarViewModel;
 }
 
-export default function ProgressBar({ viewModel }: Props) {
+function ProgressBarWidget({ viewModel }: Props) {
   const { progress, message } = viewModel;
 
   return (
@@ -40,3 +74,7 @@ export default function ProgressBar({ viewModel }: Props) {
     </Surface>
   );
 }
+
+const ProgressBar = Object.assign(ProgressBarWidget, { Core: ProgressBarCore });
+
+export default ProgressBar;

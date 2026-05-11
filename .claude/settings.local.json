@@ -32,7 +32,12 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\\" | Where-Object { $_.Name -match \"api|doc|pdf\" -or $_.Extension -match \"pdf\" } | Select-Object Name, Length)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\\" -Recurse -File | Where-Object { $_.Extension -match \"pdf|txt|md\" } | Select-Object FullName, Length | Sort-Object Length -Descending | Select-Object -First 20)",
       "Bash(dir \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\")",
-      "PowerShell(New-Item *)"
+      "PowerShell(New-Item *)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(ConvertTo-Csv)",
+      "Bash(Out-String)",
+      "Bash(npx tsc *)"
     ]
   }
 }

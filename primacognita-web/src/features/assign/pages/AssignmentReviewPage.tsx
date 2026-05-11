@@ -2,6 +2,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
+import { Button } from '@/components/ui/button/Button';
+import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
+import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
+import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
 import { useSession } from '@/shared/hooks/useSession';
 import { usePageHeader } from '@/layouts/pageHeader.context';
 import { useAssignmentReview } from '../hooks/useAssignmentReview';
@@ -52,11 +56,9 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
   return (
     <div className="bg-white rounded-3xl border border-(--border) p-6 sticky top-4 self-start">
       <div className="flex items-center gap-3 mb-5">
-        <div
-          className={`size-12 rounded-2xl bg-gradient-to-br ${color.grad} grid place-items-center text-white font-extrabold shrink-0`}
-        >
+        <AvatarBox gradient={color.grad} size="size-12">
           {sub.userInitials}
-        </div>
+        </AvatarBox>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-(--fg) leading-tight truncate">{sub.userFullName}</h3>
           <div className="text-xs text-(--fg-muted)">
@@ -154,11 +156,11 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
         />
       </div>
 
-      <button
-        type="button"
+      <Button
+        size="lg"
+        className="w-full"
         disabled={!isValid || saving}
         onClick={() => onSave(gradeValue, feedback, true)}
-        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition"
       >
         {saving ? (
           <span className="size-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -168,7 +170,7 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
           </svg>
         )}
         Calificar
-      </button>
+      </Button>
     </div>
   );
 }
@@ -233,8 +235,8 @@ export default function AssignmentReviewPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 items-center justify-center">
-        <span className="text-sm text-(--fg-muted)">Cargando entregas…</span>
+      <main className="flex flex-1 flex-col">
+        <LoadingState label="Cargando entregas…" className="py-8" />
       </main>
     );
   }
@@ -311,9 +313,7 @@ export default function AssignmentReviewPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-(--border) bg-white p-8 text-center">
-          <p className="text-(--fg-muted)">No hay entregas en esta categoría.</p>
-        </div>
+        <EmptyState emoji="📭" title="No hay entregas en esta categoría." />
       ) : (
         <div className="grid grid-cols-[1fr_400px] gap-6 items-start">
           <div className="bg-white rounded-3xl border border-(--border) overflow-hidden">
@@ -338,11 +338,9 @@ export default function AssignmentReviewPage() {
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className={`size-9 rounded-xl bg-gradient-to-br ${color.grad} grid place-items-center text-white font-extrabold text-xs shrink-0`}
-                      >
+                      <AvatarBox gradient={color.grad} size="size-9" radius="rounded-xl">
                         {s.userInitials}
-                      </div>
+                      </AvatarBox>
                       <div className="min-w-0">
                         <div className="font-extrabold text-sm text-(--fg) truncate">{s.userFullName}</div>
                         <div className="text-xs text-(--fg-muted)">

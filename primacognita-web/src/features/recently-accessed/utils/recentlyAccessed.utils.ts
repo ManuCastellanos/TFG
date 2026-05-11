@@ -1,9 +1,9 @@
 import type { RecentItem } from '@/modules/recentlyAccessed/domain/RecentItem';
-import type { RecentlyAccessedItemVM } from './RecentlyAccessed.types';
+import type { RecentlyAccessedItemVM } from '../types/recentlyAccessed.types';
 
 const MOD_META: Record<string, { soft: string; text: string; emoji: string }> = {
   resource:    { soft: 'bg-blue-100',    text: 'text-blue-700',    emoji: '📄' },
-  quiz:        { soft: 'bg-sky-100',  text: 'text-sky-700',  emoji: '🧩' },
+  quiz:        { soft: 'bg-sky-100',     text: 'text-sky-700',     emoji: '🧩' },
   assign:      { soft: 'bg-violet-100',  text: 'text-violet-700',  emoji: '📝' },
   forum:       { soft: 'bg-teal-100',    text: 'text-teal-700',    emoji: '📣' },
   page:        { soft: 'bg-amber-100',   text: 'text-amber-700',   emoji: '📖' },

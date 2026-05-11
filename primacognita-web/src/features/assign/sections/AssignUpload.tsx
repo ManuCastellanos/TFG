@@ -6,6 +6,9 @@ import { AssignmentDropzone } from '../components/AssignmentDropzone';
 import { AssignCountdown } from '../components/AssignCountdown';
 import { AssignInfoChip } from '../components/AssignInfoChip';
 import { Banner } from '@/components/feedback/banner/Banner';
+import { Button } from '@/components/ui/button/Button';
+import { StepBadge } from '@/components/ui/stepBadge/StepBadge';
+import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
 
 function formatDate(ts: number): string {
   return new Date(ts).toLocaleDateString('es-ES', {
@@ -52,14 +55,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
   };
 
   if (initializing) {
-    return (
-      <div className="flex flex-1 items-center justify-center py-16">
-        <div className="text-center">
-          <div className="text-3xl mb-3">📂</div>
-          <p className="text-sm text-(--fg-muted) font-bold">Cargando archivos enviados…</p>
-        </div>
-      </div>
-    );
+    return <LoadingState emoji="📂" label="Cargando archivos enviados…" />;
   }
 
   return (
@@ -71,9 +67,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
 
         <div className="bg-white rounded-3xl border border-(--border) p-7">
           <div className="flex items-center gap-3 mb-5">
-            <div className="size-10 rounded-2xl bg-violet-100 text-violet-700 grid place-items-center font-extrabold">
-              1
-            </div>
+            <StepBadge step={1} color="violet" size="md" />
             <h2 className="text-xl font-semibold text-(--fg)">Sube tus archivos</h2>
           </div>
 
@@ -123,9 +117,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
 
         <div className="bg-white rounded-3xl border border-(--border) p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="size-10 rounded-2xl bg-violet-100 text-violet-700 grid place-items-center font-extrabold">
-              2
-            </div>
+            <StepBadge step={2} color="violet" size="md" />
             <h2 className="text-xl font-semibold text-(--fg)">
               Añade una nota <span className="text-sm font-bold text-(--fg-subtle)">(opcional)</span>
             </h2>
@@ -140,30 +132,27 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
         </div>
 
         <div className="flex items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-5 py-3 rounded-2xl bg-white border border-(--border) text-(--fg-muted) text-sm font-extrabold hover:bg-(--tint-50)"
-          >
+          <Button variant="outline" size="lg" type="button" onClick={onCancel}>
             Cancelar
-          </button>
+          </Button>
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="tinted"
+              size="lg"
               type="button"
               disabled={!canSubmit || saving}
               onClick={() => void handleSaveDraft()}
-              className="px-5 py-3 rounded-2xl bg-(--tint-50) border border-(--border) text-(--fg) text-sm font-extrabold hover:bg-(--tint-100) disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Guardando…' : 'Guardar borrador'}
-            </button>
-            <button
+            </Button>
+            <Button
+              size="lg"
               type="button"
               disabled={!canSubmit || submitting}
               onClick={() => void handleSubmit()}
-              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Enviando…' : '✓ Enviar entrega'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -1,5 +1,8 @@
 import { isStudentRole } from '@/modules/user/domain/User';
 import { getStudentColor } from '../../types/workspace.types';
+import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
+import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
+import ProgressBar from '@/components/ui/progressBar/ProgressBar';
 import type { Participant } from '@/modules/course/domain/Participant';
 
 function getInitials(fullName: string): string {
@@ -24,7 +27,7 @@ export function TeacherClassRoster({ participants, progressByStudent }: Props) {
       </div>
 
       {students.length === 0 ? (
-        <p className="text-sm text-(--fg-muted) text-center py-4">Sin alumnos matriculados</p>
+        <EmptyState emoji="👥" title="Sin alumnos matriculados" className="p-4" />
       ) : (
         <div className="flex flex-col gap-1">
           {students.slice(0, 6).map((s) => {
@@ -33,16 +36,12 @@ export function TeacherClassRoster({ participants, progressByStudent }: Props) {
             const initials = getInitials(s.fullName);
             return (
               <div key={s.id} className="flex items-center gap-3 p-2 rounded-2xl hover:bg-(--tint-50)">
-                <div
-                  className={`size-9 rounded-xl bg-gradient-to-br ${color.grad} grid place-items-center text-white font-extrabold text-xs shrink-0`}
-                >
+                <AvatarBox gradient={color.grad} size="size-9" radius="rounded-xl">
                   {initials}
-                </div>
+                </AvatarBox>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-sm text-(--fg) truncate">{s.fullName}</div>
-                  <div className="h-1.5 rounded-full bg-neutral-100 mt-1 overflow-hidden">
-                    <div className="h-full rounded-full bg-emerald-400 transition-all" style={{ width: `${progress}%` }} />
-                  </div>
+                  <ProgressBar.Core value={progress} height="h-1.5" className="mt-1" />
                 </div>
                 <span className="text-xs font-extrabold text-(--fg-muted) w-10 text-right shrink-0">{progress}%</span>
               </div>

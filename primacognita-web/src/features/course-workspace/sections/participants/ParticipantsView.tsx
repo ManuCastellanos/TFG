@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Search } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar/Avatar';
+import { Input } from '@/components/ui/input/Input';
 import { Surface } from '@/components/ui/surface/Surface';
 import { Text } from '@/components/ui/text/Text';
 import { Card } from '@/components/ui/card/Card';
@@ -18,16 +18,12 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-(--fg-muted)" />
-        <input
-          type="search"
-          placeholder="Buscar participante..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-xl border border-(--border) bg-(--surface) py-2.5 pl-9 pr-4 text-sm text-(--fg) placeholder:text-(--fg-muted) focus:outline-none focus:ring-2 focus:ring-(--color-pr)"
-        />
-      </div>
+      <Input
+        variant="search"
+        placeholder="Buscar participante..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
 
       {loading && <Text className="text-(--fg-muted)">Cargando participantes…</Text>}
 
