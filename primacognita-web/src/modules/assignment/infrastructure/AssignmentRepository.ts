@@ -1,8 +1,13 @@
 import type IAssignmentRepository from '../domain/IAssignmentRepository';
 import type { Assignment } from '../domain/Assignment';
 import type { UpcomingAssignment } from '../domain/UpcomingAssignment';
+import type { AssignmentMeta } from '../domain/AssignmentMeta';
+import type { SubmissionEntry } from '../domain/SubmissionEntry';
+import type { GradeEntry } from '../domain/GradeEntry';
 import type { AssignmentsApiResponse } from './AssignmentResponse';
 import type { SubmissionStatusResponse } from './SubmissionResponse';
+import type { SubmissionsApiResponse } from './SubmissionsResponse';
+import type { GradesApiResponse } from './GradesResponse';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import { env } from '@/shared/utils/env';
 import { parseAssignment } from './parseAssignment';
@@ -104,6 +109,97 @@ export default class AssignmentRepository implements IAssignmentRepository {
     await this.moodleClient.call<unknown>(token, 'mod_assign_submit_for_grading', {
       assignmentid: String(assignId),
       acceptsubmissionstatement: '1',
+    });
+  }
+
+  async getAssignmentsForCourse(token: string, courseId: number): Promise<AssignmentMeta[]> {
+    const response = await this.moodleClient.call<AssignmentsApiResponse>(
+      token,
+      'mod_assign_get_assignments',
+      { 'courseids[0]': String(courseId) },
+    );
+    return (response.courses?.[0]?.assignments ?? []).map((raw) => ({
+      id: raw.id,
+      cmId: raw.cmid,
+      title: raw.name,
+      description: raw.intro ?? '',
+      dueDate: raw.duedate ? raw.duedate * 1000 : undefined,
+      maxGrade: raw.grade ?? 10,
+    }));
+  }
+
+  async getSubmissionsForAssignments(token: string, assignIds: number[]): Promise<Record<number, SubmissionEntry[]>> {
+    if (assignIds.length === 0) return {};
+    const params: Record<string, string> = { status: 'submitted' };
+    assignIds.forEach((id, i) => { params[`assignmentids[${i}]`] = String(id); });
+
+    const response = await this.moodleClient.call<SubmissionsApiResponse>(
+      token,
+      'mod_assign_get_submissions',
+      params,
+    );
+
+    const result: Record<number, SubmissionEntry[]> = {};
+    for (const assignment of response.assignments ?? []) {
+      result[assignment.assignmentid] = (assignment.submissions ?? []).map((s) => {
+        const filePlugin = s.plugins?.find((p) => p.type === 'file');
+        const fileArea = filePlugin?.fileareas?.find((a) => a.area === 'submission_files') ?? filePlugin?.fileareas?.[0];
+        const files = (fileArea?.files ?? []).map((f) => ({
+          filename: f.filename,
+          fileUrl: f.fileurl,
+          fileSize: f.filesize,
+          mimeType: f.mimetype,
+          uploadedAt: f.timemodified ? f.timemodified * 1000 : undefined,
+        }));
+
+        const notePlugin = s.plugins?.find((p) => p.type === 'onlinetext');
+        const note = notePlugin?.editorfields?.find((e) => e.name === 'onlinetext')?.text ?? undefined;
+
+        return {
+          userId: s.userid,
+          status: s.status as SubmissionEntry['status'],
+          submittedAt: s.timemodified ? s.timemodified * 1000 : undefined,
+          files,
+          note,
+        };
+      });
+    }
+    return result;
+  }
+
+  async getGradesForAssignments(token: string, assignIds: number[]): Promise<Record<number, GradeEntry[]>> {
+    if (assignIds.length === 0) return {};
+    const params: Record<string, string> = {};
+    assignIds.forEach((id, i) => { params[`assignmentids[${i}]`] = String(id); });
+
+    const response = await this.moodleClient.call<GradesApiResponse>(
+      token,
+      'mod_assign_get_grades',
+      params,
+    );
+
+    const result: Record<number, GradeEntry[]> = {};
+    for (const assignment of response.assignments ?? []) {
+      result[assignment.assignmentid] = (assignment.grades ?? []).map((g) => ({
+        userId: g.userid,
+        grade: g.grade,
+        gradedAt: g.timemodified ? g.timemodified * 1000 : undefined,
+      }));
+    }
+    return result;
+  }
+
+  async saveGrade(token: string, assignId: number, userId: number, grade: number, feedback: string): Promise<void> {
+    await this.moodleClient.call<unknown>(token, 'mod_assign_save_grade', {
+      assignmentid: String(assignId),
+      userid: String(userId),
+      grade: String(grade),
+      attemptnumber: '-1',
+      addattempt: '0',
+      workflowstate: 'graded',
+      applytoall: '0',
+      'plugindata[assignfeedbackcomments_editor][text]': feedback,
+      'plugindata[assignfeedbackcomments_editor][format]': '1',
     });
   }
 

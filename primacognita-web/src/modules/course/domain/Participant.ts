@@ -5,4 +5,5 @@ export interface Participant {
   roleId: number | null;
   roleName: string | null;
   roleDisplayName: string | null;
+  lastCourseAccess?: number;
 }

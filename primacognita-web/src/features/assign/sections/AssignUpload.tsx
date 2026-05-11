@@ -47,8 +47,8 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
 
   const handleSubmit = async () => {
     if (!draftItemId) return;
-    await submit(id, draftItemId, note || undefined);
-    onSubmitted();
+    const ok = await submit(id, draftItemId, note || undefined);
+    if (ok) onSubmitted();
   };
 
   if (initializing) {

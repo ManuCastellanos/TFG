@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import { Banner } from '@/components/feedback/banner/Banner';
+import { useSession } from '@/shared/hooks/useSession';
+import { isTeacherRole } from '@/modules/user/domain/User';
 import { useAssignment } from '../hooks/useAssignment';
 import { AssignPreview } from '../sections/AssignPreview';
 import { AssignUpload } from '../sections/AssignUpload';
 import { AssignSubmitted } from '../sections/AssignSubmitted';
 import { usePageHeader } from '@/layouts/pageHeader.context';
+import AssignmentReviewPage from './AssignmentReviewPage';
 
-export default function AssignmentPage() {
+function AssignmentStudentView() {
   const navigate = useNavigate();
   const { courseId, cmid } = useParams({ strict: false }) as { courseId: string; cmid: string };
 
@@ -68,22 +71,17 @@ export default function AssignmentPage() {
   return (
     <main className="flex-1 overflow-y-auto px-8 pt-5 pb-8">
       {showUpload ? (
-        <AssignUpload
-          assignment={assignment}
-          onCancel={() => setEditing(false)}
-          onSubmitted={handleSubmitted}
-        />
+        <AssignUpload assignment={assignment} onCancel={() => setEditing(false)} onSubmitted={handleSubmitted} />
       ) : showSubmitted ? (
-        <AssignSubmitted
-          assignment={assignment}
-          onEdit={() => setEditing(true)}
-        />
+        <AssignSubmitted assignment={assignment} onEdit={() => setEditing(true)} />
       ) : (
-        <AssignPreview
-          assignment={assignment}
-          onStartUpload={() => setEditing(true)}
-        />
+        <AssignPreview assignment={assignment} onStartUpload={() => setEditing(true)} />
       )}
     </main>
   );
+}
+
+export default function AssignmentPage() {
+  const { roleName } = useSession();
+  return isTeacherRole(roleName) ? <AssignmentReviewPage /> : <AssignmentStudentView />;
 }

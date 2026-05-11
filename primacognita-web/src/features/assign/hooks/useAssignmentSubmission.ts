@@ -7,7 +7,7 @@ type UseAssignmentSubmissionResult = {
   submitting: boolean;
   error: string | null;
   saveDraft: (assignId: number, draftItemId: number, note?: string) => Promise<void>;
-  submit: (assignId: number, draftItemId: number, note?: string) => Promise<void>;
+  submit: (assignId: number, draftItemId: number, note?: string) => Promise<boolean>;
 };
 
 export function useAssignmentSubmission(): UseAssignmentSubmissionResult {
@@ -31,15 +31,17 @@ export function useAssignmentSubmission(): UseAssignmentSubmissionResult {
     }
   }, [assignmentRepository, token]);
 
-  const submit = useCallback(async (assignId: number, draftItemId: number, note?: string) => {
-    if (!token) return;
+  const submit = useCallback(async (assignId: number, draftItemId: number, note?: string): Promise<boolean> => {
+    if (!token) return false;
     setSubmitting(true);
     setError(null);
     try {
       await assignmentRepository.saveSubmission(token, assignId, draftItemId, note);
       await assignmentRepository.submitForGrading(token, assignId);
+      return true;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error al enviar la entrega.');
+      return false;
     } finally {
       setSubmitting(false);
     }

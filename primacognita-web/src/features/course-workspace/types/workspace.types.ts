@@ -21,6 +21,8 @@ export const getModuleMeta = (modName: string) =>
 
 export const stripHtml = (html: string | null): string => (html ? html.replace(/<[^>]+>/g, '').trim() : '');
 
+export const getStudentColor = (userId: number) => SECTION_COLORS[userId % SECTION_COLORS.length];
+
 export type WorkspaceTab = 'temario' | 'ejercicios' | 'logros' | 'anuncios' | 'companeros';
 
 export const STUDENT_TABS: { id: WorkspaceTab; label: string; emoji: string }[] = [

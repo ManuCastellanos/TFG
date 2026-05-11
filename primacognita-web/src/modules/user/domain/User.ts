@@ -9,6 +9,10 @@ export interface User {
 }
 
 const TEACHER_SHORTNAMES = new Set(['editingteacher', 'teacher']);
+const STUDENT_SHORTNAMES = new Set(['student']);
 
 export const isTeacherRole = (roleName: string | null | undefined): boolean =>
   TEACHER_SHORTNAMES.has(roleName ?? '');
+
+export const isStudentRole = (roleName: string | null | undefined): boolean =>
+  STUDENT_SHORTNAMES.has(roleName ?? '');

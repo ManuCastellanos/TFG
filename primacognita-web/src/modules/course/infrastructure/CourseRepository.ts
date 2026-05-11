@@ -146,6 +146,7 @@ export default class CourseRepository implements ICourseRepository {
         roleId: primary?.roleid ?? null,
         roleName: primary?.shortname ?? null,
         roleDisplayName: primary?.name ?? null,
+        lastCourseAccess: u.lastcourseaccess ? u.lastcourseaccess * 1000 : undefined,
       };
     });
   }

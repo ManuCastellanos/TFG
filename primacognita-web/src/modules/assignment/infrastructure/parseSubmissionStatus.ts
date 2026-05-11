@@ -74,7 +74,7 @@ export function parseSubmissionStatus(
   }
 
   const isGraded = gradeRaw != null;
-  const isSubmitted = raw?.status === 'submitted';
+  const isSubmitted = raw?.status === 'submitted' || raw?.status === 'reopened';
   const isDraft = raw?.status === 'draft';
   const submissionStatus = calcSubmissionStatus(raw?.status, isGraded, dueDate);
 

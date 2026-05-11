@@ -70,29 +70,31 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
           </div>
         )}
 
-        {submission && submission.files.length > 0 && (
-          <div className="bg-white rounded-3xl border border-(--border) p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-extrabold text-(--fg)">Tu entrega</h3>
-              {canEdit && !isGraded && (
-                <button
-                  type="button"
-                  onClick={onEdit}
-                  className="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 px-3 py-1.5 rounded-xl hover:bg-emerald-50"
-                >
-                  ✏️ Editar entrega
-                </button>
-              )}
-            </div>
-            <AssignmentFilesList files={submission.files} showDownload />
-            {submission.note && (
-              <div className="mt-4 p-4 rounded-2xl bg-(--tint-50) border border-(--border)">
-                <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">Tu nota al profe</div>
-                <p className="text-sm text-(--fg)">{submission.note}</p>
-              </div>
+        <div className="bg-white rounded-3xl border border-(--border) p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-extrabold text-(--fg)">Tu entrega</h3>
+            {canEdit && !isGraded && (
+              <button
+                type="button"
+                onClick={onEdit}
+                className="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 px-3 py-1.5 rounded-xl hover:bg-emerald-50"
+              >
+                ✏️ Editar entrega
+              </button>
             )}
           </div>
-        )}
+          {submission?.files && submission.files.length > 0 ? (
+            <AssignmentFilesList files={submission.files} showDownload />
+          ) : (
+            <p className="text-sm text-(--fg-muted) italic">No hay archivos adjuntos.</p>
+          )}
+          {submission?.note && (
+            <div className="mt-4 p-4 rounded-2xl bg-(--tint-50) border border-(--border)">
+              <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">Tu nota al profe</div>
+              <p className="text-sm text-(--fg)">{submission.note}</p>
+            </div>
+          )}
+        </div>
 
         <div className="bg-white rounded-3xl border border-(--border) p-6">
           <h3 className="font-extrabold text-(--fg) mb-4">Estado de la entrega</h3>

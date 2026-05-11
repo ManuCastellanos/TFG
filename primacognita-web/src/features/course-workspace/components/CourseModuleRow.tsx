@@ -6,11 +6,12 @@ type CourseModuleRowProps = {
   module: CourseModule;
   onModuleClick?: (module: CourseModule) => void;
   onToggleComplete?: (module: CourseModule) => void;
+  pendingCount?: number;
 };
 
 const INTERNAL_MODULE_NAMES = ['assign', 'quiz'];
 
-const CourseModuleRow = ({ module, onModuleClick, onToggleComplete }: CourseModuleRowProps) => {
+const CourseModuleRow = ({ module, onModuleClick, onToggleComplete, pendingCount }: CourseModuleRowProps) => {
   const moduleMeta = getModuleMeta(module.modName);
   const isInternalModule = INTERNAL_MODULE_NAMES.includes(module.modName);
 
@@ -44,6 +45,16 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete }: CourseModu
       </div>
     </>
   );
+
+  const teacherBadge = pendingCount !== undefined ? (
+    pendingCount > 0 ? (
+      <span className="text-xs font-extrabold bg-orange-100 text-orange-700 rounded-lg px-2 py-1 shrink-0">
+        {pendingCount} por revisar
+      </span>
+    ) : (
+      <span className="text-xs font-bold text-(--fg-subtle) shrink-0">Sin pendientes</span>
+    )
+  ) : null;
 
   const completionBtn = showCompletion ? (
     <button
@@ -87,7 +98,7 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete }: CourseModu
         >
           {iconAndText}
         </button>
-        {completionBtn}
+        {teacherBadge ?? completionBtn}
       </div>
     );
   }
@@ -98,7 +109,7 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete }: CourseModu
         <a href={module.url} target="_blank" rel="noreferrer" className="flex items-center gap-3 flex-1 min-w-0">
           {iconAndText}
         </a>
-        {completionBtn}
+        {teacherBadge ?? completionBtn}
       </div>
     );
   }
@@ -106,7 +117,7 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete }: CourseModu
   return (
     <div className={containerClasses}>
       {iconAndText}
-      {completionBtn}
+      {teacherBadge ?? completionBtn}
     </div>
   );
 };

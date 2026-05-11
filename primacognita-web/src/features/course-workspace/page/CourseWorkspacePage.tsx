@@ -6,6 +6,7 @@ import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { useSession } from '@/shared/hooks/useSession';
 import { useCoursePageData } from '../hooks/useCoursePage';
 import { useParticipants } from '../sections/participants/hooks/useParticipants';
+import { useTeacherStats } from '../hooks/useTeacherStats';
 import { ParticipantsView } from '../sections/participants/ParticipantsView';
 import { TaskView } from '../sections/task/TaskView';
 import { RecentlyAccessedPanel } from '@/features/recently-accessed/RecentlyAccessedPanel';
@@ -15,6 +16,9 @@ import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import type { CourseModule } from '@/modules/course/domain/CourseSection';
 import { isTeacherRole } from '@/modules/user/domain/User';
 import { UpcomingAssignmentsPanel } from '../components/UpcomingAssignmentsPanel';
+import { TeacherStatsBar } from '../components/teacher/TeacherStatsBar';
+import { TeacherPendingPanel } from '../components/teacher/TeacherPendingPanel';
+import { TeacherClassRoster } from '../components/teacher/TeacherClassRoster';
 
 import type { WorkspaceTab } from '../types/workspace.types';
 import CourseSectionCard from '../components/CourseSectionCard';
@@ -28,6 +32,12 @@ export default function CoursePage() {
   const isTeacher = isTeacherRole(roleName);
   const { course, sections, exercises, loading, error, updateModuleCompletion } = useCoursePageData(courseId, userId, token);
   const { participants, loading: participantsLoading } = useParticipants(token, courseId);
+  const teacherStats = useTeacherStats(
+    isTeacher ? token : null,
+    courseId,
+    sections,
+    participants,
+  );
   const { courseRepository } = useDependencies();
 
   const [tab, setTab] = useState<WorkspaceTab>('temario');
@@ -94,6 +104,15 @@ export default function CoursePage() {
   const bannerTotal = sections.reduce((t, s) => t + s.modules.length, 0);
   const bannerDone = Math.round((bannerProgress / 100) * bannerTotal);
 
+  const nonGeneralSections = sections.filter((s) => s.id !== 0);
+  const avgProgress =
+    nonGeneralSections.length > 0
+      ? Math.round(
+          nonGeneralSections.reduce((sum, s) => sum + (teacherStats.sectionProgress[s.id] ?? 0), 0) /
+            nonGeneralSections.length,
+        )
+      : 0;
+
   const handleModuleClick = (module: CourseModule) => {
     if (module.modName === 'quiz') {
       void navigate({
@@ -124,6 +143,16 @@ export default function CoursePage() {
           ]}
         />
       )}
+
+      {isTeacher && (
+        <TeacherStatsBar
+          studentsCount={teacherStats.studentsCount}
+          activeCount={teacherStats.activeCount}
+          avgProgress={avgProgress}
+          pendingTotal={teacherStats.pendingTotal}
+        />
+      )}
+
       <WorkspaceTabs active={tab} onChange={setTab} isTeacher={isTeacher} />
 
       <div className="grid grid-cols-[1fr_300px] gap-6">
@@ -144,7 +173,9 @@ export default function CoursePage() {
                     defaultOpen={idx === 1}
                     progress={progress}
                     onModuleClick={handleModuleClick}
-                    onToggleComplete={handleToggleComplete}
+                    onToggleComplete={isTeacher ? undefined : handleToggleComplete}
+                    pendingByModule={isTeacher ? teacherStats.pendingByModule : undefined}
+                    teacherSectionProgress={isTeacher ? teacherStats.sectionProgress[section.id] : undefined}
                   />
                 ))
               )}
@@ -186,38 +217,14 @@ export default function CoursePage() {
             </>
           )}
 
-          {isTeacher && course && (
-            <div className="bg-white rounded-3xl p-5 border border-(--border)">
-              <h3 className="font-extrabold text-(--fg) mb-3">Resumen de clase</h3>
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-(--fg-muted)">Avance medio</span>
-                  <span className="font-extrabold text-emerald-700">{course.progress ?? 0}%</span>
-                </div>
-                <div className="h-2 rounded-full bg-neutral-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-linear-to-r from-emerald-300 to-emerald-500"
-                    style={{ width: `${course.progress ?? 0}%` }}
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="mt-1 flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="size-4"
-                    aria-hidden
-                  >
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                  Añadir nuevo tema
-                </button>
-              </div>
-            </div>
+          {isTeacher && (
+            <>
+              <TeacherPendingPanel courseId={courseId} items={teacherStats.pendingItems} />
+              <TeacherClassRoster
+                participants={participants}
+                progressByStudent={teacherStats.progressByStudent}
+              />
+            </>
           )}
         </div>
       </div>

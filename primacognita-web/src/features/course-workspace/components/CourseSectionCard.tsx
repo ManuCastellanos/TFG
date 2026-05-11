@@ -1,4 +1,4 @@
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Plus } from 'lucide-react';
 import { SECTION_COLORS, stripHtml } from '../types/workspace.types';
 import { useState } from 'react';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
@@ -13,6 +13,8 @@ type CourseSectionCardProps = {
   progress?: number;
   onModuleClick?: (module: CourseModule) => void;
   onToggleComplete?: (module: CourseModule) => void;
+  pendingByModule?: Record<number, number>;
+  teacherSectionProgress?: number;
 };
 
 const RING_COLORS = [
@@ -27,6 +29,8 @@ const CourseSectionCard = ({
   progress,
   onModuleClick,
   onToggleComplete,
+  pendingByModule,
+  teacherSectionProgress,
 }: CourseSectionCardProps) => {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -36,8 +40,10 @@ const CourseSectionCard = ({
   const ringColor = RING_COLORS[safeColorIndex % RING_COLORS.length];
   const summary = stripHtml(section.summary);
 
+  const isTeacherMode = pendingByModule !== undefined;
   const hasRing =
     !isGeneral &&
+    !isTeacherMode &&
     progress != null &&
     section.modules.some((m) => m.completion?.hasCompletion);
 
@@ -80,6 +86,20 @@ const CourseSectionCard = ({
         {hasRing && (
           <ProgressRing value={progress!} size={56} color={ringColor} />
         )}
+        {isTeacherMode && !isGeneral && teacherSectionProgress !== undefined && (
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-(--fg-subtle) font-bold">Avance medio</span>
+              <span className={`font-extrabold ${sectionColor.text}`}>{teacherSectionProgress}%</span>
+            </div>
+            <div className="w-20 h-2 rounded-full bg-neutral-100 overflow-hidden">
+              <div
+                className={`h-full bg-gradient-to-r ${sectionColor.grad}`}
+                style={{ width: `${teacherSectionProgress}%` }}
+              />
+            </div>
+          </div>
+        )}
 
         <ChevronDown
           className={`
@@ -103,8 +123,20 @@ const CourseSectionCard = ({
                 module={module}
                 onModuleClick={onModuleClick}
                 onToggleComplete={onToggleComplete}
+                pendingCount={pendingByModule ? (pendingByModule[module.cmid] ?? 0) : undefined}
               />
             ))
+          )}
+          {isTeacherMode && (
+            <div className="pt-2 border-t border-dashed border-(--border)">
+              <button
+                type="button"
+                className="flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800 transition"
+              >
+                <Plus className="size-4" />
+                Añadir actividad
+              </button>
+            </div>
           )}
         </div>
       )}
