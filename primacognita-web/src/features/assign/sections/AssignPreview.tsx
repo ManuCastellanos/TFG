@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button/Button';
+import { RichText } from '@/components/ui/rich-text';
 import type { Assignment } from '@/modules/assignment/domain/Assignment';
 import { AssignmentStatusCards } from '../components/AssignmentStatusCards';
 import { AssignInfoChip } from '../components/AssignInfoChip';
@@ -34,10 +35,7 @@ export function AssignPreview({ assignment, onStartUpload }: Props) {
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-(--fg) mb-1">{title}</h2>
               {description && (
-                <p
-                  className="text-sm text-(--fg-muted)"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <RichText html={description} className="text-sm text-(--fg-muted)" />
               )}
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
+import { RichText } from '@/components/ui/rich-text';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useQuizReview } from '../hooks/useQuizReview';
@@ -110,17 +111,14 @@ function ReviewQuestionCard({ question, idx }: { question: ReviewQuestion; idx: 
             </span>
           ) : (
             <span className="text-sm font-bold text-(--fg-muted)">
-              — / {question.maxmark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              : / {question.maxmark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           )}
         </div>
       </div>
 
       {parsed.text ? (
-        <div
-          className="text-xl font-extrabold text-(--fg) leading-snug mb-6"
-          dangerouslySetInnerHTML={{ __html: parsed.text }}
-        />
+        <RichText html={parsed.text} className="text-xl font-extrabold text-(--fg) leading-snug mb-6" />
       ) : null}
 
       {parsed.options.length > 0 ? (
@@ -133,16 +131,13 @@ function ReviewQuestionCard({ question, idx }: { question: ReviewQuestion; idx: 
             const showCross = opt.checked && question.state === 'gradedwrong';
             return (
               <div
-                key={`${opt.id}-${i}`}
+                key={opt.id}
                 className={`flex items-center gap-3 p-4 rounded-2xl ${style.container}`}
               >
                 <div className={`size-10 rounded-xl grid place-items-center font-extrabold text-base shrink-0 ${style.badge}`}>
                   {String.fromCharCode(97 + i)}
                 </div>
-                <span
-                  className="text-sm font-bold text-(--fg) flex-1 leading-snug"
-                  dangerouslySetInnerHTML={{ __html: opt.label }}
-                />
+                <RichText html={opt.label} className="text-sm font-bold text-(--fg) flex-1 leading-snug" as="span" />
                 {showTick && (
                   <svg className="size-5 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
                     <polyline points="20 6 9 17 4 12" />
@@ -158,10 +153,7 @@ function ReviewQuestionCard({ question, idx }: { question: ReviewQuestion; idx: 
           })}
         </div>
       ) : parsed.answerHtml ? (
-        <div
-          className="rounded-2xl border border-(--border) bg-(--tint-50) p-4 text-sm text-(--fg) [&_input]:accent-emerald-600"
-          dangerouslySetInnerHTML={{ __html: parsed.answerHtml }}
-        />
+        <RichText html={parsed.answerHtml} className="rounded-2xl border border-(--border) bg-(--tint-50) p-4 text-sm text-(--fg) [&_input]:accent-emerald-600" />
       ) : null}
 
       {/* Correct answer block — shown persistently for wrong/partial questions */}
@@ -173,15 +165,12 @@ function ReviewQuestionCard({ question, idx }: { question: ReviewQuestion; idx: 
           </div>
           {parsed.correctOptions.length > 0 ? (
             <div className="flex flex-col gap-2">
-              {parsed.correctOptions.map((opt, i) => (
-                <div key={i} className="flex items-center gap-2.5">
+              {parsed.correctOptions.map((opt) => (
+                <div key={`correct-${opt.id}`} className="flex items-center gap-2.5">
                   <span className="size-6 rounded-lg bg-emerald-500 text-white grid place-items-center text-xs font-extrabold shrink-0">
                     ✓
                   </span>
-                  <span
-                    className="text-sm font-bold text-emerald-900 leading-snug"
-                    dangerouslySetInnerHTML={{ __html: opt.label }}
-                  />
+                  <RichText html={opt.label} className="text-sm font-bold text-emerald-900 leading-snug" as="span" />
                 </div>
               ))}
             </div>
@@ -323,19 +312,20 @@ export default function QuizReviewPage() {
               <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">Navegación</div>
               <h3 className="font-semibold text-(--fg) mb-4">Preguntas</h3>
               <div className="grid grid-cols-5 gap-2 mb-4">
-                {questions.map((q, i) => {
-                  const isActive = i === currentIdx;
+                {questions.map((q) => {
+                  const idx = questions.indexOf(q);
+                  const isActive = idx === currentIdx;
                   const info = getStateInfo(q.state);
                   return (
                     <button
-                      key={i}
+                      key={q.slot}
                       type="button"
-                      onClick={() => setCurrentIdx(i)}
+                        onClick={() => setCurrentIdx(idx)}
                       className={`size-10 rounded-xl font-extrabold text-sm transition ${
                         isActive ? info.paletteActive : info.paletteFilled
                       }`}
                     >
-                      {i + 1}
+                      {idx + 1}
                     </button>
                   );
                 })}

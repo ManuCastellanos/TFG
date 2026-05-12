@@ -22,5 +22,4 @@ export const buttonStyles = {
   },
 } as const;
 
-export type ButtonVariant = keyof typeof buttonStyles.variants;
-export type ButtonSize = keyof typeof buttonStyles.sizes;
+

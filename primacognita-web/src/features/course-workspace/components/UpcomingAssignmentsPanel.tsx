@@ -1,17 +1,7 @@
+import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button/Button';
 import { useUpcomingAssignments } from '../hooks/useUpcomingAssignments';
-
-function formatDueDate(ts: number): string {
-  const date = new Date(ts * 1000);
-  const now = new Date();
-  const diffDays = Math.round((date.getTime() - now.getTime()) / 86400000);
-
-  if (diffDays === 0) return 'Hoy';
-  if (diffDays === 1) return 'Mañana';
-  if (diffDays < 7) return `En ${diffDays} días`;
-  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-}
 
 type Props = {
   courseId: string;
@@ -20,6 +10,7 @@ type Props = {
 export function UpcomingAssignmentsPanel({ courseId }: Props) {
   const navigate = useNavigate();
   const { upcoming, loading } = useUpcomingAssignments(courseId);
+  const [now] = useState(() => Date.now());
 
   if (loading || upcoming.length === 0) return null;
 
@@ -28,8 +19,8 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
       <h3 className="font-semibold text-(--fg) mb-3">Próximas entregas</h3>
       <div className="flex flex-col gap-2">
         {upcoming.map((a) => {
-          const daysLeft = Math.round((a.dueDate - Date.now() / 1000) / 86400);
-          const urgent = daysLeft <= 1;
+          const diffDays = Math.round((a.dueDate - now / 1000) / 86400);
+          const urgent = diffDays <= 1;
           return (
             <div
               key={a.id}
@@ -45,7 +36,7 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-sm text-(--fg) truncate">{a.name}</div>
                 <div className={`text-xs font-bold mt-0.5 ${urgent ? 'text-rose-700' : 'text-orange-700'}`}>
-                  {formatDueDate(a.dueDate)}
+                  {formatDueDate(a.dueDate, now)}
                 </div>
               </div>
               <Button
@@ -68,4 +59,14 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
       </div>
     </div>
   );
+}
+
+function formatDueDate(ts: number, now: number): string {
+  const date = new Date(ts * 1000);
+  const diffDays = Math.round((date.getTime() - now) / 86400000);
+
+  if (diffDays === 0) return 'Hoy';
+  if (diffDays === 1) return 'Mañana';
+  if (diffDays < 7) return `En ${diffDays} días`;
+  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
 }

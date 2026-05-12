@@ -33,7 +33,7 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
               {emoji}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-black text-(--fg) text-base leading-tight truncate">{course.fullname}</h3>
+              <h3 className="font-semibold text-(--fg) text-base leading-tight truncate">{course.fullname}</h3>
             </div>
           </div>
           <InlineProgressBar value={progress} colorClass={c.grad} height="h-2" className="mb-1.5" />

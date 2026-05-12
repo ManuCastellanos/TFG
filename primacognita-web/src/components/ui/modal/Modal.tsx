@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
 const WIDTH_MAP = {
@@ -61,14 +61,17 @@ type ModalProps = {
 };
 
 function ModalRoot({ open, onClose, width = "lg", children }: ModalProps) {
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current?.();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open, onClose]);
+  }, [open]);
 
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -82,11 +85,15 @@ function ModalRoot({ open, onClose, width = "lg", children }: ModalProps) {
       role="presentation"
       className="fixed inset-0 z-50 grid place-items-center bg-neutral-900/40 backdrop-blur-sm p-8"
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClose?.();
+      }}
     >
       <div
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
         className={cn(
           "w-full bg-white rounded-3xl border border-(--border) shadow-2xl overflow-hidden flex flex-col max-h-[90vh]",
           WIDTH_MAP[width],

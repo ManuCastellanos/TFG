@@ -1,4 +1,5 @@
 import { Banner } from "@/components/ui/banner/Banner";
+import { RichText } from "@/components/ui/rich-text";
 
 const CONFETTI: [string, string, string][] = [
   ['12%', '25%', '#10b981'], ['28%', '55%', '#8b5cf6'], ['42%', '15%', '#f59e0b'],
@@ -77,7 +78,7 @@ export function ResultBanner({ grade, maxGrade, passGrade, title, feedback }: Pr
           <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">
             Comentario del profe
           </div>
-          <p className="text-sm text-(--fg)" dangerouslySetInnerHTML={{ __html: feedback }} />
+          <RichText html={feedback} className="text-sm text-(--fg)" />
         </div>
       )}
     </Banner>

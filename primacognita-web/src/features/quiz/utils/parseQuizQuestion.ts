@@ -300,10 +300,4 @@ export function parseReviewQuestion(html: string): ParsedReviewQuestion {
   return { text, options, correctOptions, correctAnswerText, answerHtml };
 }
 
-export function countQuestionsFromLayout(layout: string): number {
-  if (!layout) return 0;
-  return layout.split(',').filter((s) => {
-    const n = parseInt(s.trim(), 10);
-    return !isNaN(n) && n !== 0;
-  }).length;
-}
+

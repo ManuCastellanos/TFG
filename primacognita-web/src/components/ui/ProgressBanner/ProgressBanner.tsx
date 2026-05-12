@@ -49,7 +49,7 @@ export const ProgressBanner = ({
           ) : (
             <>
               {title && (
-                <h2 className="mb-2 text-2xl font-black leading-tight text-(--fg)">{title}</h2>
+                <h2 className="mb-2 text-2xl font-semibold leading-tight text-(--fg)">{title}</h2>
               )}
               {subtitle && (
                 <p className={`text-sm font-semibold ${c.text} opacity-80`}>{subtitle}</p>

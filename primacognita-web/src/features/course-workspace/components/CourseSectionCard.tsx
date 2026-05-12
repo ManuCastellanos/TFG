@@ -34,7 +34,7 @@ const CourseSectionCard = ({
   pendingByModule,
   teacherSectionProgress,
 }: CourseSectionCardProps) => {
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(() => defaultOpen);
 
   const isGeneral = section.id === 0;
   const safeColorIndex = colorIdx >= 0 ? colorIdx % SECTION_COLORS.length : 0;
@@ -81,7 +81,7 @@ const CourseSectionCard = ({
         )}
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-black text-(--fg) text-lg leading-tight">{section.name}</h3>
+          <h3 className="font-semibold text-(--fg) text-lg leading-tight">{section.name}</h3>
           {summary && <p className="text-sm text-(--fg-subtle) mt-0.5 line-clamp-1">{summary}</p>}
         </div>
 

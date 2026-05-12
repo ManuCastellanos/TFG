@@ -77,7 +77,7 @@ export function AssignmentStatusCards({ submissionStatus, grade, dueDate, cutoff
         <div className="rounded-2xl bg-(--tint-50) border border-(--border) p-4">
           <div className="text-2xl mb-1">📅</div>
           <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Sin fecha límite</div>
-          <div className="text-base font-extrabold text-(--fg) leading-tight mt-1">—</div>
+          <div className="text-base font-extrabold text-(--fg) leading-tight mt-1">-</div>
         </div>
       )}
     </div>

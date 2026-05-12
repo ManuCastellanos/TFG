@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import { RichText } from '@/components/ui/rich-text';
 import type { QuizQuestion as QuizQuestionType } from '@/modules/quiz/domain/QuizQuestion';
 
 interface Props {
@@ -31,10 +32,8 @@ export default function QuizQuestion({ question, onAnswerChange }: Props) {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="rounded-lg border border-(--border) bg-(--surface) p-6"
-      dangerouslySetInnerHTML={{ __html: question.html }}
-    />
+    <div ref={containerRef} className="rounded-lg border border-(--border) bg-(--surface) p-6">
+      <RichText html={question.html} />
+    </div>
   );
 }

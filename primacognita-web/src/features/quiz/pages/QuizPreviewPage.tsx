@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
@@ -30,6 +30,21 @@ const formatDuration = (secs: number): string => {
   const s = secs % 60;
   return `${m} min ${s} s`;
 };
+
+function FormattedDate({ timestamp }: { timestamp: number }) {
+  const [text, setText] = useState('');
+  useEffect(() => {
+    setText(
+      new Date(timestamp * 1000).toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    );
+  }, [timestamp]);
+  return text;
+}
 
 // ─── Info chip ────────────────────────────────────────────────────────────────
 
@@ -162,15 +177,9 @@ function QuizPreviewWithAttempts({
                 const normalizedScore = attemptGrades[a.id] != null ? parseFloat(attemptGrades[a.id]) : null;
                 const attemptPassed = normalizedScore != null && normalizedScore >= passGrade;
                 const isBest = bestAttemptId === a.id;
-                const started = new Date(a.timeStart * 1000).toLocaleDateString('es-ES', {
-                  day: 'numeric',
-                  month: 'short',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                });
                 const duration = a.timeFinish > 0
                   ? formatDuration(a.timeFinish - a.timeStart)
-                  : '—';
+                  : '-';
                 return (
                   <div
                     key={a.id}
@@ -200,7 +209,7 @@ function QuizPreviewWithAttempts({
                         </span>
                       </div>
                       <div className="text-xs text-(--fg-muted) mt-0.5">
-                        {started} · {duration}
+                        <FormattedDate timestamp={a.timeStart} /> · {duration}
                       </div>
                     </div>
                     <div className="text-right shrink-0">
@@ -212,7 +221,7 @@ function QuizPreviewWithAttempts({
                       ) : a.sumGrades != null ? (
                         <span className="text-sm font-bold text-(--fg-muted)">{formatGrade(a.sumGrades)}</span>
                       ) : (
-                        <span className="text-sm font-bold text-(--fg-muted)">—</span>
+                        <span className="text-sm font-bold text-(--fg-muted)">-</span>
                       )}
                     </div>
                     <Button

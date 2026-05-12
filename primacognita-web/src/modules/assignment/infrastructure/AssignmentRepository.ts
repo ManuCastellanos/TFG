@@ -142,7 +142,8 @@ export default class AssignmentRepository implements IAssignmentRepository {
     const result: Record<number, SubmissionEntry[]> = {};
     for (const assignment of response.assignments ?? []) {
       result[assignment.assignmentid] = (assignment.submissions ?? []).map((s) => {
-        const filePlugin = s.plugins?.find((p) => p.type === 'file');
+        const pluginMap = new Map(s.plugins?.map((p) => [p.type, p]) ?? []);
+        const filePlugin = pluginMap.get('file');
         const fileArea = filePlugin?.fileareas?.find((a) => a.area === 'submission_files') ?? filePlugin?.fileareas?.[0];
         const files = (fileArea?.files ?? []).map((f) => ({
           filename: f.filename,
@@ -152,7 +153,7 @@ export default class AssignmentRepository implements IAssignmentRepository {
           uploadedAt: f.timemodified ? f.timemodified * 1000 : undefined,
         }));
 
-        const notePlugin = s.plugins?.find((p) => p.type === 'onlinetext');
+        const notePlugin = pluginMap.get('onlinetext');
         const note = notePlugin?.editorfields?.find((e) => e.name === 'onlinetext')?.text ?? undefined;
 
         return {

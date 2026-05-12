@@ -7,7 +7,7 @@ import type { RecentlyAccessedItemVM } from '../types/recentlyAccessed.types';
 
 const INTERNAL_MODS = ['assign', 'quiz'];
 
-export function buildFrontendNav(
+function buildFrontendNav(
   item: RecentlyAccessedItemVM,
   navigate: ReturnType<typeof useNavigate>,
 ) {

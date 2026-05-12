@@ -63,7 +63,7 @@ export default function CoursePage() {
           <ArrowLeft className="size-5" />
         </Button>
         <div className={`size-14 shrink-0 rounded-2xl ${c.soft} grid place-items-center text-4xl`}>{courseEmoji}</div>
-        <h1 className="text-2xl font-black text-(--fg) leading-tight truncate min-w-0">
+          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
           {course?.fullname ?? (loading ? '…' : 'Curso')}
         </h1>
       </div>,

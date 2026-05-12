@@ -80,6 +80,16 @@ export default function Calendar({
             );
           }
 
+          if (!cell.hasEvents) {
+            return (
+              <div key={cell.key} className={c.cell}>
+                <div className={cn(c.dayBase, cell.isToday ? c.dayToday : c.dayNormal)}>
+                  <span className={c.dayText}>{cell.dayOfMonth}</span>
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div key={cell.key} className={c.cell}>
               <div
@@ -87,18 +97,16 @@ export default function Calendar({
                   c.dayBase,
                   cell.isToday ? c.dayToday : c.dayNormal,
                   cell.hasOverdue && c.dayHasOverdue,
-                  !cell.hasOverdue && cell.hasEvents && c.dayHasEvents,
+                  c.dayHasEvents,
                 )}
-                onMouseEnter={() =>
-                  cell.hasEvents && onDayHover?.(cell.timestamp)
-                }
+                onMouseEnter={() => onDayHover?.(cell.timestamp)}
                 onMouseLeave={() => onDayHover?.(null)}
-                onClick={() => cell.hasEvents && onDayClick?.(cell.timestamp)}
+                onClick={() => onDayClick?.(cell.timestamp)}
                 onKeyDown={(e) =>
-                  (e.key === 'Enter' || e.key === ' ') && cell.hasEvents && onDayClick?.(cell.timestamp)
+                  (e.key === 'Enter' || e.key === ' ') && onDayClick?.(cell.timestamp)
                 }
-                role={cell.hasEvents ? "button" : undefined}
-                tabIndex={cell.hasEvents ? 0 : -1}
+                role="button"
+                tabIndex={0}
               >
                 <span className={c.dayText}>{cell.dayOfMonth}</span>
               </div>

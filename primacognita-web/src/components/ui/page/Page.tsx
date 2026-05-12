@@ -18,12 +18,12 @@ export const Page = ({
 }: PageProps) => {
   return (
     <main className={cn("flex flex-1 flex-col overflow-y-auto px-8 pt-5 pb-8")}>
-      <div className={cn("w-full", !fullWidth && "mx-auto max-w-7xl")}>
+      <div className={cn("w-full", !fullWidth && "mx-auto max-w-screen-2xl")}>
         {(title || description || actions) && (
           <header className="flex items-start justify-between gap-4 mb-6">
             <div>
               {title && (
-                <h1 className="text-3xl font-bold text-(--fg)">
+                <h1 className="text-3xl font-semibold text-(--fg)">
                   {title}
                 </h1>
               )}

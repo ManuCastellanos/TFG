@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
+import { RichText } from '@/components/ui/rich-text';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
@@ -166,10 +167,7 @@ export default function QuizAttemptPage() {
 
               {/* Question text */}
               {current.parsed.text ? (
-                <div
-                  className="text-xl font-extrabold text-(--fg) leading-snug mb-6"
-                  dangerouslySetInnerHTML={{ __html: current.parsed.text }}
-                />
+                <RichText html={current.parsed.text} className="text-xl font-extrabold text-(--fg) leading-snug mb-6" />
               ) : null}
 
               {/* Options */}
@@ -195,10 +193,7 @@ export default function QuizAttemptPage() {
                         >
                           {String.fromCharCode(97 + i)}
                         </div>
-                        <span
-                          className="text-sm font-bold text-(--fg) flex-1 leading-snug"
-                          dangerouslySetInnerHTML={{ __html: opt.label }}
-                        />
+                        <RichText html={opt.label} className="text-sm font-bold text-(--fg) flex-1 leading-snug" as="span" />
                         {selected && (
                           <svg
                             className="size-5 text-orange-600 shrink-0"
@@ -270,15 +265,16 @@ export default function QuizAttemptPage() {
               </div>
               <h3 className="font-semibold text-(--fg) mb-4">Preguntas</h3>
               <div className="grid grid-cols-5 gap-2 mb-4">
-                {parsed.map((_, i) => {
-                  const isActive = i === currentIdx;
-                  const answered = isAnswered(i);
-                  const isFlagged = flagged[i];
+                {parsed.map((item) => {
+                  const idx = parsed.indexOf(item);
+                  const isActive = idx === currentIdx;
+                  const answered = isAnswered(idx);
+                  const isFlagged = flagged[idx];
                   return (
                     <button
-                      key={i}
+                      key={item.raw.slot}
                       type="button"
-                      onClick={() => setCurrentIdx(i)}
+                      onClick={() => setCurrentIdx(idx)}
                       className={`relative size-10 rounded-xl font-extrabold text-sm transition border-2 ${
                         isActive
                           ? 'bg-[#274E38] text-white border-[#274E38]'
@@ -287,7 +283,7 @@ export default function QuizAttemptPage() {
                             : 'bg-(--tint-50) text-(--fg-muted) border-(--border) hover:border-(--border-strong)'
                       }`}
                     >
-                      {i + 1}
+                      {idx + 1}
                       {isFlagged && (
                         <span className="absolute -top-1 -right-1 size-3 rounded-full bg-amber-400 border-2 border-white" />
                       )}

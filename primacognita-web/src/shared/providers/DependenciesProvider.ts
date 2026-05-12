@@ -1,7 +1,7 @@
 import React, { createContext, use } from "react";
 import type Dependencies from "./Dependencies";
 
-export const DependenciesContext = createContext<Dependencies | null>(null);
+const DependenciesContext = createContext<Dependencies | null>(null);
 
 type Props = {
   children: React.ReactNode;
