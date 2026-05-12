@@ -6,7 +6,12 @@ const TONES: Record<Tone, string> = {
   success: 'bg-emerald-50 text-emerald-800 border-emerald-200',
 };
 
-export function AssignInfoChip({ icon, label, value, tone = 'neutral' }: {
+export function AssignInfoChip({
+  icon,
+  label,
+  value,
+  tone = 'neutral',
+}: {
   icon: string;
   label: string;
   value: string;

@@ -26,7 +26,6 @@ const RADIUS_MAP = {
 } as const;
 
 export type AvatarBoxProps = {
-  /** Use a typed GradientToken for new code; raw "from-X to-Y" string as escape hatch for dynamic SECTION_COLORS */
   gradient: GradientToken | string;
   children: ReactNode;
   size?: keyof typeof SIZE_MAP;

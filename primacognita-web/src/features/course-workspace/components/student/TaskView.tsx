@@ -1,31 +1,30 @@
-import { ClipboardList } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { Surface } from "@/components/ui/surface/Surface";
-import { Text } from "@/components/ui/text/Text";
-import { cn } from "@/shared/utils/cn";
-import type { CourseModule } from "@/modules/course/domain/CourseSection";
+import { ClipboardList } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Surface } from '@/components/ui/surface/Surface';
+import { Text } from '@/components/ui/text/Text';
+import { cn } from '@/shared/utils/cn';
+import type { CourseModule } from '@/modules/course/domain/CourseSection';
+import { INTERNAL_MODULE_NAMES } from '../../utils/workspace-mappers';
 
 const TYPE_LABEL: Record<string, string> = {
-  quiz: "Cuestionario",
-  assign: "Tarea",
-  lesson: "Lección",
-  h5pactivity: "Actividad H5P",
-  workshop: "Taller",
+  quiz: 'Cuestionario',
+  assign: 'Tarea',
+  lesson: 'Lección',
+  h5pactivity: 'Actividad H5P',
+  workshop: 'Taller',
 };
 
 const TYPE_ACCENT: Record<string, string> = {
-  quiz: "from-[var(--course-yellow-from)] to-[var(--course-orange-to)]",
-  assign: "from-[var(--course-blue-from)] to-[var(--course-indigo-to)]",
-  lesson: "from-[var(--course-teal-from)] to-[var(--course-teal-to)]",
-  h5pactivity: "from-[var(--course-pink-from)] to-[var(--course-pink-to)]",
-  workshop: "from-[var(--course-violet-from)] to-[var(--course-purple-to)]",
+  quiz: 'from-[var(--course-yellow-from)] to-[var(--course-orange-to)]',
+  assign: 'from-[var(--course-blue-from)] to-[var(--course-indigo-to)]',
+  lesson: 'from-[var(--course-teal-from)] to-[var(--course-teal-to)]',
+  h5pactivity: 'from-[var(--course-pink-from)] to-[var(--course-pink-to)]',
+  workshop: 'from-[var(--course-violet-from)] to-[var(--course-purple-to)]',
 };
 
-const INTERNAL_MOD_NAMES = new Set(["assign", "quiz"]);
-
-const typeLabel = (type: string) => TYPE_LABEL[type] ?? "Ejercicio";
+const typeLabel = (type: string) => TYPE_LABEL[type] ?? 'Ejercicio';
 const typeAccent = (type: string) =>
-  TYPE_ACCENT[type] ?? "from-[var(--course-emerald-from)] to-[var(--course-emerald-to)]";
+  TYPE_ACCENT[type] ?? 'from-[var(--course-emerald-from)] to-[var(--course-emerald-to)]';
 
 const ExerciseCard = ({
   module,
@@ -36,19 +35,19 @@ const ExerciseCard = ({
   icon: LucideIcon;
   onExerciseClick?: (module: CourseModule) => void;
 }) => {
-  const usesInternalPage = INTERNAL_MOD_NAMES.has(module.modName);
+  const usesInternalPage = INTERNAL_MODULE_NAMES.includes(module.modName);
   const interactive = usesInternalPage || Boolean(module.url);
 
   const inner = (
     <Surface
       className={cn(
-        "group flex items-center gap-4 border border-(--border) p-4",
-        interactive && "transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-md)",
+        'group flex items-center gap-4 border border-(--border) p-4',
+        interactive && 'transition-all hover:-translate-y-0.5 hover:shadow-(--shadow-md)',
       )}
     >
       <span
         className={cn(
-          "flex size-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br text-white shadow-(--shadow-sm)",
+          'flex size-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br text-white shadow-(--shadow-sm)',
           typeAccent(module.modName),
         )}
       >
@@ -97,11 +96,7 @@ export type TaskViewProps = {
 
 export const TaskView = ({ exercises: tasks, onExerciseClick }: TaskViewProps) => {
   if (tasks.length === 0) {
-    return (
-      <Text className="text-(--fg-subtle)">
-        Este curso aún no tiene ejercicios disponibles.
-      </Text>
-    );
+    return <Text className="text-(--fg-subtle)">Este curso aún no tiene ejercicios disponibles.</Text>;
   }
 
   return (

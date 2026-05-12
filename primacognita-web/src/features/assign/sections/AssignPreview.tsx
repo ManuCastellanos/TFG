@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button/Button';
-import { RichText } from '@/components/ui/rich-text';
+import { RichText } from '@/components/ui/rich-text/RichText';
 import type { Assignment } from '@/modules/assignment/domain/Assignment';
 import { AssignmentStatusCards } from '../components/AssignmentStatusCards';
 import { AssignInfoChip } from '../components/AssignInfoChip';

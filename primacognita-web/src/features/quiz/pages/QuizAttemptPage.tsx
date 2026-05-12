@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
-import { RichText } from '@/components/ui/rich-text';
+import { RichText } from '@/components/ui/rich-text/RichText';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';

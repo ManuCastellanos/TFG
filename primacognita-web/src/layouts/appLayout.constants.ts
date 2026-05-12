@@ -1,5 +1,5 @@
 import { LayoutDashboard, User, Calendar as CalendarIcon, BookOpen, Settings, LogOut } from 'lucide-react';
-import type { NavItemConfig } from '@/components/navigation/navItem/navItem.types';
+import type { NavItemConfig } from '@/components/navigation/navItem.types';
 
 export const NAV_ITEMS: NavItemConfig[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },

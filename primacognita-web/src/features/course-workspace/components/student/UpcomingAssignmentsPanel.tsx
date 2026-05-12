@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button/Button';
-import { useUpcomingAssignments } from '../hooks/useUpcomingAssignments';
+import type { UpcomingAssignment } from '@/modules/assignment/domain/UpcomingAssignment';
 
 type Props = {
-  courseId: string;
+  upcoming: UpcomingAssignment[];
+  loading: boolean;
+  onNavigate: (cmId: number) => void;
 };
 
-export function UpcomingAssignmentsPanel({ courseId }: Props) {
-  const navigate = useNavigate();
-  const { upcoming, loading } = useUpcomingAssignments(courseId);
+export function UpcomingAssignmentsPanel({ upcoming, loading, onNavigate }: Props) {
   const [now] = useState(() => Date.now());
 
   if (loading || upcoming.length === 0) return null;
@@ -43,12 +42,7 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
                 variant={urgent ? 'danger' : 'primary'}
                 size="sm"
                 type="button"
-                onClick={() =>
-                  navigate({
-                    to: '/courses/$courseId/assignment/$cmid',
-                    params: { courseId, cmid: String(a.cmId) },
-                  })
-                }
+                onClick={() => onNavigate(a.cmId)}
                 className={`text-xs px-3 py-1.5 shrink-0 ${!urgent ? 'bg-orange-500 hover:bg-orange-600' : ''}`}
               >
                 Ir

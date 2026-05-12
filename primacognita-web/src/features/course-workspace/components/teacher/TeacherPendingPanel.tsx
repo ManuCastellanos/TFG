@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
-import type { PendingItem } from '../../hooks/useTeacherStats';
+import type { PendingItem } from '../../view-models/types';
 import { formatRelativeDate } from '@/shared/utils/formatRelativeDate';
 
 const MODULE_META: Record<string, { emoji: string; soft: string }> = {

@@ -1,65 +1,62 @@
 import { useState, useRef, useEffect } from 'react';
-import type { CourseModule } from '@/modules/course/domain/CourseSection';
-import { getModuleMeta } from '../types/workspace.types';
+import type { ModuleViewModel } from '../../utils/workspace-mappers';
 
 type CourseModuleRowProps = {
-  module: CourseModule;
-  onModuleClick?: (module: CourseModule) => void;
-  onToggleComplete?: (module: CourseModule) => void;
-  pendingCount?: number;
+  module: ModuleViewModel;
+  onClick?: () => void;
+  onToggle?: () => void;
 };
 
-const INTERNAL_MODULE_NAMES = ['assign', 'quiz'];
-
-const CourseModuleRow = ({ module, onModuleClick, onToggleComplete, pendingCount }: CourseModuleRowProps) => {
-  const moduleMeta = getModuleMeta(module.modName);
-  const isInternalModule = INTERNAL_MODULE_NAMES.includes(module.modName);
-
-  const showCompletion = module.completion?.hasCompletion === true;
-  const isCompleted = (module.completion?.state ?? 0) >= 1;
-
-  // Pop animation when transitioning to completed
-  const prevCompleted = useRef(isCompleted);
+function usePopAnimation(active: boolean) {
+  const prev = useRef(active);
   const [popping, setPopping] = useState(false);
 
   useEffect(() => {
-    if (!prevCompleted.current && isCompleted) {
+    if (!prev.current && active) {
       setPopping(true);
       const t = setTimeout(() => setPopping(false), 400);
-      prevCompleted.current = true;
+      prev.current = true;
       return () => clearTimeout(t);
     }
-    prevCompleted.current = isCompleted;
-  }, [isCompleted]);
+    prev.current = active;
+  }, [active]);
+
+  return popping;
+}
+
+const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) => {
+  const popping = usePopAnimation(module.status === 'completed');
 
   const containerClasses = 'flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-emerald-100 bg-white hover:border-emerald-300 hover:shadow-sm transition';
 
   const iconAndText = (
     <>
-      <div className={`size-10 rounded-xl grid place-items-center text-lg shrink-0 ${moduleMeta.soft}`}>
-        <span>{moduleMeta.emoji}</span>
+      <div className={`size-10 rounded-xl grid place-items-center text-lg shrink-0 ${module.soft}`}>
+        <span>{module.icon}</span>
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-(--fg) text-[15px] truncate">{module.name}</div>
-        <div className={`text-xs font-bold ${moduleMeta.text}`}>{moduleMeta.label}</div>
+        <div className="font-bold text-(--fg) text-[15px] truncate">{module.title}</div>
+        <div className={`text-xs font-bold ${module.text}`}>{module.label}</div>
       </div>
     </>
   );
 
-  const teacherBadge = pendingCount !== undefined ? (
-    pendingCount > 0 ? (
+  const teacherBadge = module.pendingCount !== undefined ? (
+    module.pendingCount > 0 ? (
       <span className="text-xs font-extrabold bg-orange-100 text-orange-700 rounded-lg px-2 py-1 shrink-0">
-        {pendingCount} por revisar
+        {module.pendingCount} por revisar
       </span>
     ) : (
       <span className="text-xs font-bold text-(--fg-subtle) shrink-0">Sin pendientes</span>
     )
   ) : null;
 
-  const completionBtn = showCompletion ? (
+  const isCompleted = module.status === 'completed';
+
+  const completionBtn = module.showCompletion ? (
     <button
       type="button"
-      onClick={(e) => { e.stopPropagation(); onToggleComplete?.(module); }}
+      onClick={(e) => { e.stopPropagation(); onToggle?.(); }}
       aria-label={isCompleted ? 'Marcar como no hecha' : 'Marcar como hecha'}
       className={[
         'size-8 rounded-full grid place-items-center shrink-0',
@@ -88,17 +85,15 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete, pendingCount
     </div>
   );
 
-  if (isInternalModule) {
+  const right = teacherBadge ?? completionBtn;
+
+  if (module.isInternal && onClick) {
     return (
       <div className={containerClasses}>
-        <button
-          type="button"
-          onClick={() => onModuleClick?.(module)}
-          className="flex items-center gap-3 flex-1 min-w-0 text-left"
-        >
+        <button type="button" onClick={onClick} className="flex items-center gap-3 flex-1 min-w-0 text-left">
           {iconAndText}
         </button>
-        {teacherBadge ?? completionBtn}
+        {right}
       </div>
     );
   }
@@ -109,7 +104,7 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete, pendingCount
         <a href={module.url} target="_blank" rel="noreferrer" className="flex items-center gap-3 flex-1 min-w-0">
           {iconAndText}
         </a>
-        {teacherBadge ?? completionBtn}
+        {right}
       </div>
     );
   }
@@ -117,7 +112,7 @@ const CourseModuleRow = ({ module, onModuleClick, onToggleComplete, pendingCount
   return (
     <div className={containerClasses}>
       {iconAndText}
-      {teacherBadge ?? completionBtn}
+      {right}
     </div>
   );
 };

@@ -11,9 +11,7 @@ export const RecentlyAccessedItem = ({ item, onClick }: Props) => (
     onClick={onClick}
     className="flex w-full items-center gap-3 rounded-2xl p-2 text-left transition hover:bg-(--tint-50) focus-visible:outline-2 focus-visible:outline-(--color-pr)"
   >
-    <div
-      className={`flex size-10 shrink-0 items-center justify-center rounded-xl text-xl ${item.accentSoft}`}
-    >
+    <div className={`flex size-10 shrink-0 items-center justify-center rounded-xl text-xl ${item.accentSoft}`}>
       {item.emoji}
     </div>
 

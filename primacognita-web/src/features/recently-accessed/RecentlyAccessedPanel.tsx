@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button/Button';
-import { useRecentlyAccessed } from '../hooks/useRecentlyAccessed';
-import { RecentlyAccessedItem } from './RecentlyAccessedItem';
+import { useRecentlyAccessed } from './hooks/useRecentlyAccessed';
+import { RecentlyAccessedItem } from './components/RecentlyAccessedItem';
 
 export function RecentlyAccessedPanel() {
   const { viewModels, handleItemClick } = useRecentlyAccessed();
@@ -19,10 +19,7 @@ export function RecentlyAccessedPanel() {
         ) : (
           viewModels.map((item) => (
             <li key={item.id}>
-              <RecentlyAccessedItem
-                item={item}
-                onClick={() => handleItemClick(item)}
-              />
+              <RecentlyAccessedItem item={item} onClick={() => handleItemClick(item)} />
             </li>
           ))
         )}

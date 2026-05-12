@@ -34,15 +34,17 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
       )}
 
       {!loading && filtered.length > 0 && (
-      <Card className="bg-(--panel)">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-4 px-4 py-1">
-            <span className="size-9 shrink-0" />
-            <span className="flex-1 text-sm font-bold text-(--fg-black) uppercase tracking-wide">Nombre completo</span>
-            <span className="w-36 shrink-0 text-sm font-bold text-(--fg-black) uppercase tracking-wide text-right">
-              Rol
-            </span>
-          </div>
+        <Card className="bg-(--panel)">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-4 px-4 py-1">
+              <span className="size-9 shrink-0" />
+              <span className="flex-1 text-sm font-bold text-(--fg-black) uppercase tracking-wide">
+                Nombre completo
+              </span>
+              <span className="w-36 shrink-0 text-sm font-bold text-(--fg-black) uppercase tracking-wide text-right">
+                Rol
+              </span>
+            </div>
             {filtered.map((participant) => (
               <Surface key={participant.id} className="flex bg-white w-full items-center gap-4 px-4 py-3 mb-2">
                 <Avatar src={participant.avatarUrl} alt={participant.fullName} size="sm" />
@@ -52,8 +54,8 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
                 </span>
               </Surface>
             ))}
-        </div>
-       </Card>
+          </div>
+        </Card>
       )}
     </div>
   );

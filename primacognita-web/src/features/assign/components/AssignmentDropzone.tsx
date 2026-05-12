@@ -26,7 +26,10 @@ export function AssignmentDropzone({ maxFiles, maxSizeBytes, currentCount, onFil
       tabIndex={0}
       onClick={() => inputRef.current?.click()}
       onKeyDown={(e) => e.key === 'Enter' && inputRef.current?.click()}
-      onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
       onDragLeave={() => setDragging(false)}
       onDrop={(e) => {
         e.preventDefault();
@@ -34,9 +37,7 @@ export function AssignmentDropzone({ maxFiles, maxSizeBytes, currentCount, onFil
         handleFiles(e.dataTransfer.files);
       }}
       className={`rounded-3xl border-2 border-dashed p-10 text-center cursor-pointer transition select-none ${
-        dragging
-          ? 'border-violet-400 bg-violet-100/60'
-          : 'border-violet-300 bg-violet-50/50 hover:bg-violet-50'
+        dragging ? 'border-violet-400 bg-violet-100/60' : 'border-violet-300 bg-violet-50/50 hover:bg-violet-50'
       }`}
     >
       <div className="size-16 rounded-2xl bg-violet-100 text-violet-700 grid place-items-center text-3xl mx-auto mb-4">
@@ -47,7 +48,10 @@ export function AssignmentDropzone({ maxFiles, maxSizeBytes, currentCount, onFil
       <Button
         variant="primary"
         type="button"
-        onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          inputRef.current?.click();
+        }}
         className="px-5 py-2.5"
       >
         Seleccionar archivos
@@ -55,7 +59,9 @@ export function AssignmentDropzone({ maxFiles, maxSizeBytes, currentCount, onFil
       <div className="mt-5 flex items-center justify-center gap-4 text-xs text-(--fg-subtle) font-bold">
         <span>📦 Máx {maxMb} MB</span>
         <span>·</span>
-        <span>📎 Hasta {maxFiles} {maxFiles === 1 ? 'archivo' : 'archivos'}</span>
+        <span>
+          📎 Hasta {maxFiles} {maxFiles === 1 ? 'archivo' : 'archivos'}
+        </span>
       </div>
       <input
         ref={inputRef}

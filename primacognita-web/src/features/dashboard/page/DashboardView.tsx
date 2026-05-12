@@ -1,14 +1,11 @@
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
-
 import type { Course } from '@/modules/course/domain/Course';
 import type { User } from '@/modules/user/domain/User';
-
 import { CalendarWidget } from '@/features/calendar/CalendarWidget';
-import { RecentlyAccessedPanel } from '@/features/recently-accessed/components/RecentlyAccessedPanel';
+import { RecentlyAccessedPanel } from '@/features/recently-accessed/RecentlyAccessedPanel';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { Page } from '@/components/ui/page/Page';
-
 import DashCourseCard from '../components/DashCourseCard';
 
 type DashboardViewProps = {

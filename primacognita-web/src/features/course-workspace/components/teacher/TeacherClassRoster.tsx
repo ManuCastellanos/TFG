@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button/Button';
 import { isStudentRole } from '@/modules/user/domain/User';
-import { getStudentColor } from '../../types/workspace.types';
+import { getStudentColor } from '../../utils/workspace-mappers';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
 import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';

@@ -12,3 +12,5 @@ export const RichText = ({ html, as: Tag = "div", className, ...rest }: RichText
     {...rest}
   />
 );
+
+RichText.displayName = "RichText";
