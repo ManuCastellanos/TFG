@@ -1,20 +1,27 @@
-import type { ButtonHTMLAttributes } from "react";
+import { forwardRef } from "react";
 import { cn } from "@/shared/utils/cn";
-import { buttonStyles, type ButtonVariant, type ButtonSize } from "./button.styles";
+import { buttonStyles } from "./button.styles";
+import type { ButtonProps } from "./button.types";
 
-export type { ButtonVariant, ButtonSize };
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-};
+export type { ButtonProps, ButtonVariant, ButtonSize } from "./button.types";
 
-export const Button = ({ className, children, variant = "primary", size = "md", ...rest }: ButtonProps) => (
-  <button
-    className={cn(buttonStyles.base, buttonStyles.sizes[size], buttonStyles.variants[variant], className)}
-    {...rest}
-  >
-    {children}
-  </button>
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, children, variant = "primary", size = "md", ...rest }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          buttonStyles.base,
+          buttonStyles.sizes[size],
+          buttonStyles.variants[variant],
+          className,
+        )}
+        {...rest}
+      >
+        {children}
+      </button>
+    );
+  },
 );
 
-export default Button;
+Button.displayName = "Button";

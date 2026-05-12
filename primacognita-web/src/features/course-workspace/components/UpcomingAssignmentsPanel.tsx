@@ -1,4 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
+import { Button } from '@/components/ui/button/Button';
 import { useUpcomingAssignments } from '../hooks/useUpcomingAssignments';
 
 function formatDueDate(ts: number): string {
@@ -47,7 +48,9 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
                   {formatDueDate(a.dueDate)}
                 </div>
               </div>
-              <button
+              <Button
+                variant={urgent ? 'danger' : 'primary'}
+                size="sm"
                 type="button"
                 onClick={() =>
                   navigate({
@@ -55,14 +58,10 @@ export function UpcomingAssignmentsPanel({ courseId }: Props) {
                     params: { courseId, cmid: String(a.cmId) },
                   })
                 }
-                className={`text-xs font-extrabold rounded-xl px-3 py-1.5 shrink-0 ${
-                  urgent
-                    ? 'bg-rose-500 hover:bg-rose-600 text-white'
-                    : 'bg-orange-500 hover:bg-orange-600 text-white'
-                }`}
+                className={`text-xs px-3 py-1.5 shrink-0 ${!urgent ? 'bg-orange-500 hover:bg-orange-600' : ''}`}
               >
                 Ir
-              </button>
+              </Button>
             </div>
           );
         })}

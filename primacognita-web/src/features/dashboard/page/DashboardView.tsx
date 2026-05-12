@@ -1,4 +1,5 @@
 import { ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 
 import type { Course } from '@/modules/course/domain/Course';
 import type { User } from '@/modules/user/domain/User';
@@ -35,14 +36,16 @@ const DashboardView = ({ user, courses, onNavigateToCourses, onCourseClick }: Da
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-black ">Mis cursos</h2>
 
-            <button
+            <Button
+              variant="success"
+              size="sm"
               type="button"
               onClick={onNavigateToCourses}
-              className="flex items-center gap-1 text-sm font-bold text-emerald-700 hover:text-emerald-800"
+              className="flex items-center gap-1"
             >
               Ver todos
               <ChevronRight className="size-4" />
-            </button>
+            </Button>
           </div>
 
           {courses.length === 0 ? (

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Play } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { ResultBanner } from '@/features/quiz/components/ResultBanner';
@@ -214,7 +215,9 @@ function QuizPreviewWithAttempts({
                         <span className="text-sm font-bold text-(--fg-muted)">—</span>
                       )}
                     </div>
-                    <button
+                    <Button
+                      variant="success"
+                      size="sm"
                       type="button"
                       onClick={() =>
                         navigate({
@@ -222,10 +225,10 @@ function QuizPreviewWithAttempts({
                           params: { courseId, quizId: String(meta.cmid), attemptId: String(a.id) },
                         })
                       }
-                      className="text-sm font-extrabold text-emerald-700 hover:text-emerald-900 whitespace-nowrap transition shrink-0 ml-1"
+                      className="whitespace-nowrap shrink-0 ml-1"
                     >
                       Revisar →
-                    </button>
+                    </Button>
                   </div>
                 );
               })}
@@ -234,14 +237,15 @@ function QuizPreviewWithAttempts({
         </div>
 
         <div className="flex flex-col gap-3">
-          <button
+          <Button
+            variant="primary"
             type="button"
             onClick={onStart}
-            className="flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-[#274E38] text-white text-base font-extrabold hover:brightness-110 shadow-sm transition"
+            className="flex items-center justify-center gap-2 px-5 py-4 text-base shadow-sm"
           >
             <Play className="size-5" />
             Reintentar cuestionario
-          </button>
+          </Button>
 
           <Countdown dueDate={meta.dueDate} openDate={meta.openDate} />
           <InfoChip
@@ -318,14 +322,15 @@ function QuizPreviewEmpty({
                 </div>
               </div>
             </div>
-            <button
+            <Button
+              variant="primary"
               type="button"
               onClick={onStart}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#274E38] text-white text-base font-extrabold hover:brightness-110 shadow-sm transition"
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 text-base shadow-sm"
             >
               <Play className="size-5" />
               Empezar cuestionario
-            </button>
+            </Button>
             <p className="text-xs text-(--fg-subtle) text-center mt-3">
               Tu mejor calificación cuenta para la nota final.
             </p>
@@ -366,14 +371,15 @@ export default function QuizPreviewPage() {
   useEffect(() => {
     setPageHeader(
       <div className="flex items-center gap-4 min-w-0">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           type="button"
           onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
           aria-label="Volver al curso"
         >
           <ArrowLeft className="size-5" />
-        </button>
+        </Button>
         <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>

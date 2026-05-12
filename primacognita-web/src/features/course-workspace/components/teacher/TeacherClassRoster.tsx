@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button/Button';
 import { isStudentRole } from '@/modules/user/domain/User';
 import { getStudentColor } from '../../types/workspace.types';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
@@ -51,12 +52,13 @@ export function TeacherClassRoster({ participants, progressByStudent }: Props) {
       )}
 
       {students.length > 6 && (
-        <button
+        <Button
+          variant="success"
           type="button"
-          className="mt-3 w-full text-sm font-bold text-emerald-700 py-2 rounded-xl hover:bg-emerald-50 transition"
+          className="mt-3 w-full py-2 rounded-xl hover:bg-emerald-50"
         >
           Ver todos
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import { ChevronDown, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { SECTION_COLORS, stripHtml } from '../types/workspace.types';
 import { useState } from 'react';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
@@ -125,13 +126,15 @@ const CourseSectionCard = ({
           )}
           {isTeacherMode && (
             <div className="pt-2 border-t border-dashed border-(--border)">
-              <button
+              <Button
+                variant="success"
+                size="sm"
                 type="button"
-                className="flex items-center gap-2 text-sm font-bold text-emerald-700 hover:text-emerald-800 transition"
+                className="flex items-center gap-2"
               >
                 <Plus className="size-4" />
                 Añadir actividad
-              </button>
+              </Button>
             </div>
           )}
         </div>

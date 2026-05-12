@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
@@ -41,14 +42,15 @@ export default function QuizAttemptPage() {
   useEffect(() => {
     setPageHeader(
       <div className="flex items-center gap-4 min-w-0">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           type="button"
           onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
           aria-label="Volver al curso"
         >
           <ArrowLeft className="size-5" />
-        </button>
+        </Button>
         <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
@@ -77,13 +79,14 @@ export default function QuizAttemptPage() {
           <div className="text-5xl mb-4">🎉</div>
           <h2 className="text-2xl font-semibold text-(--fg) mb-2">¡Cuestionario enviado!</h2>
           <p className="text-sm text-(--fg-muted) mb-6">Tus respuestas han sido registradas correctamente.</p>
-          <button
+          <Button
+            variant="primary"
             type="button"
             onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-            className="w-full py-3 rounded-2xl bg-[#274E38] text-white font-extrabold hover:brightness-110 transition"
+            className="w-full py-3"
           >
             Volver al curso
-          </button>
+          </Button>
         </div>
       </Page>
     );
@@ -145,10 +148,12 @@ export default function QuizAttemptPage() {
                     </div>
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="tinted"
+                  size="sm"
                   type="button"
                   onClick={() => setFlagged((f) => ({ ...f, [currentIdx]: !f[currentIdx] }))}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border ${
                     flagged[currentIdx]
                       ? 'bg-amber-100 text-amber-800 border-amber-300'
                       : 'bg-(--tint-50) text-(--fg-muted) border-(--border) hover:border-(--border-strong)'
@@ -156,7 +161,7 @@ export default function QuizAttemptPage() {
                 >
                   <Flag className="size-3.5" />
                   {flagged[currentIdx] ? 'Marcada' : 'Marcar'}
-                </button>
+                </Button>
               </div>
 
               {/* Question text */}
@@ -219,37 +224,40 @@ export default function QuizAttemptPage() {
 
             {/* Footer navigation */}
             <div className="flex items-center justify-between gap-3">
-              <button
+              <Button
+                variant="outline"
                 type="button"
                 onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
                 disabled={isFirst}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white border border-(--border) text-(--fg) text-sm font-extrabold hover:bg-(--tint-50) disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="flex items-center gap-2 px-5 py-3"
               >
                 <ChevronLeft className="size-4" />
                 Anterior
-              </button>
+              </Button>
               <span className="text-xs font-bold text-(--fg-muted) text-center">
                 Tu progreso se guarda automáticamente
               </span>
               {!isLast ? (
-                <button
+                <Button
+                  variant="primary"
                   type="button"
                   onClick={() => setCurrentIdx((i) => Math.min(total - 1, i + 1))}
-                  className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110 transition"
+                  className="flex items-center gap-2 px-5 py-3"
                 >
                   Siguiente
                   <ChevronRight className="size-4" />
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
+                  variant="successSolid"
                   type="button"
                   onClick={submit}
                   disabled={loading}
-                  className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-600 text-white text-sm font-extrabold hover:brightness-110 disabled:opacity-50 transition"
+                  className="flex items-center gap-2 px-5 py-3"
                 >
                   <Send className="size-4" />
                   Terminar y enviar
-                </button>
+                </Button>
               )}
             </div>
           </div>
@@ -301,14 +309,15 @@ export default function QuizAttemptPage() {
                   Sin responder
                 </div>
               </div>
-              <button
+              <Button
+                variant="ghost"
                 type="button"
                 onClick={submit}
                 disabled={loading}
-                className="w-full py-2.5 rounded-2xl bg-orange-100 text-orange-800 text-sm font-extrabold hover:bg-orange-200 disabled:opacity-50 transition"
+                className="w-full py-2.5 rounded-2xl bg-orange-100 text-orange-800 hover:bg-orange-200 disabled:opacity-50"
               >
                 Terminar intento
-              </button>
+              </Button>
             </div>
           </div>
         </div>

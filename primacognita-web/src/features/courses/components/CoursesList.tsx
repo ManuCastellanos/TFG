@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import { SectionHeader } from '@/components/layout/sectionHeader/SectionHeader';
-import { IconButton } from '@/components/ui/button/IconButton';
+import { Button } from '@/components/ui/button/Button';
 import { CourseCard } from './CourseCard';
 import type { Course } from '@/modules/course/domain/Course';
 
@@ -31,12 +31,15 @@ export const CoursesList = ({ courses, onCourseClick, onViewAll, showHeader = tr
         title="Mis Cursos"
         action={
           onViewAll ? (
-            <IconButton
-              icon={ChevronRight}
-              label="Ver todos los cursos"
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Ver todos los cursos"
               onClick={onViewAll}
               className="size-auto p-1.5 rounded-md"
-            />
+            >
+              <ChevronRight className="size-5" />
+            </Button>
           ) : undefined
         }
       />

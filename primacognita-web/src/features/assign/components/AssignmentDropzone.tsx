@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Button } from '@/components/ui/button/Button';
 
 type Props = {
   maxFiles: number;
@@ -43,13 +44,14 @@ export function AssignmentDropzone({ maxFiles, maxSizeBytes, currentCount, onFil
       </div>
       <h3 className="text-lg font-semibold text-(--fg) mb-1">Arrastra y suelta tus archivos aquí</h3>
       <p className="text-sm text-(--fg-muted) mb-5">o haz clic para elegirlos del ordenador</p>
-      <button
+      <Button
+        variant="primary"
         type="button"
         onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
-        className="px-5 py-2.5 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110"
+        className="px-5 py-2.5"
       >
         Seleccionar archivos
-      </button>
+      </Button>
       <div className="mt-5 flex items-center justify-center gap-4 text-xs text-(--fg-subtle) font-bold">
         <span>📦 Máx {maxMb} MB</span>
         <span>·</span>

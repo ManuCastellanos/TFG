@@ -100,14 +100,16 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
                         />
                       </div>
                     </div>
-                    <button
+                    <Button
+                      variant="outline"
+                      size="icon"
                       type="button"
                       onClick={() => removeFile(i)}
-                      className="size-9 rounded-xl bg-white border border-(--border) hover:bg-rose-50 hover:border-rose-200 text-(--fg-muted) hover:text-rose-700 grid place-items-center text-base"
+                      className="size-9 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-base"
                       aria-label={`Eliminar ${f.file.name}`}
                     >
                       ×
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>

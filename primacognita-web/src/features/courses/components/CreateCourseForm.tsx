@@ -133,13 +133,15 @@ export const CreateCourseForm = ({ onSubmit, onCancel, isLoading, error, categor
               Seleccionar imagen
             </label>
             {imageFile && (
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 type="button"
                 onClick={handleRemoveImage}
-                className="inline-flex items-center justify-center size-8 text-red-500 hover:text-red-700 rounded-full hover:bg-red-50 transition-colors"
+                className="size-8 rounded-full text-red-500 hover:text-red-700 hover:bg-red-50"
               >
                 ✕
-              </button>
+              </Button>
             )}
           </div>
           {previewUrl && (

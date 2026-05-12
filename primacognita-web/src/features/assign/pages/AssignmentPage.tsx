@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useSession } from '@/shared/hooks/useSession';
@@ -23,14 +24,15 @@ function AssignmentStudentView() {
   useEffect(() => {
     setPageHeader(
       <div className="flex items-center gap-4 min-w-0">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           type="button"
           onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
           aria-label="Volver al curso"
         >
           <ArrowLeft className="size-5" />
-        </button>
+        </Button>
         <div className="size-14 shrink-0 rounded-2xl bg-violet-100 grid place-items-center text-2xl">📝</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tarea</span>

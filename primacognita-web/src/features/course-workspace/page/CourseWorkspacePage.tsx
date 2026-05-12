@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
@@ -52,14 +53,15 @@ export default function CoursePage() {
   useEffect(() => {
     setPageHeader(
       <div className="flex items-center gap-4 min-w-0">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           type="button"
           onClick={() => navigate({ to: '/courses' })}
-          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
           aria-label="Volver a cursos"
         >
           <ArrowLeft className="size-5" />
-        </button>
+        </Button>
         <div className={`size-14 shrink-0 rounded-2xl ${c.soft} grid place-items-center text-4xl`}>{courseEmoji}</div>
         <h1 className="text-2xl font-black text-(--fg) leading-tight truncate min-w-0">
           {course?.fullname ?? (loading ? '…' : 'Curso')}
@@ -212,9 +214,9 @@ export default function CoursePage() {
                   </AvatarBox>
                   <div>
                     <div className="font-bold text-sm text-(--fg)">Profesor del curso</div>
-                    <button type="button" className="text-xs font-bold text-emerald-700 hover:text-emerald-800">
+                    <Button variant="success" size="sm" type="button">
                       Enviar mensaje
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

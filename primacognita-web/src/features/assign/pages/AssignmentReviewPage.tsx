@@ -67,24 +67,28 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
           </div>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
-          <button
+          <Button
+            variant="tinted"
+            size="icon"
             type="button"
             onClick={onPrev}
             disabled={!hasPrev}
-            className="size-8 rounded-lg bg-(--tint-50) hover:bg-(--tint-100) text-(--fg-muted) grid place-items-center disabled:opacity-40 disabled:cursor-not-allowed"
+            className="size-8 rounded-lg"
             aria-label="Alumno anterior"
           >
             <ChevronLeft className="size-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="tinted"
+            size="icon"
             type="button"
             onClick={onNext}
             disabled={!hasNext}
-            className="size-8 rounded-lg bg-(--tint-50) hover:bg-(--tint-100) text-(--fg-muted) grid place-items-center disabled:opacity-40 disabled:cursor-not-allowed"
+            className="size-8 rounded-lg"
             aria-label="Alumno siguiente"
           >
             <ChevronRight className="size-4" />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -214,14 +218,15 @@ export default function AssignmentReviewPage() {
     setPageHeader(
 
       <div className="flex items-center gap-4 min-w-0">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           type="button"
           onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
           aria-label="Volver al curso"
         >
           <ArrowLeft className="size-5" />
-        </button>
+        </Button>
         <div className="size-14 shrink-0 rounded-2xl bg-violet-100 grid place-items-center text-2xl">📝</div>
         <div className="flex flex-col min-w-0">
           <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tarea · Calificar</span>

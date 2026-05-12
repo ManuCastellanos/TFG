@@ -1,5 +1,6 @@
 import { Pencil } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { Button } from '@/components/ui/button/Button';
 import { useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
 import { COLOR_META, COURSE_COLORS } from '@/shared/theme/courseColors';
 import { useClickOutside } from '@/shared/hooks/useClickOutside';
@@ -43,18 +44,20 @@ const DashCourseCard = ({ course, index, onClick }: { course: Course; index: num
         </div>
       </button>
 
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         type="button"
         aria-label="Personalizar curso"
         onClick={(e) => {
           e.stopPropagation();
           setPickerOpen((v) => !v);
         }}
-        className="absolute top-3 right-3 size-7 rounded-xl bg-white border border-(--border) grid place-items-center text-(--fg-muted) opacity-0 group-hover:opacity-100 transition z-10 shadow-sm hover:bg-(--tint-50)"
+        className="absolute top-3 right-3 size-7 rounded-xl opacity-0 group-hover:opacity-100 z-10 shadow-sm"
         style={{ opacity: pickerOpen ? 1 : undefined }}
       >
         <Pencil className="size-3.5" />
-      </button>
+      </Button>
 
       {pickerOpen && (
         <CourseCustomizerPopover

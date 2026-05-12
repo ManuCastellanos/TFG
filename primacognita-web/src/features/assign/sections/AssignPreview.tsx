@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button/Button';
 import type { Assignment } from '@/modules/assignment/domain/Assignment';
 import { AssignmentStatusCards } from '../components/AssignmentStatusCards';
 import { AssignInfoChip } from '../components/AssignInfoChip';
@@ -47,13 +48,14 @@ export function AssignPreview({ assignment, onStartUpload }: Props) {
             <p className="text-xs text-(--fg-muted) mt-1">Cuando subas tu archivo, aparecerá aquí.</p>
           </div>
 
-          <button
+          <Button
+            variant="primary"
             type="button"
             onClick={onStartUpload}
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#274E38] text-white text-base font-extrabold hover:brightness-110 shadow-sm transition"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 text-base shadow-sm"
           >
             + Agregar entrega
-          </button>
+          </Button>
         </div>
 
         <div className="bg-white rounded-3xl border border-(--border) p-6">

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button/Button';
 import type { AssignmentFile } from '@/modules/assignment/domain/AssignmentFile';
 import { useSession } from '@/shared/hooks/useSession';
 
@@ -55,14 +56,16 @@ export function AssignmentFilesList({ files, onRemove, showDownload }: Props) {
             </a>
           )}
           {onRemove && (
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               type="button"
               onClick={() => onRemove(i)}
-              className="size-9 rounded-xl bg-white border border-(--border) hover:bg-rose-50 hover:border-rose-200 text-(--fg-muted) hover:text-rose-700 grid place-items-center text-base"
+              className="size-9 hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 text-base"
               aria-label={`Eliminar ${f.filename}`}
             >
               ×
-            </button>
+            </Button>
           )}
         </div>
       ))}

@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Pencil } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
 import { useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
 import { COLOR_META } from '@/shared/theme/courseColors';
@@ -63,15 +64,17 @@ const CourseLibCard = ({ course, index, onClick }: CourseLibCardProps) => {
         </div>
       </button>
 
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         type="button"
         aria-label="Personalizar color del curso"
         onClick={(e) => { e.stopPropagation(); setPickerOpen((v) => !v); }}
-        className="absolute top-2 right-2 size-7 rounded-xl bg-white border border-(--border) grid place-items-center text-(--fg-muted) opacity-0 group-hover:opacity-100 transition z-10 shadow-sm hover:bg-(--tint-50)"
+        className="absolute top-2 right-2 size-7 rounded-xl opacity-0 group-hover:opacity-100 z-10 shadow-sm"
         style={{ opacity: pickerOpen ? 1 : undefined }}
       >
         <Pencil className="size-3.5" />
-      </button>
+      </Button>
 
       {pickerOpen && (
         <CourseColorPicker

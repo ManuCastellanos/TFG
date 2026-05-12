@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useQuizReview } from '../hooks/useQuizReview';
@@ -227,14 +228,15 @@ export default function QuizReviewPage() {
   useEffect(() => {
     setPageHeader(
       <div className="flex items-center gap-4 min-w-0">
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           type="button"
           onClick={() => navigate({ to: '/courses/$courseId/quiz/$quizId', params: { courseId, quizId } })}
-          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-(--tint-50) transition"
           aria-label="Volver al cuestionario"
         >
           <ArrowLeft className="size-5" />
-        </button>
+        </Button>
         <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="flex flex-col min-w-0">
@@ -292,24 +294,26 @@ export default function QuizReviewPage() {
             <ReviewQuestionCard question={current} idx={currentIdx} />
 
             <div className="flex items-center justify-between gap-3">
-              <button
+              <Button
+                variant="outline"
                 type="button"
                 onClick={() => setCurrentIdx((i) => Math.max(0, i - 1))}
                 disabled={isFirst}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white border border-(--border) text-(--fg) text-sm font-extrabold hover:bg-(--tint-50) disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="flex items-center gap-2 px-5 py-3"
               >
                 <ChevronLeft className="size-4" />
                 Anterior
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="primary"
                 type="button"
                 onClick={() => setCurrentIdx((i) => Math.min(total - 1, i + 1))}
                 disabled={isLast}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="flex items-center gap-2 px-5 py-3"
               >
                 Siguiente
                 <ChevronRight className="size-4" />
-              </button>
+              </Button>
             </div>
           </div>
 

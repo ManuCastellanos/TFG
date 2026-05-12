@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button/Button';
 import { useRecentlyAccessed } from '../hooks/useRecentlyAccessed';
 import { RecentlyAccessedItem } from './RecentlyAccessedItem';
 
@@ -8,9 +9,9 @@ export function RecentlyAccessedPanel() {
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold text-(--fg)">Sigue por aquí</h3>
-        <button type="button" className="text-xs font-bold text-emerald-700 hover:text-emerald-800 transition">
+        <Button variant="success" size="sm" type="button">
           Ver todo
-        </button>
+        </Button>
       </div>
       <ul className="flex flex-col gap-1">
         {viewModels.length === 0 ? (

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button/Button';
 import type { Assignment } from '@/modules/assignment/domain/Assignment';
 import { AssignmentStatusCards } from '../components/AssignmentStatusCards';
 import { AssignmentFilesList } from '../components/AssignmentFilesList';
@@ -39,7 +40,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
             feedback={grade?.feedback}
           />
         ) : (
-          <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-violet-50 p-7">
+          <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-200 bg-linear-to-br from-emerald-50 via-white to-violet-50 p-7">
             <svg viewBox="0 0 800 200" className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
               {(
                 [
@@ -52,7 +53,7 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
               ))}
             </svg>
             <div className="relative flex items-center gap-5">
-              <div className="size-20 rounded-3xl bg-gradient-to-br from-emerald-300 to-emerald-600 grid place-items-center text-4xl shadow-lg shrink-0">
+              <div className="size-20 rounded-3xl bg-linear-to-br from-emerald-300 to-emerald-600 grid place-items-center text-4xl shadow-lg shrink-0">
                 ✅
               </div>
               <div className="flex-1">
@@ -74,13 +75,15 @@ export function AssignSubmitted({ assignment, onEdit }: Props) {
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-(--fg)">Tu entrega</h3>
             {canEdit && !isGraded && (
-              <button
+              <Button
+                variant="success"
+                size="sm"
                 type="button"
                 onClick={onEdit}
-                className="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 px-3 py-1.5 rounded-xl hover:bg-emerald-50"
+                className="px-3 py-1.5 hover:bg-emerald-50"
               >
                 ✏️ Editar entrega
-              </button>
+              </Button>
             )}
           </div>
           {submission?.files && submission.files.length > 0 ? (

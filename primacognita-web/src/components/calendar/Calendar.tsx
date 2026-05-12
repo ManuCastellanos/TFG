@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Button from "@/components/ui/button/Button";
+import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/shared/utils/cn";
 import { calendarClasses as c } from "./calendar.styles";
 import type { CalendarViewModel } from "./calendar.types";
