@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import type { ModuleViewModel } from '../../utils/workspace-mappers';
+import type { ModuleViewModel } from '../utils/workspace-mappers';
 
 type CourseModuleRowProps = {
   module: ModuleViewModel;
@@ -13,10 +13,13 @@ function usePopAnimation(active: boolean) {
 
   useEffect(() => {
     if (!prev.current && active) {
-      setPopping(true);
-      const t = setTimeout(() => setPopping(false), 400);
       prev.current = true;
-      return () => clearTimeout(t);
+      const show = setTimeout(() => setPopping(true), 0);
+      const hide = setTimeout(() => setPopping(false), 400);
+      return () => {
+        clearTimeout(show);
+        clearTimeout(hide);
+      };
     }
     prev.current = active;
   }, [active]);
@@ -27,7 +30,8 @@ function usePopAnimation(active: boolean) {
 const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) => {
   const popping = usePopAnimation(module.status === 'completed');
 
-  const containerClasses = 'flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-emerald-100 bg-white hover:border-emerald-300 hover:shadow-sm transition';
+  const containerClasses =
+    'flex items-center gap-3 w-full px-4 py-3 rounded-2xl border border-emerald-100 bg-white hover:border-emerald-300 hover:shadow-sm transition';
 
   const iconAndText = (
     <>
@@ -41,22 +45,26 @@ const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) =>
     </>
   );
 
-  const teacherBadge = module.pendingCount !== undefined ? (
-    module.pendingCount > 0 ? (
-      <span className="text-xs font-extrabold bg-orange-100 text-orange-700 rounded-lg px-2 py-1 shrink-0">
-        {module.pendingCount} por revisar
-      </span>
-    ) : (
-      <span className="text-xs font-bold text-(--fg-subtle) shrink-0">Sin pendientes</span>
-    )
-  ) : null;
+  const teacherBadge =
+    module.pendingCount !== undefined ? (
+      module.pendingCount > 0 ? (
+        <span className="text-xs font-extrabold bg-orange-100 text-orange-700 rounded-lg px-2 py-1 shrink-0">
+          {module.pendingCount} por revisar
+        </span>
+      ) : (
+        <span className="text-xs font-bold text-(--fg-subtle) shrink-0">Sin pendientes</span>
+      )
+    ) : null;
 
   const isCompleted = module.status === 'completed';
 
   const completionBtn = module.showCompletion ? (
     <button
       type="button"
-      onClick={(e) => { e.stopPropagation(); onToggle?.(); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle?.();
+      }}
       aria-label={isCompleted ? 'Marcar como no hecha' : 'Marcar como hecha'}
       className={[
         'size-8 rounded-full grid place-items-center shrink-0',

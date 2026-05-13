@@ -12,9 +12,13 @@ export const WorkspaceLayout = ({ banner, tabs, content, sidebar }: WorkspaceLay
   <Page>
     {banner}
     {tabs}
-    <div className="grid grid-cols-[1fr_300px] gap-6">
-      <div className="flex flex-col gap-3 min-w-0">{content}</div>
-      <div className="flex flex-col gap-4">{sidebar}</div>
-    </div>
+    {sidebar ? (
+      <div className="grid grid-cols-[1fr_300px] gap-6">
+        <div className="flex flex-col gap-3 min-w-0">{content}</div>
+        <div className="flex flex-col gap-4">{sidebar}</div>
+      </div>
+    ) : (
+      <div className="flex flex-col gap-3">{content}</div>
+    )}
   </Page>
 );

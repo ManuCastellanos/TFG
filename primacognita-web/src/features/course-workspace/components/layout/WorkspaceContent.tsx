@@ -1,10 +1,10 @@
-import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
-import CourseSectionCard from '../shared/CourseSectionCard';
-import { TaskView } from '../student/TaskView';
-import { ParticipantsView } from '../student/ParticipantsView';
-import type { WorkspaceTab } from '../../types/workspace.types';
-import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
-import type { Participant } from '@/modules/course/domain/Participant';
+import { EmptyState } from "@/components/patterns/emptyState/EmptyState";
+import CourseSectionCard from "../CourseSectionCard";
+import { TaskView } from "../../sections/student/task/TaskView";
+import { ParticipantsView } from "../../sections/student/participants/ParticipantsView";
+import type { WorkspaceTab } from "../../types/workspace.types";
+import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
+import type { Participant } from "@/modules/course/domain/Participant";
 
 type WorkspaceContentProps = {
   activeTab: WorkspaceTab;
@@ -13,6 +13,7 @@ type WorkspaceContentProps = {
   participants: Participant[];
   loading: boolean;
   participantsLoading: boolean;
+  courseId: string;
   onModuleClick: (module: CourseModule) => void;
   onToggleComplete?: (module: CourseModule) => void;
   pendingByModule?: Record<number, number>;
@@ -27,6 +28,7 @@ export const WorkspaceContent = ({
   participants,
   loading,
   participantsLoading,
+  courseId,
   onModuleClick,
   onToggleComplete,
   pendingByModule,
@@ -35,7 +37,7 @@ export const WorkspaceContent = ({
   if (loading) return <p className="text-sm text-(--fg-muted)">Cargando contenido…</p>;
 
   switch (activeTab) {
-    case 'temario':
+    case "temario":
       return sections.length === 0 ? (
         <p className="text-sm text-(--fg-subtle)">Este curso aún no tiene temas.</p>
       ) : (
@@ -55,24 +57,40 @@ export const WorkspaceContent = ({
         ))
       );
 
-    case 'ejercicios':
-      return <TaskView exercises={exercises} onExerciseClick={onModuleClick} />;
-
-    case 'logros':
+    case "ejercicios":
       return (
-        <EmptyState emoji="🏆" title="Próximamente disponible" subtitle="Esta sección estará disponible en una próxima versión." />
+        <TaskView
+          exercises={exercises}
+          sections={sections.map((s) => s.section)}
+          courseId={courseId}
+          onExerciseClick={onModuleClick}
+        />
       );
 
-    case 'anuncios':
+    case "logros":
       return (
-        <EmptyState emoji="📣" title="Próximamente disponible" subtitle="Esta sección estará disponible en una próxima versión." />
+        <EmptyState
+          emoji="🏆"
+          title="Próximamente disponible"
+          subtitle="Esta sección estará disponible en una próxima versión."
+        />
       );
 
-    case 'companeros':
+    case "anuncios":
+      return (
+        <EmptyState
+          emoji="📣"
+          title="Próximamente disponible"
+          subtitle="Esta sección estará disponible en una próxima versión."
+        />
+      );
+
+    case "companeros":
       return <ParticipantsView participants={participants} loading={participantsLoading} />;
 
-    default:
-      { const _exhaustiveCheck: never = activeTab;
-      return _exhaustiveCheck; }
+    default: {
+      const _exhaustiveCheck: never = activeTab;
+      return _exhaustiveCheck;
+    }
   }
 };

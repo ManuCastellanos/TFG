@@ -33,7 +33,7 @@ const CoursesGrid = ({ loading, courses, isTeacher, onCourseClick, onCreateCours
         <button
           type="button"
           onClick={onCreateCourse}
-          className="group flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-(--border) bg-white/40 text-(--fg-muted) hover:border-emerald-400 hover:bg-white hover:text-emerald-700 transition min-h-[280px] p-6"
+          className="group flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-(--border) bg-white/40 text-(--fg-muted) hover:border-emerald-400 hover:bg-white hover:text-emerald-700 transition min-h-70 p-6"
         >
           <div className="size-14 rounded-2xl bg-emerald-100 text-emerald-700 grid place-items-center group-hover:bg-emerald-200">
             <Plus className="size-6" />

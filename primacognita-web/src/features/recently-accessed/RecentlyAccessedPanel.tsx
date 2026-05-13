@@ -4,6 +4,7 @@ import { RecentlyAccessedItem } from './components/RecentlyAccessedItem';
 
 export function RecentlyAccessedPanel() {
   const { viewModels, handleItemClick } = useRecentlyAccessed();
+  const visible = viewModels.slice(0, 4);
 
   return (
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
@@ -14,10 +15,10 @@ export function RecentlyAccessedPanel() {
         </Button>
       </div>
       <ul className="flex flex-col gap-1">
-        {viewModels.length === 0 ? (
+        {visible.length === 0 ? (
           <li className="text-sm text-(--fg-subtle) px-2 py-1">Sin actividad reciente.</li>
         ) : (
-          viewModels.map((item) => (
+          visible.map((item) => (
             <li key={item.id}>
               <RecentlyAccessedItem item={item} onClick={() => handleItemClick(item)} />
             </li>

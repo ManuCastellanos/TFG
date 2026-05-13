@@ -1,10 +1,10 @@
 import { ChevronDown, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
-import { SECTION_COLORS } from '../../types/workspace.types';
-import { stripHtml } from '../../utils/workspace-mappers';
+import { SECTION_COLORS } from '../types/workspace.types';
+import { stripHtml } from '../utils/workspace-mappers';
 import { useState } from 'react';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
-import { toModuleVM } from '../../utils/workspace-mappers';
+import { toModuleVM } from '../utils/workspace-mappers';
 import CourseModuleRow from './CourseModuleRow';
 import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
 import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
@@ -21,9 +21,7 @@ type CourseSectionCardProps = {
   teacherSectionProgress?: number;
 };
 
-const RING_COLORS = [
-  '#10b981', '#0ea5e9', '#8b5cf6', '#f97316', '#ec4899',
-];
+const RING_COLORS = ['#10b981', '#0ea5e9', '#8b5cf6', '#f97316', '#ec4899'];
 
 const CourseSectionCard = ({
   section,
@@ -45,7 +43,8 @@ const CourseSectionCard = ({
   const summary = stripHtml(section.summary);
 
   const isTeacherMode = pendingByModule !== undefined;
-  const hasRing = !isGeneral && !isTeacherMode && progress != null && section.modules.some((m) => m.completion?.hasCompletion);
+  const hasRing =
+    !isGeneral && !isTeacherMode && progress != null && section.modules.some((m) => m.completion?.hasCompletion);
 
   const toggleOpen = () => setOpen((isOpen) => !isOpen);
 
@@ -61,7 +60,9 @@ const CourseSectionCard = ({
         {isGeneral ? (
           <div className="size-14 rounded-2xl bg-neutral-100 grid place-items-center text-2xl shrink-0">📣</div>
         ) : (
-          <div className={`size-14 rounded-2xl ${sectionColor.soft} ${sectionColor.text} grid place-items-center font-extrabold text-xl shrink-0`}>
+          <div
+            className={`size-14 rounded-2xl ${sectionColor.soft} ${sectionColor.text} grid place-items-center font-extrabold text-xl shrink-0`}
+          >
             {sectionNumber}
           </div>
         )}
@@ -78,7 +79,12 @@ const CourseSectionCard = ({
               <span className="text-xs text-(--fg-subtle) font-bold">Avance medio</span>
               <span className={`font-extrabold ${sectionColor.text}`}>{teacherSectionProgress}%</span>
             </div>
-            <InlineProgressBar value={teacherSectionProgress} colorClass={sectionColor.grad} height="h-2" className="w-20" />
+            <InlineProgressBar
+              value={teacherSectionProgress}
+              colorClass={sectionColor.grad}
+              height="h-2"
+              className="w-20"
+            />
           </div>
         )}
 
@@ -94,8 +100,14 @@ const CourseSectionCard = ({
               <CourseModuleRow
                 key={vm.id}
                 module={vm}
-                onClick={vm.isInternal ? () => onModuleClick?.(section.modules.find((m) => m.cmid === vm.cmid)!) : undefined}
-                onToggle={vm.showCompletion && !isTeacherMode ? () => onToggleComplete?.(section.modules.find((m) => m.cmid === vm.cmid)!) : undefined}
+                onClick={
+                  vm.isInternal ? () => onModuleClick?.(section.modules.find((m) => m.cmid === vm.cmid)!) : undefined
+                }
+                onToggle={
+                  vm.showCompletion && !isTeacherMode
+                    ? () => onToggleComplete?.(section.modules.find((m) => m.cmid === vm.cmid)!)
+                    : undefined
+                }
               />
             ))
           )}

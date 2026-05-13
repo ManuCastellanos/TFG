@@ -5,7 +5,7 @@ import { useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { getCapabilities } from '../utils/workspace-capabilities';
 import { useCoursePageData } from '../hooks/useCoursePage';
-import { useParticipants } from '../hooks/useParticipants';
+import { useParticipants } from '../sections/student/participants/hooks/useParticipants';
 import { useTeacherStats } from '../hooks/useTeacherStats';
 import { useUpcomingAssignments } from '../hooks/useUpcomingAssignments';
 import { useCourseWorkspaceHandlers } from '../hooks/useCourseWorkspaceHandlers';

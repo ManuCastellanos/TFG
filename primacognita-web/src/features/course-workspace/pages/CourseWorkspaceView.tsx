@@ -8,7 +8,7 @@ import type { CourseWorkspaceViewModel } from '../view-models/types';
 import type { WorkspaceTab as WorkspaceTabType } from '../types/workspace.types';
 import type { CourseColor } from '@/shared/theme/courseColors';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
-import { TeacherStatsBar } from '../components/teacher/TeacherStatsBar';
+import { TeacherStatsBar } from '../sections/teacher/TeacherStatsBar';
 import WorkspaceTabs from '../components/layout/WorkspaceTabs';
 import { WorkspaceLayout } from '../components/layout/WorkspaceLayout';
 import { WorkspaceContent } from '../components/layout/WorkspaceContent';
@@ -96,6 +96,7 @@ export function CourseWorkspaceView({
           participants={participants}
           loading={loading}
           participantsLoading={participantsLoading}
+          courseId={courseId}
           onModuleClick={onModuleClick}
           onToggleComplete={showTeacherStats ? undefined : onToggleComplete}
           pendingByModule={showTeacherStats ? teacherStats.pendingByModule : undefined}
@@ -103,7 +104,7 @@ export function CourseWorkspaceView({
           canReviewExercises={showTeacherStats}
         />
       }
-      sidebar={
+      sidebar={activeTab !== 'ejercicios' ? (
         <WorkspaceSidebar
           caps={caps}
           courseId={courseId}
@@ -111,9 +112,11 @@ export function CourseWorkspaceView({
           participants={participants}
           upcomingAssignments={upcomingAssignments}
           upcomingAssignmentsLoading={upcomingAssignmentsLoading}
+          activeTab={activeTab}
           onUpcomingNavigate={onUpcomingAssignmentClick}
         />
-      }
+      ) : null}
     />
   );
 }
+
