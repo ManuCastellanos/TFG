@@ -1,5 +1,7 @@
 export type ExerciseGrade = {
   id: number;
+  cmid: number;
+  modName: string;
   title: string;
   kind: string;
   score: number | null;

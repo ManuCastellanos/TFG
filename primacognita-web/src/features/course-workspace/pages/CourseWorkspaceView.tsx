@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSession } from '@/shared/hooks/useSession';
 import type { Course } from '@/modules/course/domain/Course';
 import type { CourseModule } from '@/modules/course/domain/CourseSection';
 import type { Participant } from '@/modules/course/domain/Participant';
@@ -9,6 +10,7 @@ import type { WorkspaceTab as WorkspaceTabType } from '../types/workspace.types'
 import type { CourseColor } from '@/shared/theme/courseColors';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { TeacherStatsBar } from '../sections/teacher/TeacherStatsBar';
+import { GradeBanner } from '../sections/student/califications/GradeBanner';
 import WorkspaceTabs from '../components/layout/WorkspaceTabs';
 import { WorkspaceLayout } from '../components/layout/WorkspaceLayout';
 import { WorkspaceContent } from '../components/layout/WorkspaceContent';
@@ -47,9 +49,11 @@ export function CourseWorkspaceView({
   onToggleComplete,
   onUpcomingAssignmentClick,
 }: CourseWorkspaceViewProps) {
+  const { token, userId } = useSession();
   const [activeTab, setActiveTab] = useState<WorkspaceTabType>('temario');
   const { caps, tabs, enrichedSections, bannerProgress, bannerTotal, bannerDone, avgProgress } = viewModel;
   const showProgressBanner = caps.canViewProgressBanner && course && activeTab !== 'logros';
+  const showGradeBanner = caps.canViewProgressBanner && course && activeTab === 'logros';
   const showTeacherStats = caps.canReviewExercises;
 
   return (
@@ -74,6 +78,16 @@ export function CourseWorkspaceView({
                   label: 'Puesto',
                 },
               ]}
+            />
+          )}
+
+          {showGradeBanner && (
+            <GradeBanner
+              courseId={courseId}
+              token={token}
+              userId={userId}
+              exercises={exercises}
+              sections={enrichedSections.map((s) => s.section)}
             />
           )}
 

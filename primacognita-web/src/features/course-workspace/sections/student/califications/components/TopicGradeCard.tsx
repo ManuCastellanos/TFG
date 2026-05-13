@@ -7,9 +7,10 @@ import type { TopicGrade } from '../types/califications.types';
 type TopicGradeCardProps = {
   topic: TopicGrade;
   defaultOpen?: boolean;
+  onExerciseClick?: (cmid: number, modName: string) => void;
 };
 
-export const TopicGradeCard = ({ topic, defaultOpen = false }: TopicGradeCardProps) => {
+export const TopicGradeCard = ({ topic, defaultOpen = false, onExerciseClick }: TopicGradeCardProps) => {
   const [open, setOpen] = useState(defaultOpen);
   const color = SECTION_COLORS[(topic.sectionNumber - 1) % SECTION_COLORS.length];
 
@@ -17,11 +18,11 @@ export const TopicGradeCard = ({ topic, defaultOpen = false }: TopicGradeCardPro
   const displayAvg = hasAvg ? topic.averageScore!.toFixed(1).replace('.', ',') : '—';
 
   return (
-    <div className="rounded-2xl border border-(--border) bg-(--tint-50) overflow-hidden">
+    <div className="rounded-2xl border border-(--border) bg-white overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-4 p-4 text-left transition hover:bg-(--tint-100)"
+        className="w-full flex items-center gap-4 p-4 text-left transition hover:bg-(--tint-50)"
       >
         <div className={`size-11 rounded-2xl bg-gradient-to-br ${color.grad} grid place-items-center text-white font-extrabold text-sm shrink-0`}>
           T{topic.sectionNumber}
@@ -32,7 +33,7 @@ export const TopicGradeCard = ({ topic, defaultOpen = false }: TopicGradeCardPro
             {topic.completedItems} de {topic.totalItems} ejercicios
           </div>
           {hasAvg && (
-            <div className="h-1.5 mt-1.5 bg-white rounded-full overflow-hidden">
+            <div className="h-1.5 mt-1.5 bg-(--tint-50) rounded-full overflow-hidden">
               <div className={`h-full bg-gradient-to-r ${color.grad} rounded-full`} style={{ width: `${(topic.averageScore! / 10) * 100}%` }} />
             </div>
           )}
@@ -61,7 +62,12 @@ export const TopicGradeCard = ({ topic, defaultOpen = false }: TopicGradeCardPro
             const meta = getModuleMeta(ex.kind);
             const hasScore = ex.score != null;
             return (
-              <div key={ex.id} className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-white transition">
+              <button
+                key={ex.id}
+                type="button"
+                onClick={() => onExerciseClick?.(ex.cmid, ex.modName)}
+                className="w-full flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-(--tint-50) transition text-left"
+              >
                 <span className={`size-7 rounded-lg grid place-items-center text-xs ${meta.soft}`}>
                   {meta.emoji}
                 </span>
@@ -74,7 +80,7 @@ export const TopicGradeCard = ({ topic, defaultOpen = false }: TopicGradeCardPro
                 ) : (
                   <span className="text-xs font-bold text-(--fg-subtle)">Pendiente</span>
                 )}
-              </div>
+              </button>
             );
           })}
         </div>

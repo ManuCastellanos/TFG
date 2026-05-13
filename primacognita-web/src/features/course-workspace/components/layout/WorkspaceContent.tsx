@@ -78,6 +78,10 @@ export const WorkspaceContent = ({
           sections={sections.map((s) => s.section)}
           exercises={exercises}
           courseId={courseId}
+          onExerciseClick={(cmid, modName) => {
+            const mod = exercises.find((e) => e.cmid === cmid && e.modName === modName);
+            if (mod) onModuleClick(mod);
+          }}
         />
       </div>
 
