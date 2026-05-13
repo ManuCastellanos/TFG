@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { Course } from '@/modules/course/domain/Course';
 import type { CourseCategoryId } from '@/modules/course/domain/CourseCategory';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { queryKeys } from './queryKeys';
 
 type UseUserCoursesResult = {
   courses: Course[];
   categoryNameById: Record<string, string>;
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
+  refetch: () => void;
 };
 
 const unique = (values: string[]) => Array.from(new Set(values));
@@ -16,59 +17,37 @@ const unique = (values: string[]) => Array.from(new Set(values));
 export const useUserCourses = (userId: string | null, token: string | null): UseUserCoursesResult => {
   const { courseRepository: coursesRepository } = useDependencies();
 
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [categoryNameById, setCategoryNameById] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchCourses = useCallback(async () => {
-    if (!userId || !token) {
-      setCourses([]);
-      setCategoryNameById({});
-      setError(null);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await coursesRepository.getUserCourses(userId, token);
-      setCourses(data);
-      setLoading(false);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: queryKeys.courses.list(userId ?? ''),
+    queryFn: async () => {
+      const courses = await coursesRepository.getUserCourses(userId!, token!);
 
       const categoryIds = unique(
-        data.flatMap((c) => {
+        courses.flatMap((c) => {
           const id = c.categoryId;
           return id && id.trim().length > 0 ? [id as CourseCategoryId] : [];
         }),
       );
 
-      if (categoryIds.length === 0) {
-        setCategoryNameById({});
-        return;
+      const categoryNameById: Record<string, string> = {};
+      if (categoryIds.length > 0) {
+        const categories = await coursesRepository.getCourseCategories(token!, categoryIds);
+        for (const cat of categories) {
+          categoryNameById[cat.id] = cat.name;
+        }
       }
 
-      const categories = await coursesRepository.getCourseCategories(token, categoryIds);
+      return { courses, categoryNameById };
+    },
+    enabled: !!userId && !!token,
+    staleTime: 5 * 60 * 1000,
+  });
 
-      const map: Record<string, string> = {};
-      for (const cat of categories) {
-        map[cat.id] = cat.name;
-      }
-
-      setCategoryNameById(map);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Unknown error');
-      setCourses([]);
-      setCategoryNameById({});
-      setLoading(false);
-    }
-  }, [coursesRepository, token, userId]);
-
-  useEffect(() => {
-    void fetchCourses();
-  }, [fetchCourses]);
-
-  return { courses, categoryNameById, loading, error, refetch: fetchCourses };
+  return {
+    courses: data?.courses ?? [],
+    categoryNameById: data?.categoryNameById ?? {},
+    loading: isLoading,
+    error: error?.message ?? null,
+    refetch,
+  };
 };

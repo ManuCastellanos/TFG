@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { queryKeys } from '@/shared/hooks/queryKeys';
 import type { CourseModule } from '@/modules/course/domain/CourseSection';
 
 type Handlers = {
@@ -15,6 +17,16 @@ export function useCourseWorkspaceHandlers(
   markActivityComplete: (token: string, cmid: number, completed: boolean) => Promise<void>,
 ): Handlers {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const completionMutation = useMutation({
+    mutationFn: ({ cmid, completed }: { cmid: number; completed: boolean }) =>
+      markActivityComplete(token!, cmid, completed),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.courses.contents(courseId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.exercises.all });
+    },
+  });
 
   const handleModuleClick = useCallback(
     (module: CourseModule) => {
@@ -39,14 +51,16 @@ export function useCourseWorkspaceHandlers(
       if (!token) return;
       const currentState = module.completion?.state ?? 0;
       const nowCompleted = currentState < 1;
+
       updateModuleCompletion(module.cmid, nowCompleted);
+
       try {
-        await markActivityComplete(token, module.cmid, nowCompleted);
+        await completionMutation.mutateAsync({ cmid: module.cmid, completed: nowCompleted });
       } catch {
         updateModuleCompletion(module.cmid, !nowCompleted);
       }
     },
-    [token, updateModuleCompletion, markActivityComplete],
+    [token, updateModuleCompletion, completionMutation],
   );
 
   return { handleModuleClick, handleUpcomingAssignmentClick, handleToggleComplete };

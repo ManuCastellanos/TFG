@@ -1,6 +1,8 @@
 import { EmptyState } from "@/components/patterns/emptyState/EmptyState";
+import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
 import CourseSectionCard from "../CourseSectionCard";
 import { TaskView } from "../../sections/student/task/TaskView";
+import { CalificationsView } from "../../sections/student/califications/CalificationsView";
 import { ParticipantsView } from "../../sections/student/participants/ParticipantsView";
 import type { WorkspaceTab } from "../../types/workspace.types";
 import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
@@ -21,6 +23,9 @@ type WorkspaceContentProps = {
   canReviewExercises: boolean;
 };
 
+const tabClass = (tab: WorkspaceTab, activeTab: WorkspaceTab) =>
+  tab === activeTab ? "block" : "hidden";
+
 export const WorkspaceContent = ({
   activeTab,
   sections,
@@ -34,63 +39,59 @@ export const WorkspaceContent = ({
   pendingByModule,
   teacherSectionProgress,
 }: WorkspaceContentProps) => {
-  if (loading) return <p className="text-sm text-(--fg-muted)">Cargando contenido…</p>;
+  if (loading) return <LoadingState emoji="📖" label="Cargando contenido…" />;
 
-  switch (activeTab) {
-    case "temario":
-      return sections.length === 0 ? (
-        <p className="text-sm text-(--fg-subtle)">Este curso aún no tiene temas.</p>
-      ) : (
-        sections.map(({ section, colorIdx, sectionNumber, progress }, idx) => (
-          <CourseSectionCard
-            key={section.id}
-            section={section}
-            sectionNumber={sectionNumber}
-            colorIdx={colorIdx}
-            defaultOpen={idx === 1}
-            progress={progress}
-            onModuleClick={onModuleClick}
-            onToggleComplete={onToggleComplete}
-            pendingByModule={pendingByModule}
-            teacherSectionProgress={teacherSectionProgress?.[section.id]}
-          />
-        ))
-      );
+  return (
+    <>
+      <div className={tabClass("temario", activeTab)}>
+        {sections.length === 0 ? (
+          <p className="text-sm text-(--fg-subtle)">Este curso aún no tiene temas.</p>
+        ) : (
+          sections.map(({ section, colorIdx, sectionNumber, progress }, idx) => (
+            <CourseSectionCard
+              key={section.id}
+              section={section}
+              sectionNumber={sectionNumber}
+              colorIdx={colorIdx}
+              defaultOpen={idx === 1}
+              progress={progress}
+              onModuleClick={onModuleClick}
+              onToggleComplete={onToggleComplete}
+              pendingByModule={pendingByModule}
+              teacherSectionProgress={teacherSectionProgress?.[section.id]}
+            />
+          ))
+        )}
+      </div>
 
-    case "ejercicios":
-      return (
+      <div className={tabClass("ejercicios", activeTab)}>
         <TaskView
           exercises={exercises}
           sections={sections.map((s) => s.section)}
           courseId={courseId}
           onExerciseClick={onModuleClick}
         />
-      );
+      </div>
 
-    case "logros":
-      return (
-        <EmptyState
-          emoji="🏆"
-          title="Próximamente disponible"
-          subtitle="Esta sección estará disponible en una próxima versión."
+      <div className={tabClass("logros", activeTab)}>
+        <CalificationsView
+          sections={sections.map((s) => s.section)}
+          exercises={exercises}
+          courseId={courseId}
         />
-      );
+      </div>
 
-    case "anuncios":
-      return (
+      <div className={tabClass("anuncios", activeTab)}>
         <EmptyState
           emoji="📣"
           title="Próximamente disponible"
           subtitle="Esta sección estará disponible en una próxima versión."
         />
-      );
+      </div>
 
-    case "companeros":
-      return <ParticipantsView participants={participants} loading={participantsLoading} />;
-
-    default: {
-      const _exhaustiveCheck: never = activeTab;
-      return _exhaustiveCheck;
-    }
-  }
+      <div className={tabClass("companeros", activeTab)}>
+        <ParticipantsView participants={participants} loading={participantsLoading} />
+      </div>
+    </>
+  );
 };

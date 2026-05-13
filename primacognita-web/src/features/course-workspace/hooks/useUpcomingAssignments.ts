@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import type { UpcomingAssignment } from '@/modules/assignment/domain/UpcomingAssignment';
+import { useQuery } from '@tanstack/react-query';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { useSession } from '@/shared/hooks/useSession';
+import { queryKeys } from '@/shared/hooks/queryKeys';
+import type { UpcomingAssignment } from '@/modules/assignment/domain/UpcomingAssignment';
 
 type Result = {
   upcoming: UpcomingAssignment[];
@@ -12,32 +13,13 @@ export function useUpcomingAssignments(courseId: string): Result {
   const { assignmentRepository } = useDependencies();
   const { token, userId } = useSession();
 
-  const [upcoming, setUpcoming] = useState<UpcomingAssignment[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: queryKeys.assignments.upcoming(courseId),
+    queryFn: () =>
+      assignmentRepository.getUpcomingAssignments(token!, Number(courseId), Number(userId!)),
+    enabled: !!token && !!userId && !!courseId,
+    staleTime: 2 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    if (!token || !userId || !courseId) return;
-    let cancelled = false;
-
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const result = await assignmentRepository.getUpcomingAssignments(
-          token,
-          Number(courseId),
-          Number(userId),
-        );
-        if (!cancelled) setUpcoming(result);
-      } catch {
-        // silently ignore — widget is non-critical
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    void fetch();
-    return () => { cancelled = true; };
-  }, [assignmentRepository, token, userId, courseId]);
-
-  return { upcoming, loading };
+  return { upcoming: data ?? [], loading: isLoading };
 }

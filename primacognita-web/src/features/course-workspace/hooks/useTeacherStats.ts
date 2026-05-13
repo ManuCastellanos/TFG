@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { queryKeys } from '@/shared/hooks/queryKeys';
 import type { SubmissionEntry } from '@/modules/assignment/domain/SubmissionEntry';
 import type { GradeEntry } from '@/modules/assignment/domain/GradeEntry';
 
@@ -14,46 +15,40 @@ export function useTeacherStats(
   error: string | null;
 } {
   const { assignmentRepository } = useDependencies();
-  const [assignments, setAssignments] = useState<{ id: number; cmId: number; title: string }[]>([]);
-  const [submissionsByAssign, setSubmissionsByAssign] = useState<Record<number, SubmissionEntry[]>>({});
-  const [gradesByAssign, setGradesByAssign] = useState<Record<number, GradeEntry[]>>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetch = useCallback(async () => {
-    if (!token || !courseId) return;
-    setLoading(true);
-    setError(null);
+  const { data, isLoading, error } = useQuery({
+    queryKey: queryKeys.assignments.meta(Number(courseId)),
+    queryFn: async () => {
+      const courseIdNum = Number(courseId);
+      const fetched = await assignmentRepository.getAssignmentsForCourse(token!, courseIdNum);
 
-    try {
-      const courseIdNum = parseInt(courseId, 10);
-      const fetched = await assignmentRepository.getAssignmentsForCourse(token, courseIdNum);
-      setAssignments(fetched.map((a) => ({ id: a.id, cmId: a.cmId, title: a.title })));
+      const assignments = fetched.map((a) => ({ id: a.id, cmId: a.cmId, title: a.title }));
+
       if (fetched.length === 0) {
-        setSubmissionsByAssign({});
-        setGradesByAssign({});
-        setLoading(false);
-        return;
+        return { assignments, submissionsByAssign: {} as Record<number, SubmissionEntry[]>, gradesByAssign: {} as Record<number, GradeEntry[]> };
       }
 
       const assignIds = fetched.map((a) => a.id);
       const [subsMap, gradesMap] = await Promise.all([
-        assignmentRepository.getSubmissionsForAssignments(token, assignIds),
-        assignmentRepository.getGradesForAssignments(token, assignIds),
+        assignmentRepository.getSubmissionsForAssignments(token!, assignIds),
+        assignmentRepository.getGradesForAssignments(token!, assignIds),
       ]);
 
-      setSubmissionsByAssign(subsMap);
-      setGradesByAssign(gradesMap);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error fetching teacher stats');
-    } finally {
-      setLoading(false);
-    }
-  }, [assignmentRepository, token, courseId]);
+      return {
+        assignments,
+        submissionsByAssign: subsMap,
+        gradesByAssign: gradesMap,
+      };
+    },
+    enabled: !!token && !!courseId,
+    staleTime: 2 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    void fetch();
-  }, [fetch]);
-
-  return { assignments, submissionsByAssign, gradesByAssign, loading, error };
+  return {
+    assignments: data?.assignments ?? [],
+    submissionsByAssign: data?.submissionsByAssign ?? {},
+    gradesByAssign: data?.gradesByAssign ?? {},
+    loading: isLoading,
+    error: error?.message ?? null,
+  };
 }

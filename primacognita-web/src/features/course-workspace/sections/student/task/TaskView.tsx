@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useSession } from "@/shared/hooks/useSession";
 import { EmptyState } from "@/components/patterns/emptyState/EmptyState";
+import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
 import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
 import type { ExerciseState } from "./types/exercise.types";
 import { useEnrichedExercises } from "./hooks/useEnrichedExercises";
@@ -51,7 +52,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
     return future[0] ?? null;
   }, [enriched, now]);
 
-  const filters: { id: FilterKey; label: string }[] = [
+  const filters: { id: "todos" | "pending" | "submitted" | "graded"; label: string }[] = [
     { id: "todos", label: "Todos" },
     { id: "pending", label: "Por hacer" },
     { id: "submitted", label: "Entregados" },
@@ -59,7 +60,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
   ];
 
   if (loading) {
-    return <p className="text-sm text-(--fg-muted)">Cargando ejercicios…</p>;
+    return <LoadingState emoji="📝" label="Cargando ejercicios…" />;
   }
 
   if (enriched.length === 0) {
@@ -86,7 +87,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
                 key={f.id}
                 type="button"
                 onClick={() => setFilter(f.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full font-bold text-xs transition border-2 ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-full font-bold text-xs transition border-2 ${
                   filter === f.id
                     ? "bg-[#274E38] text-white border-[#274E38]"
                     : "bg-white text-(--fg-muted) border-(--border) hover:border-(--border-strong)"
@@ -94,7 +95,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
               >
                 {f.label}
                 <span
-                  className={`text-[10px] font-extrabold px-1.5 rounded ${
+                  className={`text-xs font-black px-1.5 rounded-full ${
                     filter === f.id ? "bg-white/20" : "bg-(--tint-100)"
                   }`}
                 >

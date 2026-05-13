@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSession } from './useSession';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { queryKeys } from './queryKeys';
 import type { User } from '@/modules/user/domain/User';
 
 type UseCurrentUserResult = {
@@ -13,32 +14,17 @@ export function useCurrentUser(): UseCurrentUserResult {
   const { token, isAuthenticated } = useSession();
   const { userRepository, userSessionStore } = useDependencies();
 
-  const [user, setUser] = useState<User | null>(() => userSessionStore.get());
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: user, isLoading, error } = useQuery({
+    queryKey: queryKeys.users.current(),
+    queryFn: async () => {
+      const fetched = await userRepository.getCurrentUser(token!);
+      userSessionStore.save(fetched);
+      return fetched;
+    },
+    enabled: !!token && isAuthenticated,
+    staleTime: Infinity,
+    placeholderData: () => userSessionStore.get(),
+  });
 
-  useEffect(() => {
-    if (!isAuthenticated || !token) {
-      setUser(null);
-      return;
-    }
-
-    const load = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const fetchedUser = await userRepository.getCurrentUser(token);
-        userSessionStore.save(fetchedUser);
-        setUser(fetchedUser);
-      } catch (e) {
-        setError(e instanceof Error ? e : new Error('Error al cargar el usuario'));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void load();
-  }, [isAuthenticated, token, userRepository, userSessionStore]);
-
-  return { user, isLoading, error };
+  return { user: user ?? null, isLoading, error: error ?? null };
 }

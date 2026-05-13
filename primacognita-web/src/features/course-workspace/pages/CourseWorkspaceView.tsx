@@ -49,7 +49,7 @@ export function CourseWorkspaceView({
 }: CourseWorkspaceViewProps) {
   const [activeTab, setActiveTab] = useState<WorkspaceTabType>('temario');
   const { caps, tabs, enrichedSections, bannerProgress, bannerTotal, bannerDone, avgProgress } = viewModel;
-  const showProgressBanner = caps.canViewProgressBanner && course;
+  const showProgressBanner = caps.canViewProgressBanner && course && activeTab !== 'logros';
   const showTeacherStats = caps.canReviewExercises;
 
   return (

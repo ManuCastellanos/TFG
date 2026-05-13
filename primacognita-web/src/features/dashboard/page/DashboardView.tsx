@@ -13,7 +13,7 @@ type DashboardViewProps = {
   courses: Course[];
   onNavigateToCourses: () => void;
   onCourseClick: (courseId: string) => void;
-};
+}
 
 const DashboardView = ({ user, courses, onNavigateToCourses, onCourseClick }: DashboardViewProps) => {
   return (

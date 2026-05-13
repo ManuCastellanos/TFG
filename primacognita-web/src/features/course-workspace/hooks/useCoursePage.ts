@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
+import { useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { Course, CourseId } from '@/modules/course/domain/Course';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
 import { isExerciseModule } from '@/modules/course/domain/CourseSection';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { queryKeys } from '@/shared/hooks/queryKeys';
 
 type UseCoursePageDataResult = {
   course: Course | null;
@@ -11,7 +12,7 @@ type UseCoursePageDataResult = {
   exercises: CourseModule[];
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<void>;
+  refetch: () => void;
   updateModuleCompletion: (cmid: number, completed: boolean) => void;
 };
 
@@ -22,52 +23,37 @@ export const useCoursePageData = (
 ): UseCoursePageDataResult => {
   const { courseRepository } = useDependencies();
 
-  const [course, setCourse] = useState<Course | null>(null);
-  const [sections, setSections] = useState<CourseSection[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryKey = queryKeys.courses.contents(courseId ?? '');
 
-  const fetchData = useCallback(async () => {
-    if (!courseId || !userId || !token) {
-      setCourse(null);
-      setSections([]);
-      setError(null);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey,
+    queryFn: async () => {
       const [userCourses, contents] = await Promise.all([
-        courseRepository.getUserCourses(userId, token),
-        courseRepository.getCourseContents(token, courseId),
+        courseRepository.getUserCourses(userId!, token!),
+        courseRepository.getCourseContents(token!, courseId!),
       ]);
-
       const matched = userCourses.find((c) => c.id === courseId) ?? null;
-      setCourse(matched);
-      setSections(contents);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Unknown error');
-      setCourse(null);
-      setSections([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [courseRepository, courseId, userId, token]);
+      return { course: matched, sections: contents };
+    },
+    enabled: !!courseId && !!userId && !!token,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const [localSections, setLocalSections] = useState<CourseSection[]>([]);
 
   useEffect(() => {
-    void fetchData();
-  }, [fetchData]);
+    if (data) setLocalSections(data.sections);
+  }, [data]);
+
+  const sections = data ? localSections : [];
 
   const exercises = useMemo<CourseModule[]>(
     () => sections.flatMap((s) => s.modules.filter(isExerciseModule)),
     [sections],
   );
 
-  const updateModuleCompletion = useCallback((cmid: number, completed: boolean) => {
-    setSections((prev) =>
+  const updateModuleCompletion = (cmid: number, completed: boolean) => {
+    setLocalSections((prev) =>
       prev.map((section) => ({
         ...section,
         modules: section.modules.map((m) =>
@@ -77,7 +63,15 @@ export const useCoursePageData = (
         ),
       })),
     );
-  }, []);
+  };
 
-  return { course, sections, exercises, loading, error, refetch: fetchData, updateModuleCompletion };
+  return {
+    course: data?.course ?? null,
+    sections,
+    exercises,
+    loading: isLoading,
+    error: error?.message ?? null,
+    refetch,
+    updateModuleCompletion,
+  };
 };
