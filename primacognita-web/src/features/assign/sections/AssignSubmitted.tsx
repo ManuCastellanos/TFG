@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button/Button';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import type { Assignment } from '@/modules/assignment/domain/Assignment';
 import { AssignmentStatusCards } from '../components/AssignmentStatusCards';
 import { AssignmentFilesList } from '../components/AssignmentFilesList';
@@ -24,8 +25,9 @@ type Props = {
 export function AssignSubmitted({ assignment, onEdit }: Props) {
   const { title, isGraded, grade, submission, dueDate, cutoffDate, openDate, maxGrade, passGrade, submissionStatus } = assignment;
 
+  const now = useTimeNow();
   const submittedAt = submission?.submittedAt;
-  const canEdit = cutoffDate ? Date.now() < cutoffDate : dueDate ? Date.now() < dueDate : true;
+  const canEdit = cutoffDate ? now < cutoffDate : dueDate ? now < dueDate : true;
   const gradeValue = grade?.grade != null ? parseFloat(grade.grade) : null;
 
   return (

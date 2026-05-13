@@ -118,7 +118,7 @@ export function CourseWorkspaceView({
           canReviewExercises={showTeacherStats}
         />
       }
-      sidebar={activeTab !== 'ejercicios' && activeTab !== 'anuncios' ? (
+      sidebar={activeTab !== 'ejercicios' && activeTab !== 'anuncios' && activeTab !== 'companeros' ? (
         <WorkspaceSidebar
           caps={caps}
           courseId={courseId}

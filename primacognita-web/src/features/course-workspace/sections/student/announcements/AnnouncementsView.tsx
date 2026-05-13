@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
 import { Alert } from '@/components/ui/alert/Alert';
@@ -36,7 +37,7 @@ export function AnnouncementsView({ courseId }: AnnouncementsViewProps) {
   const [showNewForm, setShowNewForm] = useState(false);
   const [filter, setFilter] = useState<Filter>('all');
 
-  const [now] = useState(() => Date.now());
+  const now = useTimeNow();
 
   const filtered = useMemo(() => {
     if (!discussions) return [];

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ArrowLeft, Play } from 'lucide-react';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
@@ -78,9 +79,8 @@ const InfoChip = ({
 // ─── Countdown ────────────────────────────────────────────────────────────────
 
 const Countdown = ({ dueDate, openDate }: { dueDate?: Date; openDate?: Date }) => {
+  const now = useTimeNow();
   if (!dueDate) return null;
-
-  const now = Date.now();
   const total = openDate ? Math.round((dueDate.getTime() - openDate.getTime()) / 86400000) : 14;
   const daysLeft = Math.max(0, Math.round((dueDate.getTime() - now) / 86400000));
   const urgent = daysLeft <= 1;

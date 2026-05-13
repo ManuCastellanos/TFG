@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSession } from "@/shared/hooks/useSession";
+import { useTimeNow } from "@/shared/hooks/useTimeNow";
 import { EmptyState } from "@/components/patterns/emptyState/EmptyState";
 import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
 import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
@@ -29,7 +30,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
     sections,
   });
 
-  const [now] = useState(() => Date.now());
+  const now = useTimeNow();
   const [filter, setFilter] = useState<FilterKey>("todos");
 
   const counts = useMemo(() => {

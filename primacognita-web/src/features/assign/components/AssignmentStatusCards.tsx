@@ -1,5 +1,6 @@
 import type { AssignmentGrade } from '@/modules/assignment/domain/AssignmentGrade';
 import type { AssignmentSubmissionStatus } from '@/modules/assignment/domain/AssignmentSubmission';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 
 const STATUS_META: Record<AssignmentSubmissionStatus, { icon: string; label: string; classes: string }> = {
   'not-submitted': { icon: '📤', label: 'Sin enviar', classes: 'bg-orange-50 border-orange-200 text-orange-900' },
@@ -35,7 +36,7 @@ type Props = {
 
 export function AssignmentStatusCards({ submissionStatus, grade, dueDate, cutoffDate }: Props) {
   const statusMeta = STATUS_META[submissionStatus];
-  const now = Date.now();
+  const now = useTimeNow();
 
   const gradeLabel = grade?.grade != null
     ? parseFloat(grade.grade).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 })

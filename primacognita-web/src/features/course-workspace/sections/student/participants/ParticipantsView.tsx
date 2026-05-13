@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Avatar } from '@/components/ui/avatar/Avatar';
-import { Input } from '@/components/ui/input/Input';
-import { Surface } from '@/components/ui/surface/Surface';
-import { Text } from '@/components/ui/text/Text';
-import { Card } from '@/components/ui/card/Card';
+import { useSession } from '@/shared/hooks/useSession';
+import { isTeacherRole } from '@/modules/user/domain/User';
+import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
+import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
+import { StudentCard } from './components/StudentCard';
+import { TeacherCard } from './components/TeacherCard';
+import { TipCard } from './components/TipCard';
 import type { Participant } from '@/modules/course/domain/Participant';
 
 export type ParticipantsViewProps = {
@@ -12,51 +14,84 @@ export type ParticipantsViewProps = {
 };
 
 export const ParticipantsView = ({ participants, loading }: ParticipantsViewProps) => {
+  const { userId } = useSession();
   const [query, setQuery] = useState('');
 
-  const filtered = participants.filter((p) => p.fullName.toLowerCase().includes(query.toLowerCase()));
+  const teacher = participants.find((p) => isTeacherRole(p.roleName));
+  const students = participants.filter((p) => !isTeacherRole(p.roleName));
+
+  const filteredStudents = students.filter((p) =>
+    p.fullName.toLowerCase().includes(query.toLowerCase()),
+  );
+
+  if (loading) {
+    return <LoadingState emoji="👥" label="Cargando participantes…" />;
+  }
+
+  if (participants.length === 0) {
+    return (
+      <EmptyState
+        emoji="👥"
+        title="Sin participantes"
+        subtitle="No hay participantes en este curso."
+      />
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Input
-        variant="search"
-        placeholder="Buscar participante..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-
-      {loading && <Text className="text-(--fg-muted)">Cargando participantes…</Text>}
-
-      {!loading && filtered.length === 0 && (
-        <Text className="text-(--fg-muted)">
-          {query ? 'No se encontraron participantes.' : 'No hay participantes en este curso.'}
-        </Text>
-      )}
-
-      {!loading && filtered.length > 0 && (
-        <Card className="bg-(--panel)">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-4 px-4 py-1">
-              <span className="size-9 shrink-0" />
-              <span className="flex-1 text-sm font-bold text-(--fg-black) uppercase tracking-wide">
-                Nombre completo
-              </span>
-              <span className="w-36 shrink-0 text-sm font-bold text-(--fg-black) uppercase tracking-wide text-right">
-                Rol
-              </span>
+    <div className="grid grid-cols-[1fr_300px] gap-6">
+      <div className="flex flex-col gap-5">
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-extrabold text-(--fg)">Tus compañeros</h3>
+              <p className="text-sm text-(--fg-muted)">
+                {students.length} alumnos en esta clase
+              </p>
             </div>
-            {filtered.map((participant) => (
-              <Surface key={participant.id} className="flex bg-white w-full items-center gap-4 px-4 py-3 mb-2">
-                <Avatar src={participant.avatarUrl} alt={participant.fullName} size="sm" />
-                <span className="flex-1 truncate text-sm font-semibold text-(--fg)">{participant.fullName}</span>
-                <span className="w-36 shrink-0 truncate text-sm text-(--fg-muted) text-right">
-                  {participant.roleDisplayName || participant.roleName || '—'}
-                </span>
-              </Surface>
-            ))}
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Buscar..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="rounded-2xl border border-(--border) bg-white pl-9 pr-4 py-2 text-sm w-56 focus:outline-none focus:border-emerald-400 transition"
+              />
+              <svg
+                viewBox="0 0 24 24"
+                className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-(--fg-muted)"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-3-3" />
+              </svg>
+            </div>
           </div>
-        </Card>
-      )}
+
+          {filteredStudents.length === 0 ? (
+            <p className="text-sm text-(--fg-muted) text-center py-8">
+              {query ? 'No se encontraron compañeros.' : 'No hay compañeros en este curso.'}
+            </p>
+          ) : (
+            <div className="grid grid-cols-3 gap-3">
+              {filteredStudents.map((s) => (
+                <StudentCard
+                  key={s.id}
+                  student={s}
+                  isCurrentUser={s.id === userId}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <aside className="flex flex-col gap-3">
+        {teacher && <TeacherCard teacher={teacher} />}
+        <TipCard />
+      </aside>
     </div>
   );
 };

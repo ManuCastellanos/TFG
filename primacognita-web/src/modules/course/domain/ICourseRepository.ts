@@ -14,4 +14,5 @@ export default interface ICourseRepository {
   getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]>;
   getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]>;
   markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void>;
+  viewCourse(token: string, courseId: CourseId): Promise<void>;
 }

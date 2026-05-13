@@ -1,7 +1,8 @@
-export function AssignCountdown({ dueDate, openDate }: { dueDate?: number; openDate?: number }) {
-  if (!dueDate) return null;
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 
-  const now = Date.now();
+export function AssignCountdown({ dueDate, openDate }: { dueDate?: number; openDate?: number }) {
+  const now = useTimeNow();
+  if (!dueDate) return null;
   const totalDays = openDate ? Math.round((dueDate - openDate) / 86400000) : 14;
   const daysLeft = Math.max(0, Math.round((dueDate - now) / 86400000));
   const urgent = daysLeft <= 1;

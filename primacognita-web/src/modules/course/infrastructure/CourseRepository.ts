@@ -143,11 +143,18 @@ export default class CourseRepository implements ICourseRepository {
         id: String(u.id),
         fullName: u.fullname ?? '',
         avatarUrl: u.profileimageurl ?? null,
+        avatarUrlSmall: u.profileimageurlsmall ?? null,
         roleId: primary?.roleid ?? null,
         roleName: primary?.shortname ?? null,
         roleDisplayName: primary?.name ?? null,
         lastCourseAccess: u.lastcourseaccess ? u.lastcourseaccess * 1000 : undefined,
       };
+    });
+  }
+
+  async viewCourse(token: string, courseId: CourseId): Promise<void> {
+    await this.moodleClient.call<unknown>(token, 'core_course_view_course', {
+      courseid: courseId,
     });
   }
 

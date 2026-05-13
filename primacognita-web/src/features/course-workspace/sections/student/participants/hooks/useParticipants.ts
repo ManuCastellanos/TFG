@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { Participant } from '@/modules/course/domain/Participant';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 
@@ -11,33 +11,17 @@ type UseParticipantsResult = {
 export const useParticipants = (token: string | null, courseId: string | null): UseParticipantsResult => {
   const { courseRepository } = useDependencies();
 
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: participants = [], isLoading, error } = useQuery({
+    queryKey: ['participants', courseId] as const,
+    queryFn: () => courseRepository.getEnrolledUsers(token!, courseId!),
+    enabled: !!token && !!courseId,
+    staleTime: 10 * 1000,
+    refetchInterval: 30 * 1000,
+  });
 
-  const fetchParticipants = useCallback(async () => {
-    if (!token || !courseId) {
-      setParticipants([]);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await courseRepository.getEnrolledUsers(token, courseId);
-      setParticipants(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Unknown error');
-      setParticipants([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [courseRepository, token, courseId]);
-
-  useEffect(() => {
-    void fetchParticipants();
-  }, [fetchParticipants]);
-
-  return { participants, loading, error };
+  return {
+    participants,
+    loading: isLoading,
+    error: error instanceof Error ? error.message : null,
+  };
 };

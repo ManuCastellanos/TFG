@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from '@tanstack/react-router';
 import { Alert } from '@/components/ui/alert/Alert';
 import { useSession } from '@/shared/hooks/useSession';
@@ -44,6 +45,11 @@ export default function CourseWorkspacePage() {
   });
 
   useCourseWorkspaceHeader(courseData.course?.fullname, courseEmoji, courseColor);
+
+  useEffect(() => {
+    if (!token || !courseId) return;
+    courseRepository.viewCourse(token, courseId).catch(() => {});
+  }, [token, courseId, courseRepository]);
 
   const { handleModuleClick, handleUpcomingAssignmentClick, handleToggleComplete } = useCourseWorkspaceHandlers(
     courseId,
