@@ -29,4 +29,10 @@ export const queryKeys = {
     enriched:(courseId: string, cmidSignature: string) =>
       [...queryKeys.exercises.all, courseId, cmidSignature] as const,
   },
+  forum: {
+    all:           ['forum'] as const,
+    discussions:   (forumId: number) => [...queryKeys.forum.all, 'discussions', forumId] as const,
+    posts:         (discussionId: number) => [...queryKeys.forum.all, 'posts', discussionId] as const,
+    forumsByCourse: (courseId: number) => [...queryKeys.forum.all, 'bycourse', courseId] as const,
+  },
 };

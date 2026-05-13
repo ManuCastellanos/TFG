@@ -1,9 +1,9 @@
-import { EmptyState } from "@/components/patterns/emptyState/EmptyState";
 import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
 import CourseSectionCard from "../CourseSectionCard";
 import { TaskView } from "../../sections/student/task/TaskView";
 import { CalificationsView } from "../../sections/student/califications/CalificationsView";
 import { ParticipantsView } from "../../sections/student/participants/ParticipantsView";
+import { AnnouncementsView } from "../../sections/student/announcements/AnnouncementsView";
 import type { WorkspaceTab } from "../../types/workspace.types";
 import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
 import type { Participant } from "@/modules/course/domain/Participant";
@@ -82,11 +82,7 @@ export const WorkspaceContent = ({
       </div>
 
       <div className={tabClass("anuncios", activeTab)}>
-        <EmptyState
-          emoji="📣"
-          title="Próximamente disponible"
-          subtitle="Esta sección estará disponible en una próxima versión."
-        />
+        <AnnouncementsView courseId={courseId} />
       </div>
 
       <div className={tabClass("companeros", activeTab)}>

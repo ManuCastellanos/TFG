@@ -51,7 +51,7 @@ const CourseSectionCard = ({
   const moduleVMs = section.modules.map((m) => toModuleVM(m, pendingByModule?.[m.cmid]));
 
   return (
-    <div className="rounded-3xl border border-(--border) bg-white overflow-hidden">
+    <div className="rounded-3xl border border-(--border) bg-white overflow-hidden mb-2">
       <button
         type="button"
         onClick={toggleOpen}
