@@ -1,210 +1,59 @@
-import type ICourseRepository from '@/modules/course/domain/ICourseRepository';
-import type IMoodleClient from '@/shared/clients/IMoodleClient';
-import type { CourseId } from '@/modules/course/domain/Course';
-import type { Course } from '@/modules/course/domain/Course';
-import type { CreateCourseInput, UpdateCourseInput } from '@/modules/course/domain/CreateCourseInput';
-import type { CourseResponse, CreateCourseResponse } from '@/modules/course/infrastructure/CourseResponse';
-import type { CourseCategory, CourseCategoryId } from '@/modules/course/domain/CourseCategory';
-import type { CategoryResponse } from '@/modules/course/infrastructure/CategoryResponse';
-import type { CourseSection } from '@/modules/course/domain/CourseSection';
-import type { CourseSectionResponse } from './CourseContentsResponse';
-import type { Participant } from '@/modules/course/domain/Participant';
-import type { ParticipantResponse } from './ParticipantResponse';
-import { env } from '../../../shared/utils/env';
+import type ICourseRepository from '../domain/ICourseRepository';
+import type ICourseApi from '../domain/ICourseApi';
+import type { Course, CourseId } from '../domain/Course';
+import type { CreateCourseInput, UpdateCourseInput } from '../domain/CreateCourseInput';
+import type { CourseCategory, CourseCategoryId } from '../domain/CourseCategory';
+import type { CourseSection } from '../domain/CourseSection';
+import type { Participant } from '../domain/Participant';
 
 export default class CourseRepository implements ICourseRepository {
-  constructor(private readonly moodleClient: IMoodleClient) {}
+  constructor(private readonly api: ICourseApi) {}
 
-  async getUserCourses(userId: string, token: string): Promise<Course[]> {
-    const response = await this.moodleClient.call<CourseResponse[]>(token, 'core_enrol_get_users_courses', {
-      userid: userId,
-      returnusercount: '0',
-    });
-    return response.map((c) => ({
-      id: String(c.id),
-      fullname: c.fullname,
-      shortname: c.shortname,
-      categoryId: c.category != null ? String(c.category) : null,
-      imageUrl: c.courseimage ?? null,
-      summary: c.summary ?? null,
-      progress: c.progress ?? null,
-      completed: c.completed === 1,
-    }));
+  createCourseWithImage(token: string, input: CreateCourseInput, imageFile?: File): Promise<CourseId> {
+    return this.api.createCourseWithImage(token, input, imageFile);
   }
 
-  async getCourseCategories(token: string, ids: CourseCategoryId[]): Promise<CourseCategory[]> {
-    const cleanedIds = ids.filter((id) => id.trim().length > 0);
-    const uniqueIds = Array.from(new Set(cleanedIds));
-
-    if (uniqueIds.length === 0) {
-      return [];
-    }
-
-    const response = await this.moodleClient.call<CategoryResponse[]>(token, 'core_course_get_categories', {
-      'criteria[0][key]': 'ids',
-      'criteria[0][value]': uniqueIds.join(','),
-      addsubcategories: '0',
-    });
-
-    return response.map((c) => ({ id: String(c.id), name: c.name }));
+  getUserCourses(userId: string, token: string): Promise<Course[]> {
+    return this.api.getUserCourses(token, userId);
   }
 
-  async createCourse(token: string, input: CreateCourseInput, imageItemId?: number): Promise<CourseId> {
-    const params: Record<string, string> = {
-      'courses[0][fullname]': input.fullname,
-      'courses[0][shortname]': input.shortname,
-      'courses[0][categoryid]': input.categoryId ?? '1',
-    };
-    if (input.summary != null) params['courses[0][summary]'] = input.summary;
-    if (input.visible != null) params['courses[0][visible]'] = String(input.visible);
-    if (input.startdate != null) params['courses[0][startdate]'] = String(input.startdate);
-    if (input.enddate != null) params['courses[0][enddate]'] = String(input.enddate);
-    if (input.idnumber != null) params['courses[0][idnumber]'] = String(input.idnumber);
-    if (imageItemId != null) params['courses[0][overviewfiles_itemid]'] = String(imageItemId);
-
-    const response = await this.moodleClient.call<CreateCourseResponse[]>(token, 'core_course_create_courses', params);
-    if (!response || response.length === 0) {
-      throw new Error('El servidor no devolvió el curso creado');
-    }
-    return String(response[0].id);
+  getCourseCategories(token: string, ids: CourseCategoryId[]): Promise<CourseCategory[]> {
+    return this.api.getCourseCategories(token, ids);
   }
 
-  async updateCourse(token: string, input: UpdateCourseInput): Promise<void> {
-    const params: Record<string, string> = {
-      'courses[0][id]': input.id,
-      'courses[0][fullname]': input.fullname,
-      'courses[0][shortname]': input.shortname,
-    };
-    if (input.categoryId != null) params['courses[0][categoryid]'] = input.categoryId;
-    if (input.summary != null) params['courses[0][summary]'] = input.summary;
-    if (input.visible != null) params['courses[0][visible]'] = String(input.visible);
-    if (input.startdate != null) params['courses[0][startdate]'] = String(input.startdate);
-    if (input.enddate != null) params['courses[0][enddate]'] = String(input.enddate);
-    if (input.idnumber != null) params['courses[0][idnumber]'] = String(input.idnumber);
-
-    await this.moodleClient.call<null>(token, 'core_course_update_courses', params);
+  getAllCategories(token: string): Promise<CourseCategory[]> {
+    return this.api.getAllCategories(token);
   }
 
-  async uploadCourseImage(token: string, file: File, userId: string): Promise<number> {
-    const { itemid } = await this.moodleClient.call<{ itemid: number }>(
-      token,
-      'core_files_get_unused_draft_itemid',
-      {},
-    );
-
-    const formData = new FormData();
-    formData.append('token', token);
-    formData.append('userid', userId);
-    formData.append('itemid', String(itemid));
-    formData.append('component', 'user');
-    formData.append('filearea', 'draft');
-    formData.append('filepath', '/');
-    formData.append('file', file);
-
-    const res = await fetch(`${env.baseUrl}/webservice/upload.php`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    const json = await res.json();
-
-    if (!res.ok) {
-      throw new Error('Upload failed');
-    }
-
-    if (json?.error) {
-      throw new Error(json.error);
-    }
-
-    return itemid;
+  createCourse(token: string, input: CreateCourseInput, imageItemId?: number): Promise<CourseId> {
+    return this.api.createCourse(token, input, imageItemId);
   }
 
-  async getAllCategories(token: string): Promise<CourseCategory[]> {
-    const response = await this.moodleClient.call<CategoryResponse[]>(token, 'core_course_get_categories', {});
-    return response.map((c) => ({ id: String(c.id), name: c.name }));
+  updateCourse(token: string, input: UpdateCourseInput): Promise<void> {
+    return this.api.updateCourse(token, input);
   }
 
-  async enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void> {
-    await this.moodleClient.call<null>(token, 'enrol_manual_enrol_users', {
-      'enrolments[0][roleid]': '3',
-      'enrolments[0][userid]': userId,
-      'enrolments[0][courseid]': courseId,
-    });
+  uploadCourseImage(token: string, file: File, userId: string): Promise<number> {
+    return this.api.uploadCourseImage(token, file, userId);
   }
 
-  async getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]> {
-    const response = await this.moodleClient.call<ParticipantResponse[]>(token, 'core_enrol_get_enrolled_users', {
-      courseid: courseId,
-    });
-
-    return response.map((u) => {
-      const primary = u.roles?.[0] ?? null;
-      return {
-        id: String(u.id),
-        fullName: u.fullname ?? '',
-        avatarUrl: u.profileimageurl ?? null,
-        avatarUrlSmall: u.profileimageurlsmall ?? null,
-        roleId: primary?.roleid ?? null,
-        roleName: primary?.shortname ?? null,
-        roleDisplayName: primary?.name ?? null,
-        lastCourseAccess: u.lastcourseaccess ? u.lastcourseaccess * 1000 : undefined,
-      };
-    });
+  enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void> {
+    return this.api.enrollTeacherInCourse(token, userId, courseId);
   }
 
-  async viewCourse(token: string, courseId: CourseId): Promise<void> {
-    await this.moodleClient.call<unknown>(token, 'core_course_view_course', {
-      courseid: courseId,
-    });
+  getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]> {
+    return this.api.getCourseContents(token, courseId);
   }
 
-  async markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void> {
-    await this.moodleClient.call<unknown>(
-      token,
-      'core_completion_update_activity_completion_status_manually',
-      { cmid: String(cmId), completed: completed ? '1' : '0' },
-    );
+  getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]> {
+    return this.api.getEnrolledUsers(token, courseId);
   }
 
-  async getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]> {
-    const response = await this.moodleClient.call<CourseSectionResponse[]>(token, 'core_course_get_contents', {
-      courseid: courseId,
-    });
+  markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void> {
+    return this.api.markActivityComplete(token, cmId, completed);
+  }
 
-    return response.map((s) => ({
-      id: s.id,
-      name: s.name,
-      summary: s.summary?.trim() ? s.summary : null,
-
-      modules: (s.modules ?? []).flatMap((m) => {
-        if (m.uservisible === false || m.visible === 0) return [];
-        return [{
-          id: m.id,
-          cmid: m.cmid ?? m.id,
-          name: m.name,
-          modName: m.modname,
-          url: m.url ?? null,
-          visible: m.visible !== 0,
-
-          description: m.description?.trim() ?? m.contents?.[0]?.content?.trim() ?? null,
-
-          icon: m.modicon ?? undefined,
-
-          contents: (m.contents ?? []).map((c) => ({
-            type: c.type,
-            filename: c.filename,
-            fileurl: c.fileurl,
-            filesize: c.filesize,
-            mimetype: c.mimetype,
-          })),
-
-          completion: m.completiondata ? {
-            state: m.completiondata.state as 0 | 1 | 2 | 3,
-            hasCompletion: m.completiondata.hascompletion,
-            isAutomatic: m.completiondata.isautomatic,
-          } : undefined,
-        }];
-      }),
-    }));
+  viewCourse(token: string, courseId: CourseId): Promise<void> {
+    return this.api.viewCourse(token, courseId);
   }
 }

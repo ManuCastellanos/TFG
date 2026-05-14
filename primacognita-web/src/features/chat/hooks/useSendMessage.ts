@@ -15,7 +15,8 @@ export function useSendMessage(conversationId: number) {
 
     onMutate: async (text) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.chat.conversation(uid, conversationId) });
-      const previous = queryClient.getQueryData(queryKeys.chat.conversation(uid, conversationId));
+      type ConvData = { conversation: unknown; messages: { id: number; useridfrom: number; text: string; timecreated: number }[] };
+      const previous = queryClient.getQueryData<ConvData>(queryKeys.chat.conversation(uid, conversationId));
 
       const optimisticMsg = {
         id: Date.now(),

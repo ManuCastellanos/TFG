@@ -37,7 +37,9 @@
       "Bash(Sort-Object FullName)",
       "Bash(ConvertTo-Csv)",
       "Bash(Out-String)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(Sort-Object)",
+      "Bash(Select-Object -ExpandProperty Name)"
     ]
   }
 }

@@ -25,7 +25,7 @@ export function useEnrichedExercises({
   exercises,
   sections,
 }: UseEnrichedExercisesParams): Result {
-  const { assignmentRepository, quizRepository, moodleClient } = useDependencies();
+  const { assignmentRepository, quizRepository } = useDependencies();
   const sectionByCmid = useMemo(() => buildSectionMap(sections), [sections]);
 
   const queryKey = [
@@ -72,28 +72,15 @@ export function useEnrichedExercises({
       }
 
       if (quizModules.length > 0) {
-        const quizzesRaw = await moodleClient
-          .call<{
-            quizzes: Array<{
-              id: number;
-              coursemodule: number;
-              timeclose?: number;
-              grade?: number;
-            }>;
-          }>(token!, "mod_quiz_get_quizzes_by_courses", {
-            "courseids[0]": String(courseIdNum),
-          })
-          .catch(() => null);
+        const quizzes = await quizRepository.getQuizzesByCourse(token!, courseIdNum).catch(() => []);
 
         const quizMetaByCmid: Record<number, { id: number; dueDate?: number; gradeMax: number }> = {};
-        if (quizzesRaw?.quizzes) {
-          for (const q of quizzesRaw.quizzes) {
-            quizMetaByCmid[q.coursemodule] = {
-              id: q.id,
-              dueDate: q.timeclose ?? undefined,
-              gradeMax: q.grade ?? 10,
-            };
-          }
+        for (const q of quizzes) {
+          quizMetaByCmid[q.cmid] = {
+            id: q.id,
+            dueDate: q.dueDate ? Math.floor(q.dueDate.getTime() / 1000) : undefined,
+            gradeMax: q.gradeMax,
+          };
         }
 
         for (const cmid of quizModules.map((m) => m.cmid)) {
@@ -177,7 +164,7 @@ export function useEnrichedExercises({
 
 function buildFallback(
   exercises: CourseModule[],
-  sections: CourseSection[],
+  _sections: CourseSection[],
   sectionByCmid: Record<number, string>,
 ): EnrichedExercise[] {
   return exercises.map((m) => {

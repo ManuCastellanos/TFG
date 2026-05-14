@@ -165,7 +165,7 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
         size="lg"
         className="w-full"
         disabled={!isValid || saving}
-        onClick={() => onSave(gradeValue, feedback, true)}
+        onClick={() => onSave(gradeValue, feedback)}
       >
         {saving ? (
           <span className="size-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />

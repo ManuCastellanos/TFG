@@ -13,7 +13,16 @@ import ForumRepository from '@/modules/forum/infrastructure/ForumRepository';
 import ChatRepository from '@/modules/chat/infrastructure/ChatRepository';
 import NotificationRepository from '@/modules/notifications/infrastructure/NotificationRepository';
 
-import type IMoodleClient from '@/shared/clients/IMoodleClient';
+import MoodleCalendarApi from '@/modules/calendar/infrastructure/MoodleCalendarApi';
+import MoodleRecentlyAccessedApi from '@/modules/recentlyAccessed/infrastructure/MoodleRecentlyAccessedApi';
+import MoodleNotificationApi from '@/modules/notifications/infrastructure/MoodleNotificationApi';
+import MoodleForumApi from '@/modules/forum/infrastructure/MoodleForumApi';
+import MoodleChatApi from '@/modules/chat/infrastructure/MoodleChatApi';
+import MoodleQuizApi from '@/modules/quiz/infrastructure/MoodleQuizApi';
+import MoodleAssignmentApi from '@/modules/assignment/infrastructure/MoodleAssignmentApi';
+import MoodleCourseApi from '@/modules/course/infrastructure/MoodleCourseApi';
+import MoodleUserApi from '@/modules/user/infrastructure/MoodleUserApi';
+
 import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
 import type ICourseRepository from '@/modules/course/domain/ICourseRepository';
 import type ICalendarRepository from '@/modules/calendar/domain/ICalendarRepository';
@@ -29,7 +38,6 @@ import type INotificationRepository from '@/modules/notifications/domain/INotifi
 
 
 export default class Dependencies {
-  readonly moodleClient: IMoodleClient;
   readonly authRepository: IAuthRepository;
   readonly courseRepository: ICourseRepository;
   readonly calendarRepository: ICalendarRepository;
@@ -44,7 +52,6 @@ export default class Dependencies {
   readonly notificationRepository: INotificationRepository;
 
   private constructor(params: {
-    moodleClient: IMoodleClient;
     authRepository: IAuthRepository;
     courseRepository: ICourseRepository;
     calendarRepository: ICalendarRepository;
@@ -58,7 +65,6 @@ export default class Dependencies {
     chatRepository: IChatRepository;
     notificationRepository: INotificationRepository;
   }) {
-    this.moodleClient = params.moodleClient;
     this.authRepository = params.authRepository;
     this.courseRepository = params.courseRepository;
     this.calendarRepository = params.calendarRepository;
@@ -76,20 +82,29 @@ export default class Dependencies {
   static create(): Dependencies {
     const moodleClient = new MoodleClient();
 
+    const calendarApi = new MoodleCalendarApi(moodleClient);
+    const recentlyAccessedApi = new MoodleRecentlyAccessedApi(moodleClient);
+    const notificationApi = new MoodleNotificationApi(moodleClient);
+    const forumApi = new MoodleForumApi(moodleClient);
+    const chatApi = new MoodleChatApi(moodleClient);
+    const quizApi = new MoodleQuizApi(moodleClient);
+    const assignmentApi = new MoodleAssignmentApi(moodleClient);
+    const courseApi = new MoodleCourseApi(moodleClient);
+    const userApi = new MoodleUserApi(moodleClient);
+
     return new Dependencies({
-      moodleClient,
       authRepository: new AuthRepository(),
-      courseRepository: new CourseRepository(moodleClient),
-      calendarRepository: new CalendarRepository(moodleClient),
+      courseRepository: new CourseRepository(courseApi),
+      calendarRepository: new CalendarRepository(calendarApi),
       authSessionStore: new AuthStorage(),
-      userRepository: new UserRepository(moodleClient),
-      recentlyAccessedRepository: new RecentlyAccessedRepository(moodleClient),
-      assignmentRepository: new AssignmentRepository(moodleClient),
+      userRepository: new UserRepository(userApi),
+      recentlyAccessedRepository: new RecentlyAccessedRepository(recentlyAccessedApi),
+      assignmentRepository: new AssignmentRepository(assignmentApi),
       userSessionStore: new UserStorage(),
-      quizRepository: new QuizRepository(moodleClient),
-      forumRepository: new ForumRepository(moodleClient),
-      chatRepository: new ChatRepository(moodleClient),
-      notificationRepository: new NotificationRepository(moodleClient),
+      quizRepository: new QuizRepository(quizApi),
+      forumRepository: new ForumRepository(forumApi),
+      chatRepository: new ChatRepository(chatApi),
+      notificationRepository: new NotificationRepository(notificationApi),
     });
   }
 }

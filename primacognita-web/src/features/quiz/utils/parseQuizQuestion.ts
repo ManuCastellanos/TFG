@@ -232,7 +232,7 @@ export function parseReviewQuestion(html: string): ParsedReviewQuestion {
     doc.querySelector('.formulation');
 
   const answerHtml = answerEl?.innerHTML ?? '';
-  if (!answerEl) return { text, options: [], answerHtml };
+  if (!answerEl) return { text, options: [], correctOptions: [], correctAnswerText: null, answerHtml };
 
   // Map each DIRECT child of answerEl → its correctness class.
   // Using '.correct input[...]' would find ALL inputs when the question-level wrapper has .correct.

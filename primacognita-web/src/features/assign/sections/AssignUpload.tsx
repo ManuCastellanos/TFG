@@ -85,7 +85,7 @@ export function AssignUpload({ assignment, onCancel, onSubmitted }: Props) {
                 <span className="text-xs font-bold text-(--fg-muted)">{remaining} espacios libres</span>
               </div>
               <div className="flex flex-col gap-2">
-                {files.map((f) => (
+                {files.map((f, i) => (
                   <div key={f.file.name} className="flex items-center gap-3 p-3 rounded-2xl border border-(--border) bg-(--tint-50)">
                     <div className="size-11 rounded-xl bg-rose-100 text-rose-700 grid place-items-center text-xl shrink-0">
                       📄

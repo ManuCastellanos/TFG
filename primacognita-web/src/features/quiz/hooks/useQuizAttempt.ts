@@ -46,7 +46,7 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
       setLoading(true);
       setError(null);
       try {
-        const existing = await quizRepository.getUserAttempts(token, quizId, userId);
+        const existing = await quizRepository.getUserAttempts(token, quizId, Number(userId));
         if (cancelled) return;
         const inprogress = existing.find((a) => a.state === 'inprogress');
         const attemptId = inprogress

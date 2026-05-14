@@ -25,7 +25,7 @@ export function useCalifications({
   exercises,
   sections,
 }: UseCalificationsParams): CalificationsData {
-  const { assignmentRepository, quizRepository, moodleClient } = useDependencies();
+  const { assignmentRepository, quizRepository } = useDependencies();
 
   const cmidSignature = useMemo(
     () => exercises.map((m) => m.cmid).sort().join(','),
@@ -58,18 +58,16 @@ export function useCalifications({
         (async () => {
           if (quizModules.length === 0) return;
 
-          const quizzesRaw = await moodleClient
-            .call<{ quizzes: Array<{ id: number; coursemodule: number; grade?: number }> }>(
-              token!, 'mod_quiz_get_quizzes_by_courses', { 'courseids[0]': String(courseIdNum) },
-            ).catch(() => null);
+          const quizzes = await quizRepository.getQuizzesByCourse(token!, courseIdNum).catch(() => []);
+          const quizByCmid = new Map(quizzes.map((q) => [q.cmid, q]));
 
           for (const qm of quizModules) {
             try {
-              const raw = quizzesRaw?.quizzes?.find((q) => q.coursemodule === qm.cmid);
-              if (!raw) continue;
-              maxByCmid[qm.cmid] = raw.grade ?? 10;
+              const quiz = quizByCmid.get(qm.cmid);
+              if (!quiz) continue;
+              maxByCmid[qm.cmid] = quiz.gradeMax;
 
-              const attempts = await quizRepository.getUserAttempts(token!, raw.id, userIdNum);
+              const attempts = await quizRepository.getUserAttempts(token!, quiz.id, userIdNum);
               const finished = attempts.filter((a) => a.state === 'finished');
               if (finished.length === 0) continue;
 

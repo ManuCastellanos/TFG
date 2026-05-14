@@ -35,7 +35,7 @@ export function AssignmentFilesList({ files, onRemove, showDownload }: Props) {
 
   return (
     <div className="flex flex-col gap-2">
-      {files.map((f) => (
+      {files.map((f, i) => (
         <div key={f.fileUrl ?? f.filename} className="flex items-center gap-3 p-3 rounded-2xl border border-(--border) bg-(--tint-50)">
           <div className="size-11 rounded-xl bg-rose-100 text-rose-700 grid place-items-center text-xl shrink-0">📄</div>
           <div className="flex-1 min-w-0">

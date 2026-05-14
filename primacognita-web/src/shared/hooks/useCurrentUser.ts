@@ -22,8 +22,8 @@ export function useCurrentUser(): UseCurrentUserResult {
       return fetched;
     },
     enabled: !!token && isAuthenticated,
-    staleTime: Infinity,
-    placeholderData: () => userSessionStore.get(),
+    staleTime: 0,
+    placeholderData: () => userSessionStore.get() ?? undefined,
   });
 
   return { user: user ?? null, isLoading, error: error ?? null };

@@ -44,6 +44,7 @@ export interface QuizMeta {
 }
 
 export default interface IQuizRepository {
+  getQuizzesByCourse(token: string, courseId: number): Promise<QuizMeta[]>;
   getQuizByCmid(token: string, courseId: number, cmid: number): Promise<QuizMeta | null>;
   startAttempt(token: string, quizId: number): Promise<QuizAttempt>;
   getUserAttempts(token: string, quizId: number, userId: number): Promise<UserAttempt[]>;
