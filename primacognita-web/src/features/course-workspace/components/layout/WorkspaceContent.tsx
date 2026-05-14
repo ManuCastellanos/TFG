@@ -1,5 +1,6 @@
 import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
 import CourseSectionCard from "../CourseSectionCard";
+import { TeacherCourseEditor } from "../editor/TeacherCourseEditor";
 import { TaskView } from "../../sections/student/task/TaskView";
 import { CalificationsView } from "../../sections/student/califications/CalificationsView";
 import { ParticipantsView } from "../../sections/student/participants/ParticipantsView";
@@ -46,6 +47,14 @@ export const WorkspaceContent = ({
       <div className={tabClass("temario", activeTab)}>
         {sections.length === 0 ? (
           <p className="text-sm text-(--fg-subtle)">Este curso aún no tiene temas.</p>
+        ) : pendingByModule !== undefined ? (
+          <TeacherCourseEditor
+            courseId={courseId}
+            sections={sections}
+            pendingByModule={pendingByModule}
+            teacherSectionProgress={teacherSectionProgress ?? {}}
+            onModuleClick={onModuleClick}
+          />
         ) : (
           sections.map(({ section, colorIdx, sectionNumber, progress }, idx) => (
             <CourseSectionCard
@@ -57,8 +66,6 @@ export const WorkspaceContent = ({
               progress={progress}
               onModuleClick={onModuleClick}
               onToggleComplete={onToggleComplete}
-              pendingByModule={pendingByModule}
-              teacherSectionProgress={teacherSectionProgress?.[section.id]}
             />
           ))
         )}

@@ -1,11 +1,11 @@
 import type ICalendarRepository from '../domain/ICalendarRepository';
-import type ICalendarApi from '../domain/ICalendarApi';
+import type IPrimaCognitaApi from '@/shared/infrastructure/api/IPrimaCognitaApi';
 import type { Calendar } from '../domain/Calendar';
 
 export default class CalendarRepository implements ICalendarRepository {
-  constructor(private readonly api: ICalendarApi) {}
+  constructor(private readonly api: IPrimaCognitaApi) {}
 
   getCalendar(token: string, params: { year: number; month: number; day?: number }): Promise<Calendar> {
-    return this.api.getCalendar(token, params);
+    return this.api.calendar.getCalendar(token, params);
   }
 }

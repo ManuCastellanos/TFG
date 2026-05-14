@@ -1,0 +1,70 @@
+<?php
+defined('MOODLE_INTERNAL') || die();
+
+$functions = [
+    'local_primacognita_create_section' => [
+        'classname'    => 'local_primacognita\external\create_section',
+        'methodname'   => 'execute',
+        'description'  => 'Crea una sección en el curso.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update',
+    ],
+    'local_primacognita_update_section' => [
+        'classname'    => 'local_primacognita\external\update_section',
+        'methodname'   => 'execute',
+        'description'  => 'Actualiza nombre/resumen de una sección.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update',
+    ],
+    'local_primacognita_create_assignment' => [
+        'classname'    => 'local_primacognita\external\create_assignment',
+        'methodname'   => 'execute',
+        'description'  => 'Crea una tarea (assign) en el curso.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_update_assignment' => [
+        'classname'    => 'local_primacognita\external\update_assignment',
+        'methodname'   => 'execute',
+        'description'  => 'Actualiza una tarea existente.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_create_resource' => [
+        'classname'    => 'local_primacognita\external\create_resource',
+        'methodname'   => 'execute',
+        'description'  => 'Crea un recurso de archivo (mod_resource).',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_create_url' => [
+        'classname'    => 'local_primacognita\external\create_url',
+        'methodname'   => 'execute',
+        'description'  => 'Crea un recurso URL (mod_url).',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_create_quiz' => [
+        'classname'    => 'local_primacognita\external\create_quiz',
+        'methodname'   => 'execute',
+        'description'  => 'Crea un quiz vacío.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_update_quiz' => [
+        'classname'    => 'local_primacognita\external\update_quiz',
+        'methodname'   => 'execute',
+        'description'  => 'Actualiza metadatos de un quiz existente.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+];
+
+$services = [
+    'PrimaCognita API' => [
+        'functions'       => array_keys($functions),
+        'restrictedusers' => 0,
+        'enabled'         => 1,
+        'shortname'       => 'primacognita',
+    ],
+];

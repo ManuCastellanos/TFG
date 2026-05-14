@@ -1,13 +1,13 @@
 import type IChatRepository from '../domain/IChatRepository';
-import type IChatApi from '../domain/IChatApi';
+import type IPrimaCognitaApi from '@/shared/infrastructure/api/IPrimaCognitaApi';
 import type { ChatConversation, ChatConversationMember } from '../domain/ChatConversation';
 import type { ChatMessage } from '../domain/ChatMessage';
 
 export default class ChatRepository implements IChatRepository {
-  constructor(private readonly api: IChatApi) {}
+  constructor(private readonly api: IPrimaCognitaApi) {}
 
   getConversations(token: string, userId: number, limit?: number): Promise<ChatConversation[]> {
-    return this.api.getConversations(token, userId, limit);
+    return this.api.chat.getConversations(token, userId, limit);
   }
 
   getConversation(
@@ -16,7 +16,7 @@ export default class ChatRepository implements IChatRepository {
     conversationId: number,
     messageLimit?: number,
   ): Promise<{ conversation: ChatConversation; messages: ChatMessage[] }> {
-    return this.api.getConversation(token, userId, conversationId, messageLimit);
+    return this.api.chat.getConversation(token, userId, conversationId, messageLimit);
   }
 
   getConversationBetweenUsers(
@@ -24,15 +24,15 @@ export default class ChatRepository implements IChatRepository {
     userId: number,
     otherUserId: number,
   ): Promise<{ conversation: ChatConversation; messages: ChatMessage[] } | null> {
-    return this.api.getConversationBetweenUsers(token, userId, otherUserId);
+    return this.api.chat.getConversationBetweenUsers(token, userId, otherUserId);
   }
 
   searchUsers(token: string, userId: number, search: string): Promise<ChatConversationMember[]> {
-    return this.api.searchUsers(token, userId, search);
+    return this.api.chat.searchUsers(token, userId, search);
   }
 
   sendMessage(token: string, conversationId: number, text: string): Promise<ChatMessage> {
-    return this.api.sendMessage(token, conversationId, text);
+    return this.api.chat.sendMessage(token, conversationId, text);
   }
 
   sendInstantMessage(
@@ -40,14 +40,14 @@ export default class ChatRepository implements IChatRepository {
     toUserId: number,
     text: string,
   ): Promise<{ conversationId: number; message: ChatMessage }> {
-    return this.api.sendInstantMessage(token, toUserId, text);
+    return this.api.chat.sendInstantMessage(token, toUserId, text);
   }
 
   markConversationAsRead(token: string, userId: number, conversationId: number): Promise<void> {
-    return this.api.markConversationAsRead(token, userId, conversationId);
+    return this.api.chat.markConversationAsRead(token, userId, conversationId);
   }
 
   getUnreadCount(token: string, userId: number): Promise<number> {
-    return this.api.getUnreadCount(token, userId);
+    return this.api.chat.getUnreadCount(token, userId);
   }
 }

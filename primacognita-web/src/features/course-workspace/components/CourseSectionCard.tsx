@@ -1,5 +1,4 @@
-import { ChevronDown, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button/Button';
+import { ChevronDown, Pencil } from 'lucide-react';
 import { SECTION_COLORS } from '../types/workspace.types';
 import { stripHtml } from '../utils/workspace-mappers';
 import { useState } from 'react';
@@ -8,6 +7,9 @@ import { toModuleVM } from '../utils/workspace-mappers';
 import CourseModuleRow from './CourseModuleRow';
 import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
 import { InlineProgressBar } from '@/components/ui/progressBar/ProgressBar';
+import { AddActivityButton } from './editor/AddActivityButton';
+
+type ActivityType = 'assignment' | 'quiz' | 'resource' | 'url';
 
 type CourseSectionCardProps = {
   section: CourseSection;
@@ -19,6 +21,8 @@ type CourseSectionCardProps = {
   onToggleComplete?: (module: CourseModule) => void;
   pendingByModule?: Record<number, number>;
   teacherSectionProgress?: number;
+  onEditSection?: (sectionId: number, name: string, summary: string) => void;
+  onAddActivity?: (sectionId: number, sectionNum: number, type: ActivityType) => void;
 };
 
 const RING_COLORS = ['#10b981', '#0ea5e9', '#8b5cf6', '#f97316', '#ec4899'];
@@ -33,6 +37,8 @@ const CourseSectionCard = ({
   onToggleComplete,
   pendingByModule,
   teacherSectionProgress,
+  onEditSection,
+  onAddActivity,
 }: CourseSectionCardProps) => {
   const [open, setOpen] = useState(() => defaultOpen);
 
@@ -68,7 +74,22 @@ const CourseSectionCard = ({
         )}
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-(--fg) text-lg leading-tight">{section.name}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-(--fg) text-lg leading-tight">{section.name}</h3>
+            {isTeacherMode && !isGeneral && onEditSection && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditSection(section.id, section.name, section.summary ?? '');
+                }}
+                className="size-7 rounded-lg bg-(--tint-100) hover:bg-(--tint-200) text-(--fg-muted) grid place-items-center shrink-0"
+                aria-label="Editar tema"
+              >
+                <Pencil className="size-3.5" />
+              </button>
+            )}
+          </div>
           {summary && <p className="text-sm text-(--fg-subtle) mt-0.5 line-clamp-1">{summary}</p>}
         </div>
 
@@ -111,12 +132,11 @@ const CourseSectionCard = ({
               />
             ))
           )}
-          {isTeacherMode && (
+          {isTeacherMode && onAddActivity && (
             <div className="pt-2 border-t border-dashed border-(--border)">
-              <Button variant="success" size="sm" type="button" className="flex items-center gap-2">
-                <Plus className="size-4" />
-                Añadir actividad
-              </Button>
+              <AddActivityButton
+                onSelect={(type) => onAddActivity(section.id, sectionNumber, type)}
+              />
             </div>
           )}
         </div>

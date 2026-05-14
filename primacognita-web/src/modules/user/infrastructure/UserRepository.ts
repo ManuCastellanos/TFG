@@ -1,11 +1,11 @@
 import type IUserRepository from '../domain/IUserRepository';
-import type IUserApi from '../domain/IUserApi';
+import type IPrimaCognitaApi from '@/shared/infrastructure/api/IPrimaCognitaApi';
 import type { User } from '../domain/User';
 
 export default class UserRepository implements IUserRepository {
-  constructor(private readonly api: IUserApi) {}
+  constructor(private readonly api: IPrimaCognitaApi) {}
 
   getCurrentUser(token: string): Promise<User> {
-    return this.api.getCurrentUser(token);
+    return this.api.user.getCurrentUser(token);
   }
 }

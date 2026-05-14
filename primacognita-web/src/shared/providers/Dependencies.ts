@@ -1,4 +1,14 @@
 import MoodleClient from '../clients/MoodleClient';
+import PrimaCognitaApi from '../infrastructure/api/PrimaCognitaApi';
+import MoodleUserApi from '../infrastructure/moodle/user/MoodleUserApi';
+import MoodleCalendarApi from '../infrastructure/moodle/calendar/MoodleCalendarApi';
+import MoodleRecentlyAccessedApi from '../infrastructure/moodle/recentlyAccessed/MoodleRecentlyAccessedApi';
+import MoodleNotificationApi from '../infrastructure/moodle/notifications/MoodleNotificationApi';
+import MoodleForumApi from '../infrastructure/moodle/forum/MoodleForumApi';
+import MoodleChatApi from '../infrastructure/moodle/chat/MoodleChatApi';
+import MoodleQuizApi from '../infrastructure/moodle/quiz/MoodleQuizApi';
+import MoodleAssignmentApi from '../infrastructure/moodle/assignment/MoodleAssignmentApi';
+import MoodleCourseApi from '../infrastructure/moodle/course/MoodleCourseApi';
 
 import AuthRepository from '@/modules/auth/infrastructure/AuthRepository';
 import CourseRepository from '@/modules/course/infrastructure/CourseRepository';
@@ -12,16 +22,6 @@ import QuizRepository from '@/modules/quiz/infrastructure/QuizRepository';
 import ForumRepository from '@/modules/forum/infrastructure/ForumRepository';
 import ChatRepository from '@/modules/chat/infrastructure/ChatRepository';
 import NotificationRepository from '@/modules/notifications/infrastructure/NotificationRepository';
-
-import MoodleCalendarApi from '@/modules/calendar/infrastructure/MoodleCalendarApi';
-import MoodleRecentlyAccessedApi from '@/modules/recentlyAccessed/infrastructure/MoodleRecentlyAccessedApi';
-import MoodleNotificationApi from '@/modules/notifications/infrastructure/MoodleNotificationApi';
-import MoodleForumApi from '@/modules/forum/infrastructure/MoodleForumApi';
-import MoodleChatApi from '@/modules/chat/infrastructure/MoodleChatApi';
-import MoodleQuizApi from '@/modules/quiz/infrastructure/MoodleQuizApi';
-import MoodleAssignmentApi from '@/modules/assignment/infrastructure/MoodleAssignmentApi';
-import MoodleCourseApi from '@/modules/course/infrastructure/MoodleCourseApi';
-import MoodleUserApi from '@/modules/user/infrastructure/MoodleUserApi';
 
 import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
 import type ICourseRepository from '@/modules/course/domain/ICourseRepository';
@@ -81,30 +81,31 @@ export default class Dependencies {
 
   static create(): Dependencies {
     const moodleClient = new MoodleClient();
-
-    const calendarApi = new MoodleCalendarApi(moodleClient);
-    const recentlyAccessedApi = new MoodleRecentlyAccessedApi(moodleClient);
-    const notificationApi = new MoodleNotificationApi(moodleClient);
-    const forumApi = new MoodleForumApi(moodleClient);
-    const chatApi = new MoodleChatApi(moodleClient);
-    const quizApi = new MoodleQuizApi(moodleClient);
-    const assignmentApi = new MoodleAssignmentApi(moodleClient);
-    const courseApi = new MoodleCourseApi(moodleClient);
-    const userApi = new MoodleUserApi(moodleClient);
+    const api = new PrimaCognitaApi(
+      new MoodleUserApi(moodleClient),
+      new MoodleCalendarApi(moodleClient),
+      new MoodleRecentlyAccessedApi(moodleClient),
+      new MoodleNotificationApi(moodleClient),
+      new MoodleForumApi(moodleClient),
+      new MoodleChatApi(moodleClient),
+      new MoodleQuizApi(moodleClient),
+      new MoodleAssignmentApi(moodleClient),
+      new MoodleCourseApi(moodleClient),
+    );
 
     return new Dependencies({
       authRepository: new AuthRepository(),
-      courseRepository: new CourseRepository(courseApi),
-      calendarRepository: new CalendarRepository(calendarApi),
+      courseRepository: new CourseRepository(api),
+      calendarRepository: new CalendarRepository(api),
       authSessionStore: new AuthStorage(),
-      userRepository: new UserRepository(userApi),
-      recentlyAccessedRepository: new RecentlyAccessedRepository(recentlyAccessedApi),
-      assignmentRepository: new AssignmentRepository(assignmentApi),
+      userRepository: new UserRepository(api),
+      recentlyAccessedRepository: new RecentlyAccessedRepository(api),
+      assignmentRepository: new AssignmentRepository(api),
       userSessionStore: new UserStorage(),
-      quizRepository: new QuizRepository(quizApi),
-      forumRepository: new ForumRepository(forumApi),
-      chatRepository: new ChatRepository(chatApi),
-      notificationRepository: new NotificationRepository(notificationApi),
+      quizRepository: new QuizRepository(api),
+      forumRepository: new ForumRepository(api),
+      chatRepository: new ChatRepository(api),
+      notificationRepository: new NotificationRepository(api),
     });
   }
 }

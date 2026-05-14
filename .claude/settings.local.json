@@ -39,7 +39,20 @@
       "Bash(Out-String)",
       "Bash(npx tsc *)",
       "Bash(Sort-Object)",
-      "Bash(Select-Object -ExpandProperty Name)"
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(Remove-Item *)",
+      "Bash(plannotator last *)",
+      "Bash(plannotator --help)",
+      "Bash(plannotator annotate *)",
+      "Bash(Select-Object -Property FullName, PSIsContainer)",
+      "Bash(Select-Object -First 200)",
+      "WebSearch",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\moodle\\\\public\" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { -not $_.PSIsContainer } | Select-Object -Property FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\moodle-docker\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName)",
+      "Bash(Test-Path *)",
+      "Skill(plannotator-last)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\" -Recurse -Force | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\", \"shared\"\\) })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\\\\infrastructure\" -Recurse | Select-Object FullName, @{Name=\"Type\"; Expression={if\\($_.PSIsContainer\\){\"[DIR]\"}else{\"[FILE]\"}}} | Format-Table -AutoSize)"
     ]
   }
 }

@@ -1,0 +1,247 @@
+import type IMoodleCourseApi from './IMoodleCourseApi';
+import type IMoodleClient from '@/shared/clients/IMoodleClient';
+import type { Course, CourseId } from '@/modules/course/domain/Course';
+import type { CreateCourseInput, UpdateCourseInput } from '@/modules/course/domain/CreateCourseInput';
+import type { CourseCategory, CourseCategoryId } from '@/modules/course/domain/CourseCategory';
+import type { CourseSection } from '@/modules/course/domain/CourseSection';
+import type { Participant } from '@/modules/course/domain/Participant';
+import type { CreateSectionInput, UpdateSectionInput } from '@/modules/course/domain/CreateSectionInput';
+import type { CreateResourceInput } from '@/modules/course/domain/CreateResourceInput';
+import type { CreateUrlInput } from '@/modules/course/domain/CreateUrlInput';
+import type { CourseResponse, CreateCourseResponse } from '@/modules/course/infrastructure/CourseResponse';
+import type { CategoryResponse } from '@/modules/course/infrastructure/CategoryResponse';
+import type { CourseSectionResponse } from '@/modules/course/infrastructure/CourseContentsResponse';
+import type { ParticipantResponse } from '@/modules/course/infrastructure/ParticipantResponse';
+import { env } from '@/shared/utils/env';
+
+export default class MoodleCourseApi implements IMoodleCourseApi {
+  constructor(private readonly moodleClient: IMoodleClient) {}
+
+  async createSection(token: string, input: CreateSectionInput): Promise<{ sectionId: number; sectionNum: number }> {
+    const result = await this.moodleClient.call<{ sectionid: number; sectionnum: number }>(
+      token, 'local_primacognita_create_section', {
+        courseid: String(input.courseId),
+        name:     input.name ?? '',
+        summary:  input.summary ?? '',
+      },
+    );
+    return { sectionId: result.sectionid, sectionNum: result.sectionnum };
+  }
+
+  async updateSection(token: string, input: UpdateSectionInput): Promise<void> {
+    await this.moodleClient.call<unknown>(token, 'local_primacognita_update_section', {
+      sectionid: String(input.sectionId),
+      name:      input.name ?? '',
+      summary:   input.summary ?? '',
+      visible:   input.visible === false ? '0' : '1',
+    });
+  }
+
+  async createResource(token: string, input: CreateResourceInput): Promise<{ cmid: number }> {
+    return this.moodleClient.call<{ cmid: number }>(token, 'local_primacognita_create_resource', {
+      courseid:    String(input.courseId),
+      sectionnum:  String(input.sectionNum),
+      name:        input.name,
+      intro:       input.intro ?? '',
+      draftitemid: String(input.draftItemId),
+    });
+  }
+
+  async createUrl(token: string, input: CreateUrlInput): Promise<{ cmid: number }> {
+    return this.moodleClient.call<{ cmid: number }>(token, 'local_primacognita_create_url', {
+      courseid:    String(input.courseId),
+      sectionnum:  String(input.sectionNum),
+      name:        input.name,
+      externalurl: input.externalUrl,
+      intro:       input.intro ?? '',
+    });
+  }
+
+  async getUserCourses(token: string, userId: string): Promise<Course[]> {
+    const response = await this.moodleClient.call<CourseResponse[]>(token, 'core_enrol_get_users_courses', {
+      userid: userId,
+      returnusercount: '0',
+    });
+    return response.map((c) => ({
+      id: String(c.id),
+      fullname: c.fullname,
+      shortname: c.shortname,
+      categoryId: c.category != null ? String(c.category) : null,
+      imageUrl: c.courseimage ?? null,
+      summary: c.summary ?? null,
+      progress: c.progress ?? null,
+      completed: c.completed === 1,
+    }));
+  }
+
+  async createCourseWithImage(token: string, input: CreateCourseInput, imageFile?: File): Promise<CourseId> {
+    let imageItemId: number | undefined;
+    if (imageFile) {
+      const { itemid } = await this.moodleClient.call<{ itemid: number }>(
+        token,
+        'core_files_get_unused_draft_itemid',
+        {},
+      );
+      const formData = new FormData();
+      formData.append('token', token);
+      formData.append('itemid', String(itemid));
+      formData.append('component', 'user');
+      formData.append('filearea', 'draft');
+      formData.append('filepath', '/');
+      formData.append('file', imageFile);
+      const res = await fetch(`${env.baseUrl}/webservice/upload.php`, { method: 'POST', body: formData });
+      if (!res.ok) throw new Error('Upload de imagen fallido');
+      const json = await res.json();
+      if (json?.error) throw new Error(json.error);
+      imageItemId = itemid;
+    }
+    return this.createCourse(token, input, imageItemId);
+  }
+
+  async getCourseCategories(token: string, ids: CourseCategoryId[]): Promise<CourseCategory[]> {
+    const cleanedIds = ids.filter((id) => id.trim().length > 0);
+    const uniqueIds = Array.from(new Set(cleanedIds));
+    if (uniqueIds.length === 0) return [];
+    const response = await this.moodleClient.call<CategoryResponse[]>(token, 'core_course_get_categories', {
+      'criteria[0][key]': 'ids',
+      'criteria[0][value]': uniqueIds.join(','),
+      addsubcategories: '0',
+    });
+    return response.map((c) => ({ id: String(c.id), name: c.name }));
+  }
+
+  async getAllCategories(token: string): Promise<CourseCategory[]> {
+    const response = await this.moodleClient.call<CategoryResponse[]>(token, 'core_course_get_categories', {});
+    return response.map((c) => ({ id: String(c.id), name: c.name }));
+  }
+
+  async createCourse(token: string, input: CreateCourseInput, imageItemId?: number): Promise<CourseId> {
+    const params: Record<string, string> = {
+      'courses[0][fullname]': input.fullname,
+      'courses[0][shortname]': input.shortname,
+      'courses[0][categoryid]': input.categoryId ?? '1',
+    };
+    if (input.summary != null) params['courses[0][summary]'] = input.summary;
+    if (input.visible != null) params['courses[0][visible]'] = String(input.visible);
+    if (input.startdate != null) params['courses[0][startdate]'] = String(input.startdate);
+    if (input.enddate != null) params['courses[0][enddate]'] = String(input.enddate);
+    if (input.idnumber != null) params['courses[0][idnumber]'] = String(input.idnumber);
+    if (imageItemId != null) params['courses[0][overviewfiles_itemid]'] = String(imageItemId);
+
+    const response = await this.moodleClient.call<CreateCourseResponse[]>(token, 'core_course_create_courses', params);
+    if (!response || response.length === 0) throw new Error('El servidor no devolvió el curso creado');
+    return String(response[0].id);
+  }
+
+  async updateCourse(token: string, input: UpdateCourseInput): Promise<void> {
+    const params: Record<string, string> = {
+      'courses[0][id]': input.id,
+      'courses[0][fullname]': input.fullname,
+      'courses[0][shortname]': input.shortname,
+    };
+    if (input.categoryId != null) params['courses[0][categoryid]'] = input.categoryId;
+    if (input.summary != null) params['courses[0][summary]'] = input.summary;
+    if (input.visible != null) params['courses[0][visible]'] = String(input.visible);
+    if (input.startdate != null) params['courses[0][startdate]'] = String(input.startdate);
+    if (input.enddate != null) params['courses[0][enddate]'] = String(input.enddate);
+    if (input.idnumber != null) params['courses[0][idnumber]'] = String(input.idnumber);
+    await this.moodleClient.call<null>(token, 'core_course_update_courses', params);
+  }
+
+  async uploadCourseImage(token: string, file: File, userId: string): Promise<number> {
+    const { itemid } = await this.moodleClient.call<{ itemid: number }>(
+      token,
+      'core_files_get_unused_draft_itemid',
+      {},
+    );
+    const formData = new FormData();
+    formData.append('token', token);
+    formData.append('userid', userId);
+    formData.append('itemid', String(itemid));
+    formData.append('component', 'user');
+    formData.append('filearea', 'draft');
+    formData.append('filepath', '/');
+    formData.append('file', file);
+
+    const res = await fetch(`${env.baseUrl}/webservice/upload.php`, { method: 'POST', body: formData });
+    const json = await res.json();
+    if (!res.ok) throw new Error('Upload failed');
+    if (json?.error) throw new Error(json.error);
+    return itemid;
+  }
+
+  async getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]> {
+    const response = await this.moodleClient.call<ParticipantResponse[]>(token, 'core_enrol_get_enrolled_users', {
+      courseid: courseId,
+    });
+    return response.map((u) => {
+      const primary = u.roles?.[0] ?? null;
+      return {
+        id: String(u.id),
+        fullName: u.fullname ?? '',
+        avatarUrl: u.profileimageurl ?? null,
+        avatarUrlSmall: u.profileimageurlsmall ?? null,
+        roleId: primary?.roleid ?? null,
+        roleName: primary?.shortname ?? null,
+        roleDisplayName: primary?.name ?? null,
+        lastCourseAccess: u.lastcourseaccess ? u.lastcourseaccess * 1000 : undefined,
+      };
+    });
+  }
+
+  async enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void> {
+    await this.moodleClient.call<null>(token, 'enrol_manual_enrol_users', {
+      'enrolments[0][roleid]': '3',
+      'enrolments[0][userid]': userId,
+      'enrolments[0][courseid]': courseId,
+    });
+  }
+
+  async viewCourse(token: string, courseId: CourseId): Promise<void> {
+    await this.moodleClient.call<unknown>(token, 'core_course_view_course', { courseid: courseId });
+  }
+
+  async markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void> {
+    await this.moodleClient.call<unknown>(
+      token,
+      'core_completion_update_activity_completion_status_manually',
+      { cmid: String(cmId), completed: completed ? '1' : '0' },
+    );
+  }
+
+  async getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]> {
+    const response = await this.moodleClient.call<CourseSectionResponse[]>(token, 'core_course_get_contents', {
+      courseid: courseId,
+    });
+    return response.map((s) => ({
+      id: s.id,
+      name: s.name,
+      summary: s.summary?.trim() ? s.summary : null,
+      modules: (s.modules ?? []).flatMap((m) => {
+        if (m.uservisible === false || m.visible === 0) return [];
+        return [{
+          id: m.id,
+          cmid: m.cmid ?? m.id,
+          name: m.name,
+          modName: m.modname,
+          url: m.url ?? null,
+          visible: m.visible !== 0,
+          description: m.description?.trim() ?? m.contents?.[0]?.content?.trim() ?? null,
+          icon: m.modicon ?? undefined,
+          contents: (m.contents ?? []).map((c) => ({
+            type: c.type,
+            filename: c.filename,
+            fileurl: c.fileurl,
+            filesize: c.filesize,
+            mimetype: c.mimetype,
+          })),
+          completion: m.completiondata ? {
+            state: m.completiondata.state as 0 | 1 | 2 | 3,
+            hasCompletion: m.completiondata.hascompletion,
+            isAutomatic: m.completiondata.isautomatic,
+          } : undefined,
+        }];
+      }),
+    }));
+  }
+}

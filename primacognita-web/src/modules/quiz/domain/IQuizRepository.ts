@@ -1,5 +1,6 @@
 import type { QuizAttempt } from './QuizAttempt';
 import type { QuizQuestion, QuizAnswers } from './QuizQuestion';
+import type { CreateQuizInput, UpdateQuizInput } from './CreateQuizInput';
 
 export type UserAttempt = QuizAttempt;
 
@@ -44,6 +45,8 @@ export interface QuizMeta {
 }
 
 export default interface IQuizRepository {
+  createQuiz(token: string, input: CreateQuizInput): Promise<{ cmid: number; quizId: number }>;
+  updateQuiz(token: string, input: UpdateQuizInput): Promise<void>;
   getQuizzesByCourse(token: string, courseId: number): Promise<QuizMeta[]>;
   getQuizByCmid(token: string, courseId: number, cmid: number): Promise<QuizMeta | null>;
   startAttempt(token: string, quizId: number): Promise<QuizAttempt>;
