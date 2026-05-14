@@ -29,6 +29,12 @@ export const queryKeys = {
     enriched:(courseId: string, cmidSignature: string) =>
       [...queryKeys.exercises.all, courseId, cmidSignature] as const,
   },
+  chat: {
+    all:           ['chat'] as const,
+    conversations: (userId: number) => [...queryKeys.chat.all, 'conversations', userId] as const,
+    conversation:  (userId: number, convId: number) => [...queryKeys.chat.all, 'conversation', userId, convId] as const,
+    unread:        (userId: number) => [...queryKeys.chat.all, 'unread', userId] as const,
+  },
   forum: {
     all:           ['forum'] as const,
     discussions:   (forumId: number) => [...queryKeys.forum.all, 'discussions', forumId] as const,

@@ -1,6 +1,7 @@
 import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { SECTION_COLORS } from '@/features/course-workspace/types/workspace.types';
 import { formatLastAccess } from '../utils/formatLastAccess';
+import { useChatDrawer } from '@/features/chat/useChatDrawer';
 import type { Participant } from '@/modules/course/domain/Participant';
 
 type StudentCardProps = {
@@ -10,6 +11,7 @@ type StudentCardProps = {
 
 export function StudentCard({ student, isCurrentUser }: StudentCardProps) {
   const now = useTimeNow();
+  const { openWithUser } = useChatDrawer();
   const colorIdx = Number(student.id) % SECTION_COLORS.length;
   const color = SECTION_COLORS[colorIdx];
   const initials = student.fullName
@@ -42,7 +44,7 @@ export function StudentCard({ student, isCurrentUser }: StudentCardProps) {
           />
         ) : (
           <div
-            className={`size-14 rounded-2xl bg-gradient-to-br ${color.grad} grid place-items-center text-white font-extrabold shadow-sm`}
+            className={`size-14 rounded-2xl bg-linear-to-br ${color.grad} grid place-items-center text-white font-extrabold shadow-sm`}
           >
             {initials}
           </div>
@@ -61,6 +63,7 @@ export function StudentCard({ student, isCurrentUser }: StudentCardProps) {
       {!isCurrentUser && (
         <button
           type="button"
+          onClick={() => openWithUser(Number(student.id))}
           className="mt-3 w-full text-xs font-extrabold py-2 rounded-xl bg-(--tint-50) hover:bg-emerald-100 text-(--fg-muted) hover:text-emerald-800 transition"
         >
           💬 Mensaje

@@ -1,16 +1,21 @@
-import { Bell, Mail } from 'lucide-react';
+import { Bell, MessageCircle, MessageCircleMore } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar/Avatar';
 import type { TopBarProps } from './topbar.types';
 
-export const TopBar = ({ user, onMessageClick, onNotificationClick }: TopBarProps) => (
+export const TopBar = ({ user, onMessageClick, onNotificationClick, unreadCount = 0 }: TopBarProps) => (
   <div className="flex items-center gap-4">
     <button
       type="button"
       onClick={onMessageClick}
       aria-label="Mensajes"
-      className="grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-emerald-50 transition"
+      className="relative grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-emerald-50 transition"
     >
-      <Mail className="size-5" />
+      {unreadCount > 0 ? <MessageCircleMore className="size-5" /> : <MessageCircle className="size-5" />}
+      {unreadCount > 0 && (
+        <span className="absolute -top-1.5 -right-1.5 size-5 rounded-full bg-rose-500 text-white text-[10px] font-extrabold grid place-items-center shadow-md">
+          {unreadCount > 9 ? '9+' : unreadCount}
+        </span>
+      )}
     </button>
     <button
       type="button"

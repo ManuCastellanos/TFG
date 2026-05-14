@@ -6,13 +6,19 @@ import { NAV_ITEMS } from './appLayout.constants';
 import { useAppLayout } from './useAppLayout';
 import { useLogout } from '@/features/session/hooks/useLogout';
 import { PageHeaderProvider, usePageHeader } from './pageHeader.context';
+import { ChatDrawerProvider } from '@/features/chat/ChatDrawerProvider';
+import { ChatModal } from '@/features/chat/components/ChatModal';
+import { useChatDrawer } from '@/features/chat/useChatDrawer';
+import { useUnreadCount } from '@/features/chat/hooks/useUnreadCount';
 
 function AppHeader({ user }: { user: Parameters<typeof TopBar>[0]['user'] }) {
   const { node } = usePageHeader();
+  const { open: openChat } = useChatDrawer();
+  const { data: unreadCount } = useUnreadCount();
   return (
     <header className="flex items-center gap-4 px-8 py-5 shrink-0">
       <div className="flex-1 min-w-0">{node}</div>
-      <TopBar user={user} />
+      <TopBar user={user} onMessageClick={openChat} unreadCount={unreadCount ?? 0} />
     </header>
   );
 }
@@ -28,19 +34,22 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { logout } = useLogout();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-(--bg)">
-      <Sidebar
-        navItems={NAV_ITEMS}
-        activePath={pathname}
-        onNavigate={(path) => (path === '/logout' ? logout() : navigate({ to: path }))}
-      />
+    <ChatDrawerProvider>
+      <div className="flex h-screen overflow-hidden bg-(--bg)">
+        <Sidebar
+          navItems={NAV_ITEMS}
+          activePath={pathname}
+          onNavigate={(path) => (path === '/logout' ? logout() : navigate({ to: path }))}
+        />
 
-      <PageHeaderProvider>
-        <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
-          <AppHeader user={user} />
-          {children}
-        </div>
-      </PageHeaderProvider>
-    </div>
+        <PageHeaderProvider>
+          <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
+            <AppHeader user={user} />
+            {children}
+          </div>
+        </PageHeaderProvider>
+      </div>
+      <ChatModal />
+    </ChatDrawerProvider>
   );
 }

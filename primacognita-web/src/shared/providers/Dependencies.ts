@@ -10,6 +10,7 @@ import AssignmentRepository from '@/modules/assignment/infrastructure/Assignment
 import UserStorage from '@/modules/user/infrastructure/UserStorage';
 import QuizRepository from '@/modules/quiz/infrastructure/QuizRepository';
 import ForumRepository from '@/modules/forum/infrastructure/ForumRepository';
+import ChatRepository from '@/modules/chat/infrastructure/ChatRepository';
 
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
@@ -22,6 +23,7 @@ import type IAssignmentRepository from '@/modules/assignment/domain/IAssignmentR
 import type IUserSessionStore from '@/modules/user/domain/IUserSessionStore';
 import type IQuizRepository from '@/modules/quiz/domain/IQuizRepository';
 import type IForumRepository from '@/modules/forum/domain/IForumRepository';
+import type IChatRepository from '@/modules/chat/domain/IChatRepository';
 
 
 export default class Dependencies {
@@ -36,6 +38,7 @@ export default class Dependencies {
   readonly userSessionStore: IUserSessionStore;
   readonly quizRepository: IQuizRepository;
   readonly forumRepository: IForumRepository;
+  readonly chatRepository: IChatRepository;
 
   private constructor(params: {
     moodleClient: IMoodleClient;
@@ -49,6 +52,7 @@ export default class Dependencies {
     userSessionStore: IUserSessionStore;
     quizRepository: IQuizRepository;
     forumRepository: IForumRepository;
+    chatRepository: IChatRepository;
   }) {
     this.moodleClient = params.moodleClient;
     this.authRepository = params.authRepository;
@@ -61,6 +65,7 @@ export default class Dependencies {
     this.userSessionStore = params.userSessionStore;
     this.quizRepository = params.quizRepository;
     this.forumRepository = params.forumRepository;
+    this.chatRepository = params.chatRepository;
   }
 
   static create(): Dependencies {
@@ -78,6 +83,7 @@ export default class Dependencies {
       userSessionStore: new UserStorage(),
       quizRepository: new QuizRepository(moodleClient),
       forumRepository: new ForumRepository(moodleClient),
+      chatRepository: new ChatRepository(moodleClient),
     });
   }
 }
