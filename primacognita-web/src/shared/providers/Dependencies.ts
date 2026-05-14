@@ -11,6 +11,7 @@ import UserStorage from '@/modules/user/infrastructure/UserStorage';
 import QuizRepository from '@/modules/quiz/infrastructure/QuizRepository';
 import ForumRepository from '@/modules/forum/infrastructure/ForumRepository';
 import ChatRepository from '@/modules/chat/infrastructure/ChatRepository';
+import NotificationRepository from '@/modules/notifications/infrastructure/NotificationRepository';
 
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
@@ -24,6 +25,7 @@ import type IUserSessionStore from '@/modules/user/domain/IUserSessionStore';
 import type IQuizRepository from '@/modules/quiz/domain/IQuizRepository';
 import type IForumRepository from '@/modules/forum/domain/IForumRepository';
 import type IChatRepository from '@/modules/chat/domain/IChatRepository';
+import type INotificationRepository from '@/modules/notifications/domain/INotificationRepository';
 
 
 export default class Dependencies {
@@ -39,6 +41,7 @@ export default class Dependencies {
   readonly quizRepository: IQuizRepository;
   readonly forumRepository: IForumRepository;
   readonly chatRepository: IChatRepository;
+  readonly notificationRepository: INotificationRepository;
 
   private constructor(params: {
     moodleClient: IMoodleClient;
@@ -53,6 +56,7 @@ export default class Dependencies {
     quizRepository: IQuizRepository;
     forumRepository: IForumRepository;
     chatRepository: IChatRepository;
+    notificationRepository: INotificationRepository;
   }) {
     this.moodleClient = params.moodleClient;
     this.authRepository = params.authRepository;
@@ -66,6 +70,7 @@ export default class Dependencies {
     this.quizRepository = params.quizRepository;
     this.forumRepository = params.forumRepository;
     this.chatRepository = params.chatRepository;
+    this.notificationRepository = params.notificationRepository;
   }
 
   static create(): Dependencies {
@@ -84,6 +89,7 @@ export default class Dependencies {
       quizRepository: new QuizRepository(moodleClient),
       forumRepository: new ForumRepository(moodleClient),
       chatRepository: new ChatRepository(moodleClient),
+      notificationRepository: new NotificationRepository(moodleClient),
     });
   }
 }

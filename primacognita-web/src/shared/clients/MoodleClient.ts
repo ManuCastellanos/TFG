@@ -30,11 +30,13 @@ export default class MoodleClient implements IMoodleClient {
 
     if (isMoodleWsError(json)) {
       const code = json.errorcode ? ` (${json.errorcode})` : "";
+      console.warn('[MoodleClient] Error en', wsFunction, params, json);
       throw new Error(`${json.error}${code}`);
     }
 
     if (isMoodleWsException(json)) {
       const code = json.errorcode ? ` (${json.errorcode})` : "";
+      console.warn('[MoodleClient] Excepción en', wsFunction, params, json);
       throw new Error(`${json.message}${code}`);
     }
 

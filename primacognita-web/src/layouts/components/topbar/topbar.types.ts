@@ -9,4 +9,5 @@ export type TopBarProps = {
   onMessageClick?: () => void;
   onNotificationClick?: () => void;
   unreadCount?: number;
+  unreadNotificationCount?: number;
 };
