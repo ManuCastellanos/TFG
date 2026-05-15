@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTimeNow } from "@/shared/hooks/useTimeNow";
 import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
 import type { EnrichedExercise, ExerciseState } from "../types/exercise.types";
 import { useDependencies } from "@/shared/providers/DependenciesProvider";
@@ -26,6 +27,7 @@ export function useEnrichedExercises({
   sections,
 }: UseEnrichedExercisesParams): Result {
   const { assignmentRepository, quizRepository } = useDependencies();
+  const now = useTimeNow();
   const sectionByCmid = useMemo(() => buildSectionMap(sections), [sections]);
 
   const queryKey = [
@@ -40,7 +42,6 @@ export function useEnrichedExercises({
     queryFn: async () => {
       const courseIdNum = Number(courseId);
       const userIdNum = Number(userId);
-      const now = Date.now();
 
       const dueByCmid: Record<number, number> = {};
       const maxByCmid: Record<number, number> = {};

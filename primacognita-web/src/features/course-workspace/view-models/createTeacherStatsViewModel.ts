@@ -16,19 +16,12 @@ type Inputs = {
   error: string | null;
 };
 
-export function createTeacherStatsViewModel({
-  sections,
-  participants,
-  assignments,
-  submissionsByAssign,
-  gradesByAssign,
-  loading,
-  error,
-}: Inputs): TeacherStatsData {
+export function createTeacherStatsViewModel(inputs: Inputs, now: number): TeacherStatsData {
+  const { sections, participants, assignments, submissionsByAssign, gradesByAssign, loading, error } = inputs;
   const students = participants.filter((p) => p.roleName && p.roleName.toLowerCase().includes('student'));
 
   const studentsCount = students.length;
-  const weekAgo = Date.now() - WEEK_MS;
+  const weekAgo = now - WEEK_MS;
   const activeCount = students.filter((s) => (s.lastCourseAccess ?? 0) >= weekAgo).length;
 
   const pendingMap: Record<number, number> = {};

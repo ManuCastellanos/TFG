@@ -25,7 +25,7 @@ export function ChatModal() {
       )}
 
       <div
-        className={`relative bg-white rounded-3xl border border-(--border) shadow-2xl w-full max-w-5xl h-[640px] flex overflow-hidden transition-all duration-300 pointer-events-auto ${
+        className={`relative bg-white rounded-3xl border border-(--border) shadow-2xl w-full max-w-5xl h-160 flex overflow-hidden transition-all duration-300 pointer-events-auto ${
           isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
         }`}
       >

@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button/Button';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { SkelBox, SkelLine } from '@/components/ui/skeleton';
 import type { UpcomingAssignment } from '@/modules/assignment/domain/UpcomingAssignment';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function UpcomingAssignmentsPanel({ upcoming, loading, onNavigate }: Props) {
-  const [now] = useState(() => Date.now());
+  const now = useTimeNow();
 
   if (loading) {
     return (

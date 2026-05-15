@@ -89,7 +89,7 @@ export function MessageThread() {
           {otherMember?.profileimageurl ? (
             <img src={otherMember.profileimageurl} alt={displayName} className="size-11 rounded-2xl object-cover shadow-sm" />
           ) : (
-            <div className={`size-11 rounded-2xl bg-gradient-to-br ${color.grad} grid place-items-center text-white font-extrabold shadow-sm`}>
+            <div className={`size-11 rounded-2xl bg-linear-to-br ${color.grad} grid place-items-center text-white font-extrabold shadow-sm`}>
               {initials}
             </div>
           )}

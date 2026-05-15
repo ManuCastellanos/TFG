@@ -25,7 +25,7 @@ export function MessageBubble({ message, isMine, member, showAvatar }: MessageBu
           member.profileimageurl ? (
             <img src={member.profileimageurl} alt={member.fullname} className="size-8 rounded-xl object-cover shrink-0" />
           ) : (
-            <div className={`size-8 rounded-xl bg-gradient-to-br ${color.grad} grid place-items-center text-white text-xs font-extrabold shrink-0`}>
+            <div className={`size-8 rounded-xl bg-linear-to-br ${color.grad} grid place-items-center text-white text-xs font-extrabold shrink-0`}>
               {member.fullname.charAt(0).toUpperCase()}
             </div>
           )

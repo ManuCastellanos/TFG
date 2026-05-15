@@ -24,11 +24,12 @@ function parseNote(plugins: SubmissionPluginRaw[] | undefined): string | undefin
 function calcSubmissionStatus(
   rawStatus: string | undefined,
   hasGrade: boolean,
+  now: number,
   dueDate?: number,
 ): AssignmentSubmissionStatus {
   if (hasGrade) return 'graded';
   if (rawStatus === 'submitted') {
-    if (dueDate && Date.now() > dueDate) return 'late';
+    if (dueDate && now > dueDate) return 'late';
     return 'submitted';
   }
   if (rawStatus === 'draft') return 'draft';
@@ -38,6 +39,7 @@ function calcSubmissionStatus(
 export function parseSubmissionStatus(
   response: SubmissionStatusResponse,
   dueDate?: number,
+  now: number = Date.now(),
 ): {
   submission: AssignmentSubmission;
   grade?: AssignmentGrade;
@@ -76,7 +78,7 @@ export function parseSubmissionStatus(
   const isGraded = gradeRaw != null;
   const isSubmitted = raw?.status === 'submitted' || raw?.status === 'reopened';
   const isDraft = raw?.status === 'draft';
-  const submissionStatus = calcSubmissionStatus(raw?.status, isGraded, dueDate);
+  const submissionStatus = calcSubmissionStatus(raw?.status, isGraded, now, dueDate);
 
   return { submission, grade, submissionStatus, isSubmitted, isDraft, isGraded };
 }

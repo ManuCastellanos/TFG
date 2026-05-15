@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
 import type { Notification, NotificationType } from '@/modules/notifications/domain/Notification';
 import { useMarkNotificationRead } from '../hooks/useMarkNotificationRead';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 
 const TYPE_META: Record<NotificationType, { emoji: string; tone: string }> = {
   assignment: { emoji: '📝', tone: 'bg-violet-100 text-violet-700' },
@@ -11,8 +12,8 @@ const TYPE_META: Record<NotificationType, { emoji: string; tone: string }> = {
   system:     { emoji: 'ℹ️', tone: 'bg-neutral-100 text-neutral-700' },
 };
 
-function formatWhen(timecreated: number): string {
-  const diff = Date.now() - timecreated * 1000;
+function formatWhen(timecreated: number, now: number): string {
+  const diff = now - timecreated * 1000;
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
@@ -36,6 +37,7 @@ export function NotificationItem({ n }: { n: Notification }) {
   const currentCourseId = params.id;
   const meta = TYPE_META[n.type];
   const markRead = useMarkNotificationRead();
+  const now = useTimeNow();
   const cmid = extractCmid(n.contexturl);
 
   const handleClick = () => {
@@ -75,7 +77,7 @@ export function NotificationItem({ n }: { n: Notification }) {
               {n.userfromfullname}
             </span>
           )}
-          <span className="text-[10px] font-bold text-(--fg-subtle)">{formatWhen(n.timecreated)}</span>
+          <span className="text-[10px] font-bold text-(--fg-subtle)">{formatWhen(n.timecreated, now)}</span>
         </div>
         <div className={`text-sm leading-snug ${n.read ? 'font-bold text-(--fg)' : 'font-extrabold text-(--fg)'}`}>
           {n.title}

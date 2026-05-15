@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from '@tanstack/react-router';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { Alert } from '@/components/ui/alert/Alert';
 import { useSession } from '@/shared/hooks/useSession';
 import { useCourseCustomization } from '@/shared/hooks/useCourseCustomization';
@@ -27,6 +28,7 @@ export default function CourseWorkspacePage() {
   const teacherData = useTeacherStats(caps.canReviewExercises ? token : null, courseId);
   const { upcoming: upcomingAssignments, loading: upcomingAssignmentsLoading } = useUpcomingAssignments(courseId);
 
+  const now = useTimeNow();
   const teacherStats = createTeacherStatsViewModel({
     sections: courseData.sections,
     participants,
@@ -35,7 +37,7 @@ export default function CourseWorkspacePage() {
     gradesByAssign: teacherData.gradesByAssign,
     loading: teacherData.loading,
     error: teacherData.error,
-  });
+  }, now);
 
   const viewModel = createCourseWorkspaceViewModel({
     roleName,

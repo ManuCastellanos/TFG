@@ -4,6 +4,7 @@ import { useClickOutside } from '@/shared/hooks/useClickOutside';
 import { useNotificationDrawer } from '../notificationContext';
 import { useNotifications } from '../hooks/useNotifications';
 import { useMarkAllNotificationsRead } from '../hooks/useMarkAllNotificationsRead';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { NotificationItem } from './NotificationItem';
 import type { Notification } from '@/modules/notifications/domain/Notification';
 
@@ -20,6 +21,7 @@ export function NotificationDropdown() {
   const [tab, setTab] = useState<TabId>('all');
   const { notifications, unreadCount, isLoading, isError, errorMessage } = useNotifications();
   const markAll = useMarkAllNotificationsRead();
+  const now = useTimeNow();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(dropdownRef, () => {
@@ -35,18 +37,18 @@ export function NotificationDropdown() {
   }, {} as Record<TabId, number>);
 
   const fresh = filtered.filter((n) => {
-    const diff = Date.now() - n.timecreated * 1000;
+    const diff = now - n.timecreated * 1000;
     return diff < 24 * 60 * 60 * 1000;
   });
   const older = filtered.filter((n) => {
-    const diff = Date.now() - n.timecreated * 1000;
+    const diff = now - n.timecreated * 1000;
     return diff >= 24 * 60 * 60 * 1000;
   });
 
   return (
     <div
       ref={dropdownRef}
-      className={`fixed right-8 top-[88px] z-40 w-[420px] bg-(--tint-100) border border-(--border)
+      className={`fixed right-8 top-22 z-40 w-105 bg-(--tint-100) border border-(--border)
         rounded-3xl shadow-2xl flex flex-col overflow-hidden
         transition-all duration-200 origin-top
         ${isOpen
@@ -120,7 +122,7 @@ export function NotificationDropdown() {
               ⚠️
             </div>
             <div className="font-extrabold text-(--fg) mb-1">No se pudieron cargar</div>
-            <div className="text-xs text-(--fg-muted) font-bold max-w-[280px] break-words">
+            <div className="text-xs text-(--fg-muted) font-bold max-w-70 wrap-break-word">
               {errorMessage ?? 'Error al conectar con el servidor.'}
             </div>
           </div>
