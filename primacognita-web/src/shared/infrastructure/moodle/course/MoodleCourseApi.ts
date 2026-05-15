@@ -13,16 +13,19 @@ import type { CategoryResponse } from '@/modules/course/infrastructure/CategoryR
 import type { CourseSectionResponse } from '@/modules/course/infrastructure/CourseContentsResponse';
 import type { ParticipantResponse } from '@/modules/course/infrastructure/ParticipantResponse';
 import { env } from '@/shared/utils/env';
+import type { CreateForumInput } from '@/modules/course/domain/CreateForumInput';
 
 export default class MoodleCourseApi implements IMoodleCourseApi {
   constructor(private readonly moodleClient: IMoodleClient) {}
 
   async createSection(token: string, input: CreateSectionInput): Promise<{ sectionId: number; sectionNum: number }> {
     const result = await this.moodleClient.call<{ sectionid: number; sectionnum: number }>(
-      token, 'local_primacognita_create_section', {
+      token,
+      'local_primacognita_create_section',
+      {
         courseid: String(input.courseId),
-        name:     input.name ?? '',
-        summary:  input.summary ?? '',
+        name: input.name ?? '',
+        summary: input.summary ?? '',
       },
     );
     return { sectionId: result.sectionid, sectionNum: result.sectionnum };
@@ -31,29 +34,39 @@ export default class MoodleCourseApi implements IMoodleCourseApi {
   async updateSection(token: string, input: UpdateSectionInput): Promise<void> {
     await this.moodleClient.call<unknown>(token, 'local_primacognita_update_section', {
       sectionid: String(input.sectionId),
-      name:      input.name ?? '',
-      summary:   input.summary ?? '',
-      visible:   input.visible === false ? '0' : '1',
+      name: input.name ?? '',
+      summary: input.summary ?? '',
+      visible: input.visible === false ? '0' : '1',
     });
   }
 
   async createResource(token: string, input: CreateResourceInput): Promise<{ cmid: number }> {
     return this.moodleClient.call<{ cmid: number }>(token, 'local_primacognita_create_resource', {
-      courseid:    String(input.courseId),
-      sectionnum:  String(input.sectionNum),
-      name:        input.name,
-      intro:       input.intro ?? '',
+      courseid: String(input.courseId),
+      sectionnum: String(input.sectionNum),
+      name: input.name,
+      intro: input.intro ?? '',
       draftitemid: String(input.draftItemId),
     });
   }
 
   async createUrl(token: string, input: CreateUrlInput): Promise<{ cmid: number }> {
     return this.moodleClient.call<{ cmid: number }>(token, 'local_primacognita_create_url', {
-      courseid:    String(input.courseId),
-      sectionnum:  String(input.sectionNum),
-      name:        input.name,
+      courseid: String(input.courseId),
+      sectionnum: String(input.sectionNum),
+      name: input.name,
       externalurl: input.externalUrl,
-      intro:       input.intro ?? '',
+      intro: input.intro ?? '',
+    });
+  }
+
+  async createForum(token: string, input: CreateForumInput): Promise<{ cmid: number; forumid: number }> {
+    return this.moodleClient.call<{ cmid: number; forumid: number }>(token, 'local_primacognita_create_forum', {
+      courseid: String(input.courseId),
+      sectionnum: String(input.sectionNum),
+      name: input.name,
+      intro: input.intro ?? '',
+      type: input.type ?? 'general',
     });
   }
 
@@ -202,11 +215,21 @@ export default class MoodleCourseApi implements IMoodleCourseApi {
   }
 
   async markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void> {
-    await this.moodleClient.call<unknown>(
-      token,
-      'core_completion_update_activity_completion_status_manually',
-      { cmid: String(cmId), completed: completed ? '1' : '0' },
-    );
+    await this.moodleClient.call<unknown>(token, 'core_completion_update_activity_completion_status_manually', {
+      cmid: String(cmId),
+      completed: completed ? '1' : '0',
+    });
+  }
+
+  async deleteModule(token: string, cmid: number): Promise<void> {
+    await this.moodleClient.call<unknown>(token, 'core_course_delete_modules', { 'cmids[0]': String(cmid) });
+  }
+
+  async deleteSection(token: string, courseId: number, sectionId: number): Promise<void> {
+    await this.moodleClient.call<unknown>(token, 'local_primacognita_delete_section', {
+      courseid: String(courseId),
+      sectionid: String(sectionId),
+    });
   }
 
   async getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]> {
@@ -219,28 +242,32 @@ export default class MoodleCourseApi implements IMoodleCourseApi {
       summary: s.summary?.trim() ? s.summary : null,
       modules: (s.modules ?? []).flatMap((m) => {
         if (m.uservisible === false || m.visible === 0) return [];
-        return [{
-          id: m.id,
-          cmid: m.cmid ?? m.id,
-          name: m.name,
-          modName: m.modname,
-          url: m.url ?? null,
-          visible: m.visible !== 0,
-          description: m.description?.trim() ?? m.contents?.[0]?.content?.trim() ?? null,
-          icon: m.modicon ?? undefined,
-          contents: (m.contents ?? []).map((c) => ({
-            type: c.type,
-            filename: c.filename,
-            fileurl: c.fileurl,
-            filesize: c.filesize,
-            mimetype: c.mimetype,
-          })),
-          completion: m.completiondata ? {
-            state: m.completiondata.state as 0 | 1 | 2 | 3,
-            hasCompletion: m.completiondata.hascompletion,
-            isAutomatic: m.completiondata.isautomatic,
-          } : undefined,
-        }];
+        return [
+          {
+            id: m.id,
+            cmid: m.cmid ?? m.id,
+            name: m.name,
+            modName: m.modname,
+            url: m.url ?? null,
+            visible: m.visible !== 0,
+            description: m.description?.trim() ?? m.contents?.[0]?.content?.trim() ?? null,
+            icon: m.modicon ?? undefined,
+            contents: (m.contents ?? []).map((c) => ({
+              type: c.type,
+              filename: c.filename,
+              fileurl: c.fileurl,
+              filesize: c.filesize,
+              mimetype: c.mimetype,
+            })),
+            completion: m.completiondata
+              ? {
+                  state: m.completiondata.state as 0 | 1 | 2 | 3,
+                  hasCompletion: m.completiondata.hascompletion,
+                  isAutomatic: m.completiondata.isautomatic,
+                }
+              : undefined,
+          },
+        ];
       }),
     }));
   }

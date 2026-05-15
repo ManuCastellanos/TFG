@@ -1,16 +1,21 @@
 import type IMoodleUserApi from './IMoodleUserApi';
+import type { CachedRole } from './IMoodleUserApi';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import type { User } from '@/modules/user/domain/User';
-import type { UserResponse, UserCoursesResponse, EnrolledUsersResponse } from '@/modules/user/infrastructure/UserResponse';
+import type {
+  UserResponse,
+  UserCoursesResponse,
+  EnrolledUsersResponse,
+} from '@/modules/user/infrastructure/UserResponse';
 
 const TEACHER_SHORTNAMES = new Set(['editingteacher', 'teacher']);
 
 export default class MoodleUserApi implements IMoodleUserApi {
   constructor(private readonly moodleClient: IMoodleClient) {}
 
-  async getCurrentUser(token: string): Promise<User> {
+  async getCurrentUser(token: string, cachedRole?: CachedRole): Promise<User> {
     const siteInfo = await this.moodleClient.call<UserResponse>(token, 'core_webservice_get_site_info', {});
-    const { roleId, roleName } = await this.getUserRole(token, siteInfo.userid);
+    const { roleId, roleName } = cachedRole ?? (await this.getUserRole(token, siteInfo.userid));
     return {
       id: String(siteInfo.userid),
       fullName: siteInfo.fullname,

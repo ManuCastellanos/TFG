@@ -7,7 +7,8 @@ const MODULE_META: Record<string, { label: string; emoji: string; soft: string; 
   assign: { label: 'Tarea', emoji: '📝', soft: 'bg-violet-100', text: 'text-violet-700' },
   workshop: { label: 'Taller', emoji: '🤝', soft: 'bg-pink-100', text: 'text-pink-700' },
   h5pactivity: { label: 'Actividad', emoji: '🎨', soft: 'bg-lime-100', text: 'text-lime-700' },
-  forum: { label: 'Anuncios', emoji: '📣', soft: 'bg-neutral-100', text: 'text-neutral-600' },
+  forum:    { label: 'Anuncios', emoji: '📣', soft: 'bg-neutral-100', text: 'text-neutral-600' },
+  resource: { label: 'Archivo',   emoji: '📄', soft: 'bg-neutral-100', text: 'text-neutral-600' },
 };
 
 export const getModuleMeta = (modName: string) =>
@@ -32,6 +33,8 @@ export type ModuleViewModel = {
   isInternal: boolean;
   showCompletion: boolean;
   pendingCount?: number;
+  downloadUrl?: string;
+  previewUrl?: string;
 };
 
 export type SectionViewModel = {
@@ -45,14 +48,27 @@ export type SectionViewModel = {
   teacherSectionProgress?: number;
 };
 
-const INTERNAL_MODULE_NAMES = ['assign', 'quiz'];
+const INTERNAL_MODULE_NAMES = ['assign', 'quiz', 'forum'];
 
 export { INTERNAL_MODULE_NAMES };
 
-export const toModuleVM = (module: CourseModule, pendingCount?: number): ModuleViewModel => {
+export const toModuleVM = (module: CourseModule, pendingCount?: number, token?: string): ModuleViewModel => {
   const meta = getModuleMeta(module.modName);
   const completion = module.completion;
   const isCompleted = (completion?.state ?? 0) >= 1;
+
+  const isResource = module.modName === 'resource';
+  const rawFileUrl = isResource ? (module.contents?.[0]?.fileurl ?? null) : null;
+
+  const withToken = (url: string) =>
+    url.includes('?') ? `${url}&token=${token}` : `${url}?token=${token}`;
+
+  const downloadUrl = rawFileUrl && token ? withToken(rawFileUrl) : undefined;
+
+  const cleanFileUrl = rawFileUrl
+    ? rawFileUrl.replace(/[?&]forcedownload=1/, '').replace(/\?&/, '?')
+    : null;
+  const previewUrl = cleanFileUrl && token ? withToken(cleanFileUrl) : undefined;
 
   return {
     id: module.id,
@@ -63,10 +79,12 @@ export const toModuleVM = (module: CourseModule, pendingCount?: number): ModuleV
     soft: meta.soft,
     text: meta.text,
     status: isCompleted ? 'completed' : 'pending',
-    url: module.url ?? null,
+    url: isResource ? null : (module.url ?? null),
     isInternal: INTERNAL_MODULE_NAMES.includes(module.modName),
     showCompletion: completion?.hasCompletion === true,
     pendingCount,
+    downloadUrl,
+    previewUrl,
   };
 };
 

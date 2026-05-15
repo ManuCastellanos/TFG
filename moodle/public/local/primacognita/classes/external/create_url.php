@@ -24,7 +24,7 @@ class create_url extends external_api {
         int $courseid, int $sectionnum, string $name,
         string $externalurl, string $intro = '',
     ): array {
-        global $CFG;
+        global $CFG, $DB;
         require_once($CFG->dirroot . '/course/modlib.php');
 
         $params = self::validate_parameters(self::execute_parameters(), [
@@ -44,6 +44,7 @@ class create_url extends external_api {
         $data = new \stdClass();
         $data->course       = $params['courseid'];
         $data->modulename   = 'url';
+        $data->module = $DB->get_record('modules', ['name' => $data->modulename], '*', MUST_EXIST)->id;
         $data->section      = $params['sectionnum'];
         $data->name         = $params['name'];
         $data->externalurl  = $params['externalurl'];

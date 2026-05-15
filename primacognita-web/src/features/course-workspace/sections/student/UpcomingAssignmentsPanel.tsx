@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button/Button';
+import { SkelBox, SkelLine } from '@/components/ui/skeleton';
 import type { UpcomingAssignment } from '@/modules/assignment/domain/UpcomingAssignment';
 
 type Props = {
@@ -11,7 +12,27 @@ type Props = {
 export function UpcomingAssignmentsPanel({ upcoming, loading, onNavigate }: Props) {
   const [now] = useState(() => Date.now());
 
-  if (loading || upcoming.length === 0) return null;
+  if (loading) {
+    return (
+      <div className="bg-white rounded-3xl p-5 border border-(--border)">
+        <SkelLine w={140} h={14} className="mb-3" />
+        <div className="flex flex-col gap-2">
+          {[0, 1].map((i) => (
+            <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border border-(--border)">
+              <SkelBox w={40} h={40} r={12} />
+              <div className="flex-1 flex flex-col gap-1.5">
+                <SkelLine w={`${55 + i * 15}%`} h={12} />
+                <SkelLine w="35%" h={9} />
+              </div>
+              <SkelBox w={36} h={28} r={8} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (upcoming.length === 0) return null;
 
   return (
     <div className="bg-white rounded-3xl p-5 border border-(--border)">
@@ -27,9 +48,11 @@ export function UpcomingAssignmentsPanel({ upcoming, loading, onNavigate }: Prop
                 urgent ? 'bg-rose-50 border-rose-200' : 'bg-orange-50 border-orange-200'
               }`}
             >
-              <div className={`size-10 rounded-xl grid place-items-center text-lg shrink-0 ${
-                urgent ? 'bg-rose-200 text-rose-700' : 'bg-orange-200 text-orange-700'
-              }`}>
+              <div
+                className={`size-10 rounded-xl grid place-items-center text-lg shrink-0 ${
+                  urgent ? 'bg-rose-200 text-rose-700' : 'bg-orange-200 text-orange-700'
+                }`}
+              >
                 📝
               </div>
               <div className="flex-1 min-w-0">

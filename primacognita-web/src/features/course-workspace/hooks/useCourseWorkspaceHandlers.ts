@@ -32,6 +32,8 @@ export function useCourseWorkspaceHandlers(
     (module: CourseModule) => {
       if (module.modName === 'quiz') {
         void navigate({ to: '/courses/$courseId/quiz/$quizId', params: { courseId, quizId: String(module.cmid) } });
+      } else if (module.modName === 'forum') {
+        void navigate({ to: '/courses/$courseId/forum/$cmid', params: { courseId, cmid: String(module.cmid) } });
       } else {
         void navigate({ to: '/courses/$courseId/assignment/$cmid', params: { courseId, cmid: String(module.cmid) } });
       }

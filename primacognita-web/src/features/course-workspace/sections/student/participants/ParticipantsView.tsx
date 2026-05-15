@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSession } from '@/shared/hooks/useSession';
 import { isTeacherRole } from '@/modules/user/domain/User';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
-import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
+import { SectionListSkeleton } from '@/components/patterns/sectionSkeleton/SectionListSkeleton';
 import { StudentCard } from './components/StudentCard';
 import { TeacherCard } from './components/TeacherCard';
 import { TipCard } from './components/TipCard';
@@ -20,22 +20,14 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
   const teacher = participants.find((p) => isTeacherRole(p.roleName));
   const students = participants.filter((p) => !isTeacherRole(p.roleName));
 
-  const filteredStudents = students.filter((p) =>
-    p.fullName.toLowerCase().includes(query.toLowerCase()),
-  );
+  const filteredStudents = students.filter((p) => p.fullName.toLowerCase().includes(query.toLowerCase()));
 
   if (loading) {
-    return <LoadingState emoji="👥" label="Cargando participantes…" />;
+    return <SectionListSkeleton />;
   }
 
   if (participants.length === 0) {
-    return (
-      <EmptyState
-        emoji="👥"
-        title="Sin participantes"
-        subtitle="No hay participantes en este curso."
-      />
-    );
+    return <EmptyState emoji="👥" title="Sin participantes" subtitle="No hay participantes en este curso." />;
   }
 
   return (
@@ -45,9 +37,7 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-extrabold text-(--fg)">Tus compañeros</h3>
-              <p className="text-sm text-(--fg-muted)">
-                {students.length} alumnos en esta clase
-              </p>
+              <p className="text-sm text-(--fg-muted)">{students.length} alumnos en esta clase</p>
             </div>
             <div className="relative">
               <input
@@ -77,11 +67,7 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
           ) : (
             <div className="grid grid-cols-3 gap-3">
               {filteredStudents.map((s) => (
-                <StudentCard
-                  key={s.id}
-                  student={s}
-                  isCurrentUser={s.id === userId}
-                />
+                <StudentCard key={s.id} student={s} isCurrentUser={s.id === userId} />
               ))}
             </div>
           )}

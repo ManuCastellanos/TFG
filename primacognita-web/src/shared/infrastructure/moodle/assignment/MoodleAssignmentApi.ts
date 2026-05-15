@@ -92,16 +92,31 @@ export default class MoodleAssignmentApi implements IMoodleAssignmentApi {
     if (note) {
       params['plugindata[onlinetext_editor][text]'] = note;
       params['plugindata[onlinetext_editor][format]'] = '1';
-      params['plugindata[onlinetext_editor][itemid]'] = String(draftItemId);
+      params['plugindata[onlinetext_editor][itemid]'] = '0';
     }
-    await this.moodleClient.call<unknown>(token, 'mod_assign_save_submission', params);
+    // mod_assign_save_submission returns an array of warnings on failure (not exceptions)
+    const warnings = await this.moodleClient.call<Array<{ warningcode: string; message: string }>>(
+      token, 'mod_assign_save_submission', params,
+    );
+    if (Array.isArray(warnings) && warnings.length > 0) {
+      console.error('[saveSubmission] Moodle warnings:', warnings);
+      // `item` contains the human-readable reason; `message` is the generic "Could not save submission."
+      throw new Error(warnings[0].item ?? warnings[0].message ?? warnings[0].warningcode);
+    }
   }
 
   async submitForGrading(token: string, assignId: number): Promise<void> {
-    await this.moodleClient.call<unknown>(token, 'mod_assign_submit_for_grading', {
-      assignmentid: String(assignId),
-      acceptsubmissionstatement: '1',
-    });
+    // Returns warnings array — non-empty is expected when submissiondrafts=0 (already submitted)
+    // so we only log the result without throwing
+    const warnings = await this.moodleClient.call<Array<{ warningcode: string; message: string }>>(
+      token, 'mod_assign_submit_for_grading', {
+        assignmentid: String(assignId),
+        acceptsubmissionstatement: '1',
+      },
+    );
+    if (Array.isArray(warnings) && warnings.length > 0) {
+      console.warn('[submitForGrading] Moodle warnings (expected when submissiondrafts=0):', warnings);
+    }
   }
 
   async getAssignmentsForCourse(token: string, courseId: number): Promise<AssignmentMeta[]> {
@@ -215,14 +230,22 @@ export default class MoodleAssignmentApi implements IMoodleAssignmentApi {
   async createAssignment(token: string, input: CreateAssignmentInput): Promise<{ cmid: number; assignmentId: number }> {
     const result = await this.moodleClient.call<{ cmid: number; assignmentid: number }>(
       token, 'local_primacognita_create_assignment', {
-        courseid:   String(input.courseId),
-        sectionnum: String(input.sectionNum),
-        name:       input.name,
-        intro:      input.intro ?? '',
-        duedate:    String(input.dueDate ? Math.floor(input.dueDate / 1000) : 0),
-        maxgrade:   String(input.maxGrade),
-        allowfile:  input.allowFile ? '1' : '0',
-        allowtext:  input.allowText ? '1' : '0',
+        courseid:                 String(input.courseId),
+        sectionnum:               String(input.sectionNum),
+        name:                     input.name,
+        intro:                    input.intro ?? '',
+        allowsubmissionsfromdate: String(input.allowSubmissionsFromDate ? Math.floor(input.allowSubmissionsFromDate / 1000) : 0),
+        duedate:                  String(input.dueDate ? Math.floor(input.dueDate / 1000) : 0),
+        cutoffdate:               String(input.cutoffDate ? Math.floor(input.cutoffDate / 1000) : 0),
+        maxgrade:                 String(input.maxGrade),
+        gradepass:                String(input.gradePass ?? 0),
+        allowfile:                input.allowFile ? '1' : '0',
+        allowtext:                input.allowText ? '1' : '0',
+        maxfilesubmissions:       String(input.maxFileSubmissions ?? 1),
+        acceptedfiletypes:        input.acceptedFileTypes ?? '',
+        submissiondrafts:         input.submissionDrafts ? '1' : '0',
+        sendnotifications:        input.sendNotifications ? '1' : '0',
+        activitydraftitemid:      String(input.activityDraftItemId ?? 0),
       },
     );
     return { cmid: result.cmid, assignmentId: result.assignmentid };

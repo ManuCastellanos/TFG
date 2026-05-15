@@ -4,9 +4,11 @@ import { coursesRoute } from './courses.route';
 import { createCourseRoute } from './create-course.route';
 import { courseRoute } from './course.route';
 import { assignmentRoute } from './assignment.route';
+import { createAssignmentRoute } from './create-assignment.route';
 import { quizAttemptRoute } from './quiz-attempt.route';
 import { quizPreviewRoute } from './quiz-preview.route';
 import { quizReviewRoute } from './quiz-review.route';
+import { forumRoute } from './forum.route';
 
 export const appRoutes = layoutRoute.addChildren([
   dashboardRoute,
@@ -14,7 +16,9 @@ export const appRoutes = layoutRoute.addChildren([
   createCourseRoute,
   courseRoute,
   assignmentRoute,
+  createAssignmentRoute,
   quizPreviewRoute,
   quizAttemptRoute,
   quizReviewRoute,
+  forumRoute,
 ]);

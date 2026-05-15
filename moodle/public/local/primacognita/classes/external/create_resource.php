@@ -24,8 +24,10 @@ class create_resource extends external_api {
         int $courseid, int $sectionnum, string $name,
         string $intro = '', int $draftitemid = 0,
     ): array {
-        global $CFG;
+        global $CFG, $DB;
         require_once($CFG->dirroot . '/course/modlib.php');
+        require_once($CFG->dirroot . '/mod/resource/lib.php');
+        require_once($CFG->dirroot . '/mod/resource/locallib.php');
 
         $params = self::validate_parameters(self::execute_parameters(), [
             'courseid'    => $courseid,
@@ -42,14 +44,21 @@ class create_resource extends external_api {
         $course = get_course($params['courseid']);
 
         $data = new \stdClass();
-        $data->course      = $params['courseid'];
-        $data->modulename  = 'resource';
-        $data->section     = $params['sectionnum'];
-        $data->name        = $params['name'];
-        $data->intro       = $params['intro'];
+        
+        $data->course = $params['courseid'];
+        $data->modulename = 'resource';
+        $data->module = $DB->get_record('modules', ['name' => $data->modulename], '*', MUST_EXIST)->id;
+        $data->section = $params['sectionnum'];
+        
+        $data->name = $params['name'];
+        
+        $data->intro = $params['intro'];
         $data->introformat = FORMAT_HTML;
-        $data->files       = $params['draftitemid'];
-        $data->visible     = 1;
+        
+        $data->files   = $params['draftitemid'];
+        $data->display = RESOURCELIB_DISPLAY_AUTO;
+        
+        $data->visible = 1;
 
         $mod = add_moduleinfo($data, $course);
         return ['cmid' => (int) $mod->coursemodule];

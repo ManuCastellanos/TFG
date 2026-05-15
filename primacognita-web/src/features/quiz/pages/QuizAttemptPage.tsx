@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button/Button';
 import { RichText } from '@/components/ui/rich-text/RichText';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
+import { QuizContentSkeleton } from '../components/QuizContentSkeleton';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
 import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseQuizQuestion } from '../utils/parseQuizQuestion';
@@ -16,8 +17,9 @@ export default function QuizAttemptPage() {
     quizId: string;
   };
 
-  const { attempt, questions, answers, loading, saving, error, setAnswer, clearAnswer, submit } =
-    useQuizAttempt(Number(quizId));
+  const { attempt, questions, answers, loading, saving, error, setAnswer, clearAnswer, submit } = useQuizAttempt(
+    Number(quizId),
+  );
   const { set: setPageHeader } = usePageHeader();
 
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -96,18 +98,18 @@ export default function QuizAttemptPage() {
   // ── Loading screen ────────────────────────────────────────────────────────
 
   if (loading && questions.length === 0) {
-    return (
-      <Page>
-        <span className="text-sm text-(--fg-muted)">Cargando cuestionario…</span>
-      </Page>
-    );
+    return <QuizContentSkeleton />;
   }
 
   // ── Resolution screen ─────────────────────────────────────────────────────
 
   return (
     <Page>
-      {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+      {error && (
+        <Alert variant="error" className="mb-4">
+          {error}
+        </Alert>
+      )}
 
       {/* Progress bar */}
       {total > 0 && (
@@ -179,7 +181,7 @@ export default function QuizAttemptPage() {
                       <button
                         key={`${opt.name}-${opt.value}`}
                         type="button"
-                        onClick={() => selected ? clearAnswer(opt.name) : setAnswer(opt.name, opt.value)}
+                        onClick={() => (selected ? clearAnswer(opt.name) : setAnswer(opt.name, opt.value))}
                         className={`flex items-center gap-3 p-4 rounded-2xl border-2 text-left transition ${
                           selected
                             ? 'border-orange-500 bg-orange-50'
@@ -193,7 +195,11 @@ export default function QuizAttemptPage() {
                         >
                           {String.fromCharCode(97 + i)}
                         </div>
-                        <RichText html={opt.label} className="text-sm font-bold text-(--fg) flex-1 leading-snug" as="span" />
+                        <RichText
+                          html={opt.label}
+                          className="text-sm font-bold text-(--fg) flex-1 leading-snug"
+                          as="span"
+                        />
                         {selected && (
                           <svg
                             className="size-5 text-orange-600 shrink-0"
@@ -260,9 +266,7 @@ export default function QuizAttemptPage() {
           {/* Right: question palette */}
           <div className="flex flex-col gap-4">
             <div className="bg-white rounded-3xl border border-(--border) p-5">
-              <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">
-                Navegación
-              </div>
+              <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">Navegación</div>
               <h3 className="font-semibold text-(--fg) mb-4">Preguntas</h3>
               <div className="grid grid-cols-5 gap-2 mb-4">
                 {parsed.map((item) => {

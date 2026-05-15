@@ -1,13 +1,12 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:is(.dark *));
-
 
 @theme inline {
   /* -------------------------
      Typography
      ------------------------- */
-  --font-sans: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* -------------------------
      Neutral scale
@@ -68,8 +67,8 @@
   --sidebar-bg: rgba(255, 255, 255, 0.88);
   --sidebar-fg: var(--neutral-700);
   --sidebar-border: rgba(228, 231, 228, 0.9);
-  --sidebar-active-bg: #274E38;
-  --sidebar-profile: #468B64;
+  --sidebar-active-bg: #274e38;
+  --sidebar-profile: #468b64;
   --sidebar-active-fg: var(--neutral-0);
   --sidebar-hover-bg: var(--neutral-100);
 
@@ -89,7 +88,7 @@
   --calendar-cell-selected-fg: var(--neutral-0);
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-  --shadow-md: 0 8px 24px -12px rgb(0 0 0 / 0.10);
+  --shadow-md: 0 8px 24px -12px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 20px 40px -20px rgb(0 0 0 / 0.14);
 
   /* -------------------------
@@ -293,54 +292,54 @@
   /* -------------------------
      Semantic aliases for quick course usage
      ------------------------- */
-     /* Course gradients */
-     --course-red-from: var(--red-300);
-     --course-red-to: var(--red-600);
-   
-     --course-orange-from: var(--orange-200);
-     --course-orange-to: var(--orange-500);
-   
-     --course-yellow-from: var(--yellow-200);
-     --course-yellow-to: var(--yellow-500);
-   
-     --course-lime-from: var(--lime-200);
-     --course-lime-to: var(--lime-500);
-   
-     --course-green-from: var(--green-300);
-     --course-green-to: var(--green-500);
-   
-     --course-emerald-from: var(--emerald-300);
-     --course-emerald-to: var(--emerald-500);
-   
-     --course-teal-from: var(--teal-200);
-     --course-teal-to: var(--teal-500);
-   
-     --course-cyan-from: var(--cyan-300);
-     --course-cyan-to: var(--cyan-500);
-   
-     --course-sky-from: var(--sky-300);
-     --course-sky-to: var(--sky-500);
-   
-     --course-blue-from: var(--blue-300);
-     --course-blue-to: var(--blue-500);
-   
-     --course-indigo-from: var(--indigo-300);
-     --course-indigo-to: var(--indigo-500);
-   
-     --course-violet-from: var(--violet-300);
-     --course-violet-to: var(--violet-500);
-   
-     --course-purple-from: var(--purple-300);
-     --course-purple-to: var(--purple-500);
-   
-     --course-fuchsia-from: var(--fuchsia-300);
-     --course-fuchsia-to: var(--fuchsia-500);
-   
-     --course-pink-from: var(--pink-300);
-     --course-pink-to: var(--pink-500);
-   
-     --course-rose-from: var(--rose-300);
-     --course-rose-to: var(--rose-500);
+  /* Course gradients */
+  --course-red-from: var(--red-300);
+  --course-red-to: var(--red-600);
+
+  --course-orange-from: var(--orange-200);
+  --course-orange-to: var(--orange-500);
+
+  --course-yellow-from: var(--yellow-200);
+  --course-yellow-to: var(--yellow-500);
+
+  --course-lime-from: var(--lime-200);
+  --course-lime-to: var(--lime-500);
+
+  --course-green-from: var(--green-300);
+  --course-green-to: var(--green-500);
+
+  --course-emerald-from: var(--emerald-300);
+  --course-emerald-to: var(--emerald-500);
+
+  --course-teal-from: var(--teal-200);
+  --course-teal-to: var(--teal-500);
+
+  --course-cyan-from: var(--cyan-300);
+  --course-cyan-to: var(--cyan-500);
+
+  --course-sky-from: var(--sky-300);
+  --course-sky-to: var(--sky-500);
+
+  --course-blue-from: var(--blue-300);
+  --course-blue-to: var(--blue-500);
+
+  --course-indigo-from: var(--indigo-300);
+  --course-indigo-to: var(--indigo-500);
+
+  --course-violet-from: var(--violet-300);
+  --course-violet-to: var(--violet-500);
+
+  --course-purple-from: var(--purple-300);
+  --course-purple-to: var(--purple-500);
+
+  --course-fuchsia-from: var(--fuchsia-300);
+  --course-fuchsia-to: var(--fuchsia-500);
+
+  --course-pink-from: var(--pink-300);
+  --course-pink-to: var(--pink-500);
+
+  --course-rose-from: var(--rose-300);
+  --course-rose-to: var(--rose-500);
 }
 
 /* -------------------------
@@ -396,7 +395,7 @@
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.25);
   --shadow-md: 0 10px 28px -12px rgb(0 0 0 / 0.32);
-  --shadow-lg: 0 24px 48px -24px rgb(0 0 0 / 0.40);
+  --shadow-lg: 0 24px 48px -24px rgb(0 0 0 / 0.4);
 }
 
 /* -------------------------
@@ -428,6 +427,74 @@ body {
 ::selection {
   background: color-mix(in srgb, var(--course-emerald) 24%, white);
   color: var(--fg);
+}
+
+/* ─── Skeleton animations ─────────────────────────────────────────────────── */
+
+@keyframes pc-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes pc-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+@keyframes pc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pc-bounce-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes pc-progress-indeterminate {
+  0% {
+    left: -40%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -40%;
+  }
+  100% {
+    left: 100%;
+    right: -40%;
+  }
+}
+
+.pc-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(231, 241, 235, 0.6) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(231, 241, 235, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: pc-shimmer 1.6s ease-in-out infinite;
+}
+.pc-pulse {
+  animation: pc-pulse 1.6s ease-in-out infinite;
+}
+.pc-spin {
+  animation: pc-spin 0.9s linear infinite;
+}
+.pc-bounce {
+  animation: pc-bounce-soft 1.2s ease-in-out infinite;
 }
 
 /* ─── Moodle question HTML renderer ───────────────────────────────────────── */
@@ -470,7 +537,9 @@ body {
   border: 2px solid var(--border);
   background: white;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .moodle-q .answer > div:has(input:checked) {
@@ -484,8 +553,8 @@ body {
 }
 
 /* Inputs inside answer rows */
-.moodle-q .answer input[type="radio"],
-.moodle-q .answer input[type="checkbox"] {
+.moodle-q .answer input[type='radio'],
+.moodle-q .answer input[type='checkbox'] {
   width: 1.1rem;
   height: 1.1rem;
   accent-color: #f97316;

@@ -37,6 +37,8 @@ export function useAssignmentSubmission(): UseAssignmentSubmissionResult {
     setError(null);
     try {
       await assignmentRepository.saveSubmission(token, assignId, draftItemId, note);
+      // submitForGrading is needed when submissiondrafts=1. When submissiondrafts=0 the save
+      // already finalizes, so Moodle returns a warning (handled inside submitForGrading, no throw).
       await assignmentRepository.submitForGrading(token, assignId);
       return true;
     } catch (e) {

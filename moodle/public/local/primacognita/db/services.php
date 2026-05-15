@@ -58,6 +58,20 @@ $functions = [
         'type'         => 'write',
         'capabilities' => 'moodle/course:manageactivities',
     ],
+    'local_primacognita_create_forum' => [
+        'classname'    => 'local_primacognita\external\create_forum',
+        'methodname'   => 'execute',
+        'description'  => 'Crea un foro en el curso.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_delete_section' => [
+        'classname'    => 'local_primacognita\external\delete_section',
+        'methodname'   => 'execute',
+        'description'  => 'Elimina una sección del curso.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:update',
+    ],
 ];
 
 $services = [

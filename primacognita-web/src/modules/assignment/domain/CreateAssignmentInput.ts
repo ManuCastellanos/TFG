@@ -3,10 +3,18 @@ export type CreateAssignmentInput = {
   sectionNum: number;
   name: string;
   intro?: string;
+  allowSubmissionsFromDate?: number;
   dueDate?: number;
+  cutoffDate?: number;
   maxGrade: number;
+  gradePass?: number;
   allowFile: boolean;
   allowText: boolean;
+  maxFileSubmissions?: number;
+  acceptedFileTypes?: string;
+  submissionDrafts?: boolean;
+  sendNotifications?: boolean;
+  activityDraftItemId?: number;
 };
 
 export type UpdateAssignmentInput = {

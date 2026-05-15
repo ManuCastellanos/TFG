@@ -5,6 +5,7 @@ import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
+import { QuizContentSkeleton } from '../components/QuizContentSkeleton';
 import { ResultBanner } from '@/features/quiz/components/ResultBanner';
 import { useQuizMeta } from '../hooks/useQuizMeta';
 import { useQuizPreview } from '../hooks/useQuizPreview';
@@ -149,12 +150,7 @@ function QuizPreviewWithAttempts({
       <div className="grid grid-cols-[1fr_300px] gap-6">
         <div className="flex flex-col gap-5">
           {normalizedGrade != null ? (
-            <ResultBanner
-              grade={normalizedGrade}
-              maxGrade={meta.gradeMax}
-              passGrade={passGrade}
-              title={meta.title}
-            />
+            <ResultBanner grade={normalizedGrade} maxGrade={meta.gradeMax} passGrade={passGrade} title={meta.title} />
           ) : (
             <div className="bg-white rounded-3xl border border-(--border) p-6 flex items-center gap-4">
               <div className="size-14 rounded-2xl bg-emerald-100 grid place-items-center text-2xl shrink-0">✅</div>
@@ -177,9 +173,7 @@ function QuizPreviewWithAttempts({
                 const normalizedScore = attemptGrades[a.id] != null ? parseFloat(attemptGrades[a.id]) : null;
                 const attemptPassed = normalizedScore != null && normalizedScore >= passGrade;
                 const isBest = bestAttemptId === a.id;
-                const duration = a.timeFinish > 0
-                  ? formatDuration(a.timeFinish - a.timeStart)
-                  : '-';
+                const duration = a.timeFinish > 0 ? formatDuration(a.timeFinish - a.timeStart) : '-';
                 return (
                   <div
                     key={a.id}
@@ -187,24 +181,26 @@ function QuizPreviewWithAttempts({
                       isBest ? 'border-emerald-200 bg-emerald-50/50' : 'border-(--border) hover:bg-(--tint-50)'
                     }`}
                   >
-                    <div className={`size-9 rounded-xl grid place-items-center font-extrabold text-sm shrink-0 ${
-                      isBest ? 'bg-emerald-200 text-emerald-900' : 'bg-(--tint-100) text-(--fg-muted)'
-                    }`}>
+                    <div
+                      className={`size-9 rounded-xl grid place-items-center font-extrabold text-sm shrink-0 ${
+                        isBest ? 'bg-emerald-200 text-emerald-900' : 'bg-(--tint-100) text-(--fg-muted)'
+                      }`}
+                    >
                       #{a.attemptNumber}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-extrabold text-(--fg) text-sm">
-                          Intento {a.attemptNumber}
-                        </span>
+                        <span className="font-extrabold text-(--fg) text-sm">Intento {a.attemptNumber}</span>
                         {isBest && (
                           <span className="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500 text-white rounded-full px-1.5 py-0.5">
                             MEJOR
                           </span>
                         )}
-                        <span className={`text-[10px] font-extrabold uppercase tracking-wider rounded-full px-1.5 py-0.5 ${
-                          attemptPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
-                        }`}>
+                        <span
+                          className={`text-[10px] font-extrabold uppercase tracking-wider rounded-full px-1.5 py-0.5 ${
+                            attemptPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                          }`}
+                        >
                           {attemptPassed ? 'APROBADO' : 'SUSPENSO'}
                         </span>
                       </div>
@@ -215,7 +211,10 @@ function QuizPreviewWithAttempts({
                     <div className="text-right shrink-0">
                       {attemptGrades[a.id] != null ? (
                         <span className="text-lg font-extrabold text-(--fg)">
-                          {parseFloat(attemptGrades[a.id]).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          {parseFloat(attemptGrades[a.id]).toLocaleString('es-ES', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                           <span className="text-xs font-bold text-(--fg-subtle)"> / {formatGrade(meta.gradeMax)}</span>
                         </span>
                       ) : a.sumGrades != null ? (
@@ -270,9 +269,7 @@ function QuizPreviewWithAttempts({
               tone={passed ? 'success' : 'warning'}
             />
           )}
-          {meta.dueDate && (
-            <InfoChip icon="🔴" label="Cierra" value={formatDate(meta.dueDate)} />
-          )}
+          {meta.dueDate && <InfoChip icon="🔴" label="Cierra" value={formatDate(meta.dueDate)} />}
         </div>
       </div>
     </Page>
@@ -281,13 +278,7 @@ function QuizPreviewWithAttempts({
 
 // ─── Quiz preview — no previous attempts ─────────────────────────────────────
 
-function QuizPreviewEmpty({
-  meta,
-  onStart,
-}: {
-  meta: QuizMeta;
-  onStart: () => void;
-}) {
+function QuizPreviewEmpty({ meta, onStart }: { meta: QuizMeta; onStart: () => void }) {
   const passGrade = meta.gradePass ?? meta.gradeMax * 0.5;
 
   return (
@@ -296,7 +287,9 @@ function QuizPreviewEmpty({
         <div className="flex flex-col gap-5">
           <div className="bg-white rounded-3xl border border-(--border) p-6">
             <div className="flex items-start gap-4 mb-5">
-              <div className="size-12 rounded-2xl bg-orange-100 text-orange-700 grid place-items-center text-2xl shrink-0">🧩</div>
+              <div className="size-12 rounded-2xl bg-orange-100 text-orange-700 grid place-items-center text-2xl shrink-0">
+                🧩
+              </div>
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-(--fg) mb-1">¿Listo para empezar?</h2>
                 <p className="text-sm text-(--fg-muted)">
@@ -307,18 +300,14 @@ function QuizPreviewEmpty({
             <div className="grid grid-cols-3 gap-3 mb-5">
               <div className="rounded-2xl bg-(--tint-50) border border-(--border) p-3 text-center">
                 <div className="text-2xl">🎯</div>
-                <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">
-                  {formatGrade(passGrade)}
-                </div>
+                <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">{formatGrade(passGrade)}</div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-(--fg-subtle) mt-0.5">
                   Para aprobar
                 </div>
               </div>
               <div className="rounded-2xl bg-(--tint-50) border border-(--border) p-3 text-center">
                 <div className="text-2xl">🏆</div>
-                <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">
-                  {formatGrade(meta.gradeMax)}
-                </div>
+                <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">{formatGrade(meta.gradeMax)}</div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-(--fg-subtle) mt-0.5">
                   Nota máx.
                 </div>
@@ -326,9 +315,7 @@ function QuizPreviewEmpty({
               <div className="rounded-2xl bg-(--tint-50) border border-(--border) p-3 text-center">
                 <div className="text-2xl">🔄</div>
                 <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">∞</div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-(--fg-subtle) mt-0.5">
-                  Intentos
-                </div>
+                <div className="text-[10px] font-bold uppercase tracking-wider text-(--fg-subtle) mt-0.5">Intentos</div>
               </div>
             </div>
             <Button
@@ -410,11 +397,7 @@ export default function QuizPreviewPage() {
   };
 
   if (loading) {
-    return (
-      <Page>
-        <span className="text-sm text-(--fg-muted)">Cargando…</span>
-      </Page>
-    );
+    return <QuizContentSkeleton />;
   }
 
   if (error) {
@@ -440,10 +423,5 @@ export default function QuizPreviewPage() {
     );
   }
 
-  return (
-    <QuizPreviewEmpty
-      meta={meta}
-      onStart={handleStart}
-    />
-  );
+  return <QuizPreviewEmpty meta={meta} onStart={handleStart} />;
 }

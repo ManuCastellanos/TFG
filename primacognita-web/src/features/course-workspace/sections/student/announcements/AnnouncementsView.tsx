@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTimeNow } from '@/shared/hooks/useTimeNow';
-import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
+import { SectionListSkeleton } from '@/components/patterns/sectionSkeleton/SectionListSkeleton';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Button } from '@/components/ui/button/Button';
@@ -56,7 +56,7 @@ export function AnnouncementsView({ courseId }: AnnouncementsViewProps) {
   };
 
   if (loadingForums) {
-    return <LoadingState emoji="📣" label="Cargando anuncios…" />;
+    return <SectionListSkeleton />;
   }
 
   if (forumsError) {
@@ -79,43 +79,28 @@ export function AnnouncementsView({ courseId }: AnnouncementsViewProps) {
         {isTeacher && (
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-(--fg)">{forum.name}</h2>
-            {!showNewForm && (
-              <Button onClick={() => setShowNewForm(true)}>Nuevo anuncio</Button>
-            )}
+            {!showNewForm && <Button onClick={() => setShowNewForm(true)}>Nuevo anuncio</Button>}
           </div>
         )}
 
-        {addDiscussion.error && (
-          <Alert variant="error">{(addDiscussion.error as Error).message}</Alert>
-        )}
+        {addDiscussion.error && <Alert variant="error">{(addDiscussion.error as Error).message}</Alert>}
 
         {isTeacher && showNewForm && (
-          <NewDiscussionForm
-            onSubmit={handleNewDiscussion}
-            onCancel={() => setShowNewForm(false)}
-          />
+          <NewDiscussionForm onSubmit={handleNewDiscussion} onCancel={() => setShowNewForm(false)} />
         )}
 
         {loadingDiscussions ? (
-          <LoadingState emoji="💬" label="Cargando discusiones…" />
+          <SectionListSkeleton rows={3} />
         ) : isDiscussionsError ? (
-          <Alert variant="error">
-            Error cargando discusiones: {String(discussionsError)}
-          </Alert>
+          <Alert variant="error">Error cargando discusiones: {String(discussionsError)}</Alert>
         ) : filtered.length === 0 ? (
           <EmptyState
             emoji="📭"
             title={filter !== 'all' ? 'Sin resultados' : 'Sin anuncios'}
-            subtitle={
-              filter !== 'all'
-                ? 'No hay anuncios con este filtro.'
-                : 'Sé el primero en publicar un anuncio.'
-            }
+            subtitle={filter !== 'all' ? 'No hay anuncios con este filtro.' : 'Sé el primero en publicar un anuncio.'}
           />
         ) : (
-          filtered.map((d) => (
-            <ArticleCard key={d.id} discussion={d} />
-          ))
+          filtered.map((d) => <ArticleCard key={d.id} discussion={d} />)
         )}
       </div>
 
@@ -133,9 +118,7 @@ export function AnnouncementsView({ courseId }: AnnouncementsViewProps) {
                 type="button"
                 onClick={() => setFilter(f.key)}
                 className={`text-left text-sm font-bold px-3 py-2 rounded-xl transition ${
-                  filter === f.key
-                    ? 'bg-[#274E38] text-white'
-                    : 'text-(--fg-muted) hover:bg-(--tint-100)'
+                  filter === f.key ? 'bg-[#274E38] text-white' : 'text-(--fg-muted) hover:bg-(--tint-100)'
                 }`}
               >
                 {f.label}
@@ -147,8 +130,8 @@ export function AnnouncementsView({ courseId }: AnnouncementsViewProps) {
         <div className="bg-white rounded-3xl border border-(--border) p-5">
           <h4 className="font-extrabold text-(--fg) mb-2 text-sm">¿Has visto?</h4>
           <p className="text-xs text-(--fg-muted) leading-relaxed">
-            Aquí encontrarás todos los avisos importantes de tu profe. Cuando haya uno
-            nuevo, te avisaremos con la campanita 🔔.
+            Aquí encontrarás todos los avisos importantes de tu profe. Cuando haya uno nuevo, te avisaremos con la
+            campanita 🔔.
           </p>
         </div>
       </aside>

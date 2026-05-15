@@ -10,6 +10,7 @@ import type { WorkspaceTab as WorkspaceTabType } from '../types/workspace.types'
 import type { CourseColor } from '@/shared/theme/courseColors';
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { TeacherStatsBar } from '../sections/teacher/TeacherStatsBar';
+import { TeacherStatsBarSkeleton } from '../sections/teacher/TeacherStatsBarSkeleton';
 import { GradeBanner } from '../sections/student/califications/GradeBanner';
 import WorkspaceTabs from '../components/layout/WorkspaceTabs';
 import { WorkspaceLayout } from '../components/layout/WorkspaceLayout';
@@ -91,14 +92,17 @@ export function CourseWorkspaceView({
             />
           )}
 
-          {showTeacherStats && (
-            <TeacherStatsBar
-              studentsCount={teacherStats.studentsCount}
-              activeCount={teacherStats.activeCount}
-              avgProgress={avgProgress}
-              pendingTotal={teacherStats.pendingTotal}
-            />
-          )}
+          {showTeacherStats &&
+            (participantsLoading ? (
+              <TeacherStatsBarSkeleton />
+            ) : (
+              <TeacherStatsBar
+                studentsCount={teacherStats.studentsCount}
+                activeCount={teacherStats.activeCount}
+                avgProgress={avgProgress}
+                pendingTotal={teacherStats.pendingTotal}
+              />
+            ))}
         </>
       }
       tabs={<WorkspaceTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />}
@@ -118,19 +122,21 @@ export function CourseWorkspaceView({
           canReviewExercises={showTeacherStats}
         />
       }
-      sidebar={activeTab !== 'ejercicios' && activeTab !== 'anuncios' && activeTab !== 'companeros' ? (
-        <WorkspaceSidebar
-          caps={caps}
-          courseId={courseId}
-          teacherStats={teacherStats}
-          participants={participants}
-          upcomingAssignments={upcomingAssignments}
-          upcomingAssignmentsLoading={upcomingAssignmentsLoading}
-          activeTab={activeTab}
-          onUpcomingNavigate={onUpcomingAssignmentClick}
-        />
-      ) : null}
+      sidebar={
+        activeTab !== 'ejercicios' && activeTab !== 'anuncios' && activeTab !== 'companeros' ? (
+          <WorkspaceSidebar
+            caps={caps}
+            courseId={courseId}
+            teacherStats={teacherStats}
+            participants={participants}
+            participantsLoading={participantsLoading}
+            upcomingAssignments={upcomingAssignments}
+            upcomingAssignmentsLoading={upcomingAssignmentsLoading}
+            activeTab={activeTab}
+            onUpcomingNavigate={onUpcomingAssignmentClick}
+          />
+        ) : null
+      }
     />
   );
 }
-

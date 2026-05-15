@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button/Button';
+import { Alert } from '@/components/ui/alert/Alert';
 import CourseSectionCard from '../CourseSectionCard';
-import { EditSectionModal } from './EditSectionModal';
-import { CreateAssignmentModal } from './CreateAssignmentModal';
 import { CreateQuizModal } from './CreateQuizModal';
 import { CreateResourceModal } from './CreateResourceModal';
 import { CreateUrlModal } from './CreateUrlModal';
+import { CreateForumModal } from './CreateForumModal';
 import { useCourseEditor } from '../../hooks/useCourseEditor';
 import { useSession } from '@/shared/hooks/useSession';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
 
-type ActivityType = 'assignment' | 'quiz' | 'resource' | 'url';
+type ActivityType = 'assignment' | 'quiz' | 'resource' | 'url' | 'forum';
 
 type TeacherCourseEditorProps = {
   courseId: string;
@@ -21,7 +22,6 @@ type TeacherCourseEditorProps = {
   onModuleClick: (module: CourseModule) => void;
 };
 
-type EditSectionState = { sectionId: number; name: string; summary: string } | null;
 type AddActivityState = { sectionId: number; sectionNum: number; type: ActivityType } | null;
 
 export function TeacherCourseEditor({
@@ -33,28 +33,46 @@ export function TeacherCourseEditor({
 }: TeacherCourseEditorProps) {
   const { token } = useSession();
   const editor = useCourseEditor(courseId, token);
+  const navigate = useNavigate();
 
-  const [editSection, setEditSection] = useState<EditSectionState>(null);
   const [addActivity, setAddActivity] = useState<AddActivityState>(null);
 
   const handleEditSection = (sectionId: number, name: string, summary: string) => {
-    setEditSection({ sectionId, name, summary: summary ?? '' });
+    editor.updateSection.mutate({ sectionId, name, summary });
   };
 
   const handleAddActivity = (sectionId: number, sectionNum: number, type: ActivityType) => {
+    if (type === 'assignment') {
+      void navigate({
+        to: '/courses/$courseId/assignments/create/$sectionNum',
+        params: { courseId, sectionNum: String(sectionNum) },
+      });
+      return;
+    }
     setAddActivity({ sectionId, sectionNum, type });
   };
 
-  const closeEditSection = () => setEditSection(null);
+  const handleDeleteModule = (cmid: number) => {
+    editor.deleteModule.mutate(cmid);
+  };
+
+  const handleDeleteSection = (sectionId: number) => {
+    editor.deleteSection.mutate({ sectionId });
+  };
+
   const closeAddActivity = () => setAddActivity(null);
 
-  const targetSection = addActivity
-    ? sections.find((s) => s.section.id === addActivity.sectionId)
-    : null;
+  const targetSection = addActivity ? sections.find((s) => s.section.id === addActivity.sectionId) : null;
   const courseIdNum = Number(courseId);
 
   return (
     <>
+      {editor.deleteSection.isError && (
+        <Alert variant="error">
+          Error al eliminar el tema: {(editor.deleteSection.error as Error)?.message}
+        </Alert>
+      )}
+
       {sections.map(({ section, colorIdx, sectionNumber, progress }, idx) => (
         <CourseSectionCard
           key={section.id}
@@ -68,6 +86,8 @@ export function TeacherCourseEditor({
           teacherSectionProgress={teacherSectionProgress?.[section.id]}
           onEditSection={handleEditSection}
           onAddActivity={handleAddActivity}
+          onDeleteModule={handleDeleteModule}
+          onDeleteSection={handleDeleteSection}
         />
       ))}
 
@@ -77,42 +97,13 @@ export function TeacherCourseEditor({
           size="sm"
           type="button"
           className="flex items-center gap-2 w-full justify-center border-2 border-dashed border-(--border) rounded-2xl py-3 text-(--fg-muted) hover:text-(--fg) hover:border-(--fg-muted) transition"
-          onClick={() =>
-            editor.createSection.mutate({ courseId: courseIdNum, name: 'Nuevo tema', summary: '' })
-          }
+          onClick={() => editor.createSection.mutate({ courseId: courseIdNum, name: 'Nuevo tema', summary: '' })}
           disabled={editor.createSection.isPending}
         >
           <Plus className="size-4" />
           {editor.createSection.isPending ? 'Creando tema…' : 'Añadir tema'}
         </Button>
       </div>
-
-      {editSection && (
-        <EditSectionModal
-          open
-          onClose={closeEditSection}
-          sectionId={editSection.sectionId}
-          initialName={editSection.name}
-          initialSummary={editSection.summary}
-          loading={editor.updateSection.isPending}
-          onSave={(input) => {
-            editor.updateSection.mutate(input, { onSuccess: closeEditSection });
-          }}
-        />
-      )}
-
-      {addActivity?.type === 'assignment' && targetSection && (
-        <CreateAssignmentModal
-          open
-          onClose={closeAddActivity}
-          courseId={courseIdNum}
-          sectionNum={addActivity.sectionNum}
-          loading={editor.createAssignment.isPending}
-          onSave={(input) => {
-            editor.createAssignment.mutate(input, { onSuccess: closeAddActivity });
-          }}
-        />
-      )}
 
       {addActivity?.type === 'quiz' && targetSection && (
         <CreateQuizModal
@@ -150,6 +141,19 @@ export function TeacherCourseEditor({
           loading={editor.createResource.isPending}
           onSave={(input) => {
             editor.createResource.mutate(input, { onSuccess: closeAddActivity });
+          }}
+        />
+      )}
+
+      {addActivity?.type === 'forum' && targetSection && (
+        <CreateForumModal
+          open
+          onClose={closeAddActivity}
+          courseId={courseIdNum}
+          sectionNum={addActivity.sectionNum}
+          loading={editor.createForum.isPending}
+          onSave={(input) => {
+            editor.createForum.mutate(input, { onSuccess: closeAddActivity });
           }}
         />
       )}

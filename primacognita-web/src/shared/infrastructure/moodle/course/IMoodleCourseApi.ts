@@ -6,12 +6,14 @@ import type { Participant } from '@/modules/course/domain/Participant';
 import type { CreateSectionInput, UpdateSectionInput } from '@/modules/course/domain/CreateSectionInput';
 import type { CreateResourceInput } from '@/modules/course/domain/CreateResourceInput';
 import type { CreateUrlInput } from '@/modules/course/domain/CreateUrlInput';
+import type { CreateForumInput } from '@/modules/course/domain/CreateForumInput';
 
 export default interface IMoodleCourseApi {
   createSection(token: string, input: CreateSectionInput): Promise<{ sectionId: number; sectionNum: number }>;
   updateSection(token: string, input: UpdateSectionInput): Promise<void>;
   createResource(token: string, input: CreateResourceInput): Promise<{ cmid: number }>;
   createUrl(token: string, input: CreateUrlInput): Promise<{ cmid: number }>;
+  createForum(token: string, input: CreateForumInput): Promise<{ cmid: number; forumid: number }>;
   getUserCourses(token: string, userId: string): Promise<Course[]>;
   createCourseWithImage(token: string, input: CreateCourseInput, imageFile?: File): Promise<CourseId>;
   getCourseCategories(token: string, ids: CourseCategoryId[]): Promise<CourseCategory[]>;
@@ -24,4 +26,6 @@ export default interface IMoodleCourseApi {
   viewCourse(token: string, courseId: CourseId): Promise<void>;
   markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void>;
   getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]>;
+  deleteModule(token: string, cmid: number): Promise<void>;
+  deleteSection(token: string, courseId: number, sectionId: number): Promise<void>;
 }

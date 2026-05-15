@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import CourseLibCard from './CourseLibCard';
+import { CoursesGridSkeleton } from './CoursesGridSkeleton';
 import type { Course } from '@/modules/course/domain/Course';
 
 type CoursesGridProps = {
@@ -12,7 +13,7 @@ type CoursesGridProps = {
 
 const CoursesGrid = ({ loading, courses, isTeacher, onCourseClick, onCreateCourse }: CoursesGridProps) => {
   if (loading) {
-    return <p className="text-sm text-(--fg-muted)">Cargando cursos…</p>;
+    return <CoursesGridSkeleton />;
   }
 
   if (courses.length === 0) {
@@ -22,12 +23,7 @@ const CoursesGrid = ({ loading, courses, isTeacher, onCourseClick, onCreateCours
   return (
     <div className="grid grid-cols-3 gap-4 content-start">
       {courses.map((course, i) => (
-        <CourseLibCard
-          key={course.id}
-          course={course}
-          index={i}
-          onClick={() => onCourseClick(course.id)}
-        />
+        <CourseLibCard key={course.id} course={course} index={i} onClick={() => onCourseClick(course.id)} />
       ))}
       {isTeacher && (
         <button
@@ -39,9 +35,7 @@ const CoursesGrid = ({ loading, courses, isTeacher, onCourseClick, onCreateCours
             <Plus className="size-6" />
           </div>
           <div className="text-base font-extrabold">Crear curso</div>
-          <p className="text-xs text-center max-w-45 leading-snug">
-            Configura nombre, fechas, visibilidad y portada.
-          </p>
+          <p className="text-xs text-center max-w-45 leading-snug">Configura nombre, fechas, visibilidad y portada.</p>
         </button>
       )}
     </div>

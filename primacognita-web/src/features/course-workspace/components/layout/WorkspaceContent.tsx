@@ -1,13 +1,13 @@
-import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
-import CourseSectionCard from "../CourseSectionCard";
-import { TeacherCourseEditor } from "../editor/TeacherCourseEditor";
-import { TaskView } from "../../sections/student/task/TaskView";
-import { CalificationsView } from "../../sections/student/califications/CalificationsView";
-import { ParticipantsView } from "../../sections/student/participants/ParticipantsView";
-import { AnnouncementsView } from "../../sections/student/announcements/AnnouncementsView";
-import type { WorkspaceTab } from "../../types/workspace.types";
-import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
-import type { Participant } from "@/modules/course/domain/Participant";
+import { WorkspaceSkeleton } from './WorkspaceSkeleton';
+import CourseSectionCard from '../CourseSectionCard';
+import { TeacherCourseEditor } from '../editor/TeacherCourseEditor';
+import { TaskView } from '../../sections/student/task/TaskView';
+import { CalificationsView } from '../../sections/student/califications/CalificationsView';
+import { ParticipantsView } from '../../sections/student/participants/ParticipantsView';
+import { AnnouncementsView } from '../../sections/student/announcements/AnnouncementsView';
+import type { WorkspaceTab } from '../../types/workspace.types';
+import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
+import type { Participant } from '@/modules/course/domain/Participant';
 
 type WorkspaceContentProps = {
   activeTab: WorkspaceTab;
@@ -24,8 +24,7 @@ type WorkspaceContentProps = {
   canReviewExercises: boolean;
 };
 
-const tabClass = (tab: WorkspaceTab, activeTab: WorkspaceTab) =>
-  tab === activeTab ? "block" : "hidden";
+const tabClass = (tab: WorkspaceTab, activeTab: WorkspaceTab) => (tab === activeTab ? 'block' : 'hidden');
 
 export const WorkspaceContent = ({
   activeTab,
@@ -40,11 +39,11 @@ export const WorkspaceContent = ({
   pendingByModule,
   teacherSectionProgress,
 }: WorkspaceContentProps) => {
-  if (loading) return <LoadingState emoji="📖" label="Cargando contenido…" />;
+  if (loading) return <WorkspaceSkeleton />;
 
   return (
     <>
-      <div className={tabClass("temario", activeTab)}>
+      <div className={tabClass('temario', activeTab)}>
         {sections.length === 0 ? (
           <p className="text-sm text-(--fg-subtle)">Este curso aún no tiene temas.</p>
         ) : pendingByModule !== undefined ? (
@@ -71,7 +70,7 @@ export const WorkspaceContent = ({
         )}
       </div>
 
-      <div className={tabClass("ejercicios", activeTab)}>
+      <div className={tabClass('ejercicios', activeTab)}>
         <TaskView
           exercises={exercises}
           sections={sections.map((s) => s.section)}
@@ -80,7 +79,7 @@ export const WorkspaceContent = ({
         />
       </div>
 
-      <div className={tabClass("logros", activeTab)}>
+      <div className={tabClass('logros', activeTab)}>
         <CalificationsView
           sections={sections.map((s) => s.section)}
           exercises={exercises}
@@ -92,11 +91,11 @@ export const WorkspaceContent = ({
         />
       </div>
 
-      <div className={tabClass("anuncios", activeTab)}>
+      <div className={tabClass('anuncios', activeTab)}>
         <AnnouncementsView courseId={courseId} />
       </div>
 
-      <div className={tabClass("companeros", activeTab)}>
+      <div className={tabClass('companeros', activeTab)}>
         <ParticipantsView participants={participants} loading={participantsLoading} />
       </div>
     </>

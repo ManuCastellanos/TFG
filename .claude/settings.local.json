@@ -52,7 +52,12 @@
       "Bash(Test-Path *)",
       "Skill(plannotator-last)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\" -Recurse -Force | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\", \"shared\"\\) })",
-      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\\\\infrastructure\" -Recurse | Select-Object FullName, @{Name=\"Type\"; Expression={if\\($_.PSIsContainer\\){\"[DIR]\"}else{\"[FILE]\"}}} | Format-Table -AutoSize)"
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\\\\infrastructure\" -Recurse | Select-Object FullName, @{Name=\"Type\"; Expression={if\\($_.PSIsContainer\\){\"[DIR]\"}else{\"[FILE]\"}}} | Format-Table -AutoSize)",
+      "Bash(dir /s \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\" -Recurse -Include \"*MoodleClient*\" -ErrorAction SilentlyContinue)",
+      "Bash(powershell -Command \"Get-ChildItem -Directory | Select-Object -ExpandProperty Name\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\modules\" -Directory | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\features\\\\course-workspace\" -Recurse -Directory | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\('C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\', ''\\) })",
+      "Bash(powershell -Command \"Get-ChildItem -Recurse -Directory | Select-Object -ExpandProperty Name\")"
     ]
   }
 }

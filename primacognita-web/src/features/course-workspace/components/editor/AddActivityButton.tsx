@@ -1,48 +1,67 @@
-import { useState, useRef, useEffect } from 'react';
-import { Plus, ClipboardList, HelpCircle, FileUp, Link } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 
-type ActivityType = 'assignment' | 'quiz' | 'resource' | 'url';
+type ActivityType = 'assignment' | 'quiz' | 'resource' | 'url' | 'forum';
 
 type AddActivityButtonProps = {
   onSelect: (type: ActivityType) => void;
 };
 
-const OPTIONS: { type: ActivityType; icon: React.ReactNode; label: string }[] = [
-  { type: 'assignment', icon: <ClipboardList className="size-4" />, label: 'Tarea' },
-  { type: 'quiz', icon: <HelpCircle className="size-4" />, label: 'Cuestionario' },
-  { type: 'resource', icon: <FileUp className="size-4" />, label: 'Subir archivo' },
-  { type: 'url', icon: <Link className="size-4" />, label: 'Enlace URL' },
+const OPTIONS: { type: ActivityType; emoji: string; label: string; sublabel: string; soft: string; text: string }[] = [
+  {
+    type: 'quiz',
+    emoji: '🧩',
+    label: 'Crear cuestionario',
+    sublabel: 'Cuestionario',
+    soft: 'bg-green-100',
+    text: 'text-green-700',
+  },
+  {
+    type: 'assignment',
+    emoji: '📝',
+    label: 'Crear tarea',
+    sublabel: 'Tarea',
+    soft: 'bg-violet-100',
+    text: 'text-violet-700',
+  },
+  {
+    type: 'forum',
+    emoji: '📣',
+    label: 'Crear foro',
+    sublabel: 'Foro',
+    soft: 'bg-neutral-100',
+    text: 'text-neutral-600',
+  },
+  {
+    type: 'resource',
+    emoji: '📄',
+    label: 'Subir archivo',
+    sublabel: 'Archivo',
+    soft: 'bg-neutral-100',
+    text: 'text-neutral-600',
+  },
 ];
 
 export function AddActivityButton({ onSelect }: AddActivityButtonProps) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
 
   return (
-    <div ref={ref} className="relative inline-block">
+    <div className="flex flex-col gap-3">
       <Button
         variant="success"
-        size="sm"
+        size="md"
         type="button"
-        className="flex items-center gap-2"
         onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2"
       >
-        <Plus className="size-4" />
+        {open ? <Minus className="size-4" /> : <Plus className="size-4" />}
         Añadir actividad
       </Button>
 
       {open && (
-        <div className="absolute left-0 top-full mt-1 z-20 bg-white border border-(--border) rounded-2xl shadow-lg py-1 min-w-[180px]">
-          {OPTIONS.map(({ type, icon, label }) => (
+        <div className="grid grid-cols-2 gap-2">
+          {OPTIONS.map(({ type, emoji, label, sublabel, soft, text }) => (
             <button
               key={type}
               type="button"
@@ -50,10 +69,15 @@ export function AddActivityButton({ onSelect }: AddActivityButtonProps) {
                 setOpen(false);
                 onSelect(type);
               }}
-              className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-(--fg) hover:bg-(--tint-50) transition"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-(--border) bg-white hover:border-(--fg-muted) hover:shadow-sm transition text-left w-full"
             >
-              <span className="text-(--fg-muted)">{icon}</span>
-              {label}
+              <div className={`size-10 rounded-xl grid place-items-center text-lg shrink-0 ${soft}`}>
+                <span>{emoji}</span>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="font-bold text-(--fg) text-[15px] leading-tight">{label}</span>
+                <span className={`text-xs font-bold ${text}`}>{sublabel}</span>
+              </div>
             </button>
           ))}
         </div>

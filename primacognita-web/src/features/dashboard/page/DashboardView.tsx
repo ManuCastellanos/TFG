@@ -7,15 +7,19 @@ import { RecentlyAccessedPanel } from '@/features/recently-accessed/RecentlyAcce
 import { ProgressBanner } from '@/components/ui/ProgressBanner/ProgressBanner';
 import { Page } from '@/components/ui/page/Page';
 import DashCourseCard from '../components/DashCourseCard';
+import { DashboardSkeleton } from '../components/DashboardSkeleton';
 
 type DashboardViewProps = {
   user: User | null;
   courses: Course[];
+  loading?: boolean;
   onNavigateToCourses: () => void;
   onCourseClick: (courseId: string) => void;
-}
+};
 
-const DashboardView = ({ user, courses, onNavigateToCourses, onCourseClick }: DashboardViewProps) => {
+const DashboardView = ({ user, courses, loading, onNavigateToCourses, onCourseClick }: DashboardViewProps) => {
+  if (loading) return <DashboardSkeleton />;
+
   return (
     <Page>
       <ProgressBanner

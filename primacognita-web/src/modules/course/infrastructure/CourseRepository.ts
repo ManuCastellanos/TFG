@@ -8,6 +8,7 @@ import type { Participant } from '../domain/Participant';
 import type { CreateSectionInput, UpdateSectionInput } from '../domain/CreateSectionInput';
 import type { CreateResourceInput } from '../domain/CreateResourceInput';
 import type { CreateUrlInput } from '../domain/CreateUrlInput';
+import type { CreateForumInput } from '../domain/CreateForumInput';
 
 export default class CourseRepository implements ICourseRepository {
   constructor(private readonly api: IPrimaCognitaApi) {}
@@ -26,6 +27,10 @@ export default class CourseRepository implements ICourseRepository {
 
   createUrl(token: string, input: CreateUrlInput): Promise<{ cmid: number }> {
     return this.api.course.createUrl(token, input);
+  }
+
+  createForum(token: string, input: CreateForumInput): Promise<{ cmid: number; forumid: number }> {
+    return this.api.course.createForum(token, input);
   }
 
   createCourseWithImage(token: string, input: CreateCourseInput, imageFile?: File): Promise<CourseId> {
@@ -74,5 +79,13 @@ export default class CourseRepository implements ICourseRepository {
 
   viewCourse(token: string, courseId: CourseId): Promise<void> {
     return this.api.course.viewCourse(token, courseId);
+  }
+
+  deleteModule(token: string, cmid: number): Promise<void> {
+    return this.api.course.deleteModule(token, cmid);
+  }
+
+  deleteSection(token: string, courseId: number, sectionId: number): Promise<void> {
+    return this.api.course.deleteSection(token, courseId, sectionId);
   }
 }

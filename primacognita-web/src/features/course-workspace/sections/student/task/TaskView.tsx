@@ -1,17 +1,17 @@
-import { useMemo, useState } from "react";
-import { useSession } from "@/shared/hooks/useSession";
-import { useTimeNow } from "@/shared/hooks/useTimeNow";
-import { EmptyState } from "@/components/patterns/emptyState/EmptyState";
-import { LoadingState } from "@/components/patterns/loadingState/LoadingState";
-import type { CourseModule, CourseSection } from "@/modules/course/domain/CourseSection";
-import type { ExerciseState } from "./types/exercise.types";
-import { useEnrichedExercises } from "./hooks/useEnrichedExercises";
-import { ExerciseRow } from "./components/ExerciseRow";
-import { SummaryCard } from "./components/SummaryCard";
-import { NextDueCard } from "./components/NextDueCard";
-import { Button } from "@/components/ui/button/Button";
+import { useMemo, useState } from 'react';
+import { useSession } from '@/shared/hooks/useSession';
+import { useTimeNow } from '@/shared/hooks/useTimeNow';
+import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
+import { SectionListSkeleton } from '@/components/patterns/sectionSkeleton/SectionListSkeleton';
+import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
+import type { ExerciseState } from './types/exercise.types';
+import { useEnrichedExercises } from './hooks/useEnrichedExercises';
+import { ExerciseRow } from './components/ExerciseRow';
+import { SummaryCard } from './components/SummaryCard';
+import { NextDueCard } from './components/NextDueCard';
+import { Button } from '@/components/ui/button/Button';
 
-type FilterKey = "todos" | ExerciseState;
+type FilterKey = 'todos' | ExerciseState;
 
 export type TaskViewProps = {
   exercises: CourseModule[];
@@ -31,18 +31,18 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
   });
 
   const now = useTimeNow();
-  const [filter, setFilter] = useState<FilterKey>("todos");
+  const [filter, setFilter] = useState<FilterKey>('todos');
 
   const counts = useMemo(() => {
     const all = enriched.length;
-    const pending = enriched.filter((e) => e.state === "pending").length;
-    const submitted = enriched.filter((e) => e.state === "submitted").length;
-    const graded = enriched.filter((e) => e.state === "graded").length;
+    const pending = enriched.filter((e) => e.state === 'pending').length;
+    const submitted = enriched.filter((e) => e.state === 'submitted').length;
+    const graded = enriched.filter((e) => e.state === 'graded').length;
     return { todos: all, pending, submitted, graded };
   }, [enriched]);
 
   const filtered = useMemo(
-    () => (filter === "todos" ? enriched : enriched.filter((e) => e.state === filter)),
+    () => (filter === 'todos' ? enriched : enriched.filter((e) => e.state === filter)),
     [enriched, filter],
   );
 
@@ -53,24 +53,20 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
     return future[0] ?? null;
   }, [enriched, now]);
 
-  const filters: { id: "todos" | "pending" | "submitted" | "graded"; label: string }[] = [
-    { id: "todos", label: "Todos" },
-    { id: "pending", label: "Por hacer" },
-    { id: "submitted", label: "Entregados" },
-    { id: "graded", label: "Calificados" },
+  const filters: { id: 'todos' | 'pending' | 'submitted' | 'graded'; label: string }[] = [
+    { id: 'todos', label: 'Todos' },
+    { id: 'pending', label: 'Por hacer' },
+    { id: 'submitted', label: 'Entregados' },
+    { id: 'graded', label: 'Calificados' },
   ];
 
   if (loading) {
-    return <LoadingState emoji="📝" label="Cargando ejercicios…" />;
+    return <SectionListSkeleton />;
   }
 
   if (enriched.length === 0) {
     return (
-      <EmptyState
-        emoji="📋"
-        title="No hay ejercicios"
-        subtitle="Este curso aún no tiene ejercicios disponibles."
-      />
+      <EmptyState emoji="📋" title="No hay ejercicios" subtitle="Este curso aún no tiene ejercicios disponibles." />
     );
   }
 
@@ -90,14 +86,14 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
                 onClick={() => setFilter(f.id)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full font-bold text-xs transition border-2 ${
                   filter === f.id
-                    ? "bg-[#274E38] text-white border-[#274E38]"
-                    : "bg-white text-(--fg-muted) border-(--border) hover:border-(--border-strong)"
+                    ? 'bg-[#274E38] text-white border-[#274E38]'
+                    : 'bg-white text-(--fg-muted) border-(--border) hover:border-(--border-strong)'
                 }`}
               >
                 {f.label}
                 <span
                   className={`text-xs font-black px-1.5 rounded-full ${
-                    filter === f.id ? "bg-white/20" : "bg-(--tint-100)"
+                    filter === f.id ? 'bg-white/20' : 'bg-(--tint-100)'
                   }`}
                 >
                   {counts[f.id]}
@@ -130,12 +126,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
           submitted={counts.submitted}
         />
 
-        {nextDue && (
-          <NextDueCard
-            title={nextDue.title}
-            daysLabel={formatDaysLabel(nextDue.dueTimestamp!, now)}
-          />
-        )}
+        {nextDue && <NextDueCard title={nextDue.title} daysLabel={formatDaysLabel(nextDue.dueTimestamp!, now)} />}
       </div>
     </div>
   );
@@ -143,7 +134,7 @@ export const TaskView = ({ exercises, sections, courseId, onExerciseClick }: Tas
 
 function formatDaysLabel(dueTs: number, now: number): string {
   const diffDays = Math.round((dueTs * 1000 - now) / 86400000);
-  if (diffDays === 0) return "Hoy";
-  if (diffDays === 1) return "en 1 día";
+  if (diffDays === 0) return 'Hoy';
+  if (diffDays === 1) return 'en 1 día';
   return `en ${diffDays} días`;
 }

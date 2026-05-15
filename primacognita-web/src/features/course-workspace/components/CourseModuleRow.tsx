@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import { X, Download } from 'lucide-react';
 import type { ModuleViewModel } from '../utils/workspace-mappers';
 
 type CourseModuleRowProps = {
   module: ModuleViewModel;
   onClick?: () => void;
   onToggle?: () => void;
+  onDelete?: () => void;
+  hideCompletion?: boolean;
 };
 
 function usePopAnimation(active: boolean) {
@@ -27,7 +30,7 @@ function usePopAnimation(active: boolean) {
   return popping;
 }
 
-const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) => {
+const CourseModuleRow = ({ module, onClick, onToggle, onDelete, hideCompletion }: CourseModuleRowProps) => {
   const popping = usePopAnimation(module.status === 'completed');
 
   const containerClasses =
@@ -58,7 +61,20 @@ const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) =>
 
   const isCompleted = module.status === 'completed';
 
-  const completionBtn = module.showCompletion ? (
+  const downloadBtn = module.downloadUrl ? (
+    <a
+      href={module.downloadUrl}
+      target="_blank"
+      rel="noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      className="size-8 rounded-lg bg-neutral-50 text-neutral-500 hover:bg-neutral-100 grid place-items-center shrink-0 transition"
+      aria-label="Descargar archivo"
+    >
+      <Download className="size-4" />
+    </a>
+  ) : null;
+
+  const completionBtn = hideCompletion ? null : module.showCompletion ? (
     <button
       type="button"
       onClick={(e) => {
@@ -93,7 +109,21 @@ const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) =>
     </div>
   );
 
-  const right = teacherBadge ?? completionBtn;
+  const deleteBtn = onDelete ? (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete();
+      }}
+      aria-label="Eliminar actividad"
+      className="size-7 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 grid place-items-center shrink-0 transition"
+    >
+      <X className="size-3.5" />
+    </button>
+  ) : null;
+
+  const right = deleteBtn ?? downloadBtn ?? teacherBadge ?? completionBtn;
 
   if (module.isInternal && onClick) {
     return (
@@ -101,6 +131,17 @@ const CourseModuleRow = ({ module, onClick, onToggle }: CourseModuleRowProps) =>
         <button type="button" onClick={onClick} className="flex items-center gap-3 flex-1 min-w-0 text-left">
           {iconAndText}
         </button>
+        {right}
+      </div>
+    );
+  }
+
+  if (module.previewUrl) {
+    return (
+      <div className={containerClasses}>
+        <a href={module.previewUrl} target="_blank" rel="noreferrer" className="flex items-center gap-3 flex-1 min-w-0">
+          {iconAndText}
+        </a>
         {right}
       </div>
     );

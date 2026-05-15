@@ -13,7 +13,7 @@ const DashboardPage = () => {
 
   const { user } = useCurrentUser();
 
-  const { courses } = useUserCourses(userId, token);
+  const { courses, loading } = useUserCourses(userId, token);
 
   const handleNavigateToCourses = () => {
     navigate({ to: '/courses' });
@@ -30,6 +30,7 @@ const DashboardPage = () => {
     <DashboardView
       user={user}
       courses={courses}
+      loading={loading}
       onNavigateToCourses={handleNavigateToCourses}
       onCourseClick={handleCourseClick}
     />

@@ -14,15 +14,21 @@ export function useCurrentUser(): UseCurrentUserResult {
   const { token, isAuthenticated } = useSession();
   const { userRepository, userSessionStore } = useDependencies();
 
-  const { data: user, isLoading, error } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: queryKeys.users.current(),
     queryFn: async () => {
-      const fetched = await userRepository.getCurrentUser(token!);
+      const cached = userSessionStore.get();
+      const cachedRole = cached ? { roleId: cached.roleId ?? null, roleName: cached.roleName ?? null } : undefined;
+      const fetched = await userRepository.getCurrentUser(token!, cachedRole);
       userSessionStore.save(fetched);
       return fetched;
     },
     enabled: !!token && isAuthenticated,
-    staleTime: 0,
+    staleTime: 5 * 60 * 1000,
     placeholderData: () => userSessionStore.get() ?? undefined,
   });
 

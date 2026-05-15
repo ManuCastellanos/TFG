@@ -28,7 +28,7 @@ class create_quiz extends external_api {
         string $intro = '', int $timeopen = 0, int $timeclose = 0,
         int $timelimit = 0, int $maxattempts = -1,
     ): array {
-        global $CFG;
+        global $CFG, $DB;
         require_once($CFG->dirroot . '/course/modlib.php');
 
         $params = self::validate_parameters(self::execute_parameters(), [
@@ -51,6 +51,7 @@ class create_quiz extends external_api {
         $data = new \stdClass();
         $data->course       = $params['courseid'];
         $data->modulename   = 'quiz';
+        $data->module = $DB->get_record('modules', ['name' => $data->modulename], '*', MUST_EXIST)->id;
         $data->section      = $params['sectionnum'];
         $data->name         = $params['name'];
         $data->intro        = $params['intro'];
