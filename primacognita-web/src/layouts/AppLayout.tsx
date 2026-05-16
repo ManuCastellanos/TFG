@@ -1,11 +1,11 @@
-import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { useMatches, useNavigate, useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { Sidebar } from './components/sidebar/Sidebar';
 import { TopBar } from './components/topbar/TopBar';
 import { NAV_ITEMS } from './appLayout.constants';
 import { useAppLayout } from './useAppLayout';
 import { useLogout } from '@/features/session/hooks/useLogout';
-import { PageHeaderProvider, usePageHeader } from './pageHeader.context';
+import { getActiveHeader } from './getActiveHeader';
 import { ChatDrawerProvider } from '@/features/chat/ChatDrawerProvider';
 import { ChatModal } from '@/features/chat/components/ChatModal';
 import { useChatDrawer } from '@/features/chat/useChatDrawer';
@@ -16,7 +16,8 @@ import { useNotificationDrawer } from '@/features/notifications/notificationCont
 import { useUnreadNotificationCount } from '@/features/notifications/hooks/useUnreadNotificationCount';
 
 function AppHeader({ user }: { user: Parameters<typeof TopBar>[0]['user'] }) {
-  const { node } = usePageHeader();
+  const matches = useMatches();
+  const HeaderComponent = getActiveHeader(matches);
   const { open: openChat } = useChatDrawer();
   const { data: unreadCount } = useUnreadCount();
   const { toggle: toggleNotifications } = useNotificationDrawer();
@@ -24,7 +25,7 @@ function AppHeader({ user }: { user: Parameters<typeof TopBar>[0]['user'] }) {
 
   return (
     <header className="flex items-center gap-4 px-8 py-5 shrink-0">
-      <div className="flex-1 min-w-0">{node}</div>
+      <div className="flex-1 min-w-0">{HeaderComponent ? <HeaderComponent /> : null}</div>
       <TopBar
         user={user}
         onMessageClick={openChat}
@@ -56,12 +57,10 @@ export function AppLayout({ children }: AppLayoutProps) {
             onNavigate={(path) => (path === '/logout' ? logout() : navigate({ to: path }))}
           />
 
-          <PageHeaderProvider>
-            <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
-              <AppHeader user={user} />
-              {children}
-            </div>
-          </PageHeaderProvider>
+          <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
+            <AppHeader user={user} />
+            {children}
+          </div>
         </div>
         <ChatModal />
         <NotificationDropdown />

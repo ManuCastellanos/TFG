@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft, ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { RichText } from '@/components/ui/rich-text/RichText';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { QuizContentSkeleton } from '../components/QuizContentSkeleton';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
-import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseQuizQuestion } from '../utils/parseQuizQuestion';
 
 export default function QuizAttemptPage() {
@@ -17,10 +16,9 @@ export default function QuizAttemptPage() {
     quizId: string;
   };
 
-  const { attempt, questions, answers, loading, saving, error, setAnswer, clearAnswer, submit } = useQuizAttempt(
+  const { attempt, questions, answers, loading, error, setAnswer, clearAnswer, submit } = useQuizAttempt(
     Number(quizId),
   );
-  const { set: setPageHeader } = usePageHeader();
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [flagged, setFlagged] = useState<Record<number, boolean>>({});
@@ -40,30 +38,6 @@ export default function QuizAttemptPage() {
   const isFirst = currentIdx === 0;
   const isLast = currentIdx === total - 1;
   const isFinished = attempt?.state === 'finished';
-
-  const titleLabel = isFinished ? 'Enviado' : 'Resolviendo';
-  useEffect(() => {
-    setPageHeader(
-      <div className="flex items-center gap-4 min-w-0">
-        <Button
-          variant="outline"
-          size="icon"
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </Button>
-        <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">{titleLabel}</h1>
-        </div>
-        {saving && <span className="ml-2 text-xs font-bold text-(--fg-muted)">Guardando…</span>}
-      </div>,
-    );
-    return () => setPageHeader(null);
-  }, [courseId, isFinished, saving]);
 
   const isAnswered = (idx: number) => {
     const q = parsed[idx];

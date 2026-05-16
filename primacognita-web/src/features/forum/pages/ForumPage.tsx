@@ -1,12 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { useParams } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { SectionListSkeleton } from '@/components/patterns/sectionSkeleton/SectionListSkeleton';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
-import { usePageHeader } from '@/layouts/pageHeader.context';
 import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import {
   useForumByCourse,
@@ -19,9 +17,7 @@ import { NewDiscussionForm } from '@/features/course-workspace/sections/student/
 type Filter = 'all' | 'pinned' | 'week';
 
 export default function ForumPage() {
-  const navigate = useNavigate();
   const { courseId, cmid } = useParams({ strict: false }) as { courseId: string; cmid: string };
-  const { set: setPageHeader } = usePageHeader();
 
   const { data: forums, isLoading: loadingForums } = useForumByCourse(courseId);
   const forum = forums?.find((f) => f.cmid === Number(cmid)) ?? null;
@@ -37,30 +33,6 @@ export default function ForumPage() {
   const [showNewForm, setShowNewForm] = useState(false);
   const [filter, setFilter] = useState<Filter>('all');
   const now = useTimeNow();
-
-  useEffect(() => {
-    setPageHeader(
-      <div className="flex items-center gap-4 min-w-0">
-        <Button
-          variant="outline"
-          size="icon"
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </Button>
-        <div className="size-14 shrink-0 rounded-2xl bg-emerald-100 grid place-items-center text-2xl">💬</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Foro</span>
-          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
-            {forum?.name ?? (loadingForums ? '…' : 'Foro')}
-          </h1>
-        </div>
-      </div>,
-    );
-    return () => setPageHeader(null);
-  }, [forum?.name, courseId, loadingForums]);
 
   const filtered = useMemo(() => {
     if (!discussions) return [];

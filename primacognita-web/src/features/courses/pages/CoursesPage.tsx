@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { usePageHeader } from '@/layouts/pageHeader.context';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useCourses } from '../hooks/useCourses';
@@ -14,19 +13,6 @@ export default function CoursesPage() {
   const { courses, loading, error, isTeacher } = useCourses();
   const { filter, search, setFilter, setSearch, filteredCourses, pendingCount } = useCourseFilters(courses);
   const [showModal, setShowModal] = useState(false);
-  const { set: setPageHeader } = usePageHeader();
-
-  useEffect(() => {
-    setPageHeader(
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tu biblioteca</span>
-          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">Mis cursos</h1>
-        </div>
-      </div>,
-    );
-    return () => setPageHeader(null);
-  }, [setPageHeader]);
 
   return (
     <Page>

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useParams } from '@tanstack/react-router';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { RichText } from '@/components/ui/rich-text/RichText';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { useQuizReview } from '../hooks/useQuizReview';
-import { usePageHeader } from '@/layouts/pageHeader.context';
 import { parseReviewQuestion } from '../utils/parseQuizQuestion';
 import type { ReviewQuestion } from '@/modules/quiz/domain/IQuizRepository';
 import type { ReviewOption } from '../utils/parseQuizQuestion';
@@ -184,15 +183,13 @@ function ReviewQuestionCard({ question, idx }: { question: ReviewQuestion; idx: 
 }
 
 export default function QuizReviewPage() {
-  const navigate = useNavigate();
-  const { courseId, quizId, attemptId } = useParams({ strict: false }) as {
+  const { attemptId } = useParams({ strict: false }) as {
     courseId: string;
     quizId: string;
     attemptId: string;
   };
 
   const { review, loading, error } = useQuizReview(Number(attemptId));
-  const { set: setPageHeader } = usePageHeader();
   const [currentIdx, setCurrentIdx] = useState(0);
 
   const questions = review?.questions ?? [];
@@ -213,35 +210,6 @@ export default function QuizReviewPage() {
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [total]);
-
-  useEffect(() => {
-    setPageHeader(
-      <div className="flex items-center gap-4 min-w-0">
-        <Button
-          variant="outline"
-          size="icon"
-          type="button"
-          onClick={() => navigate({ to: '/courses/$courseId/quiz/$quizId', params: { courseId, quizId } })}
-          aria-label="Volver al cuestionario"
-        >
-          <ArrowLeft className="size-5" />
-        </Button>
-        <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="flex flex-col min-w-0">
-            <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-            <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">Revisión del intento</h1>
-          </div>
-          {review && (
-            <span className="rounded-xl bg-(--tint-100) border border-(--border) px-2.5 py-1 text-base font-extrabold text-(--fg) leading-none shrink-0">
-              {review.grade}
-            </span>
-          )}
-        </div>
-      </div>,
-    );
-    return () => setPageHeader(null);
-  }, [courseId, quizId, review?.grade]);
 
   if (loading) {
     return (

@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { useParams } from '@tanstack/react-router';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
 import { Button } from '@/components/ui/button/Button';
@@ -8,7 +8,6 @@ import { AvatarBox } from '@/components/ui/avatarBox/AvatarBox';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
 import { LoadingState } from '@/components/patterns/loadingState/LoadingState';
 import { useSession } from '@/shared/hooks/useSession';
-import { usePageHeader } from '@/layouts/pageHeader.context';
 import { useAssignmentReview } from '../hooks/useAssignmentReview';
 import { formatRelativeDate } from '@/shared/utils/formatRelativeDate';
 import { SECTION_COLORS } from '@/features/course-workspace/types/workspace.types';
@@ -181,10 +180,8 @@ function GradingPanel({ sub, maxGrade, onPrev, onNext, hasPrev, hasNext, onSave,
 }
 
 export default function AssignmentReviewPage() {
-  const navigate = useNavigate();
   const { courseId, cmid } = useParams({ strict: false }) as { courseId: string; cmid: string };
   const { token } = useSession();
-  const { set: setPageHeader } = usePageHeader();
 
   const { assignment, submissions, loading, error, saving, saveGrade } = useAssignmentReview(
     token,
@@ -213,31 +210,6 @@ export default function AssignmentReviewPage() {
     }
     return filtered.find((s) => s.status === 'submitted' || s.status === 'late') ?? filtered[0] ?? null;
   }, [filtered, selectedUserId]);
-
-  useEffect(() => {
-    setPageHeader(
-
-      <div className="flex items-center gap-4 min-w-0">
-        <Button
-          variant="outline"
-          size="icon"
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </Button>
-        <div className="size-14 shrink-0 rounded-2xl bg-violet-100 grid place-items-center text-2xl">📝</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Tarea · Calificar</span>
-          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
-            {assignment?.title ?? (loading ? '…' : 'Tarea')}
-          </h1>
-        </div>
-      </div>,
-    );
-    return () => setPageHeader(null);
-  }, [assignment?.title, courseId, loading]);
 
   if (loading) {
     return (

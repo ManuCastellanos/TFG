@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
@@ -9,7 +9,6 @@ import { QuizContentSkeleton } from '../components/QuizContentSkeleton';
 import { ResultBanner } from '@/features/quiz/components/ResultBanner';
 import { useQuizMeta } from '../hooks/useQuizMeta';
 import { useQuizPreview } from '../hooks/useQuizPreview';
-import { usePageHeader } from '@/layouts/pageHeader.context';
 import type { UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { QuizMeta } from '@/modules/quiz/domain/IQuizRepository';
 
@@ -362,31 +361,6 @@ export default function QuizPreviewPage() {
   const { courseId, quizId: cmid } = useParams({ strict: false }) as { courseId: string; quizId: string };
   const { meta, loading, error } = useQuizMeta(courseId, cmid);
   const { attempts, bestGrade, attemptGrades } = useQuizPreview(meta ? meta.id : null);
-  const { set: setPageHeader } = usePageHeader();
-
-  useEffect(() => {
-    setPageHeader(
-      <div className="flex items-center gap-4 min-w-0">
-        <Button
-          variant="outline"
-          size="icon"
-          type="button"
-          onClick={() => navigate({ to: '/courses/$id', params: { id: courseId } })}
-          aria-label="Volver al curso"
-        >
-          <ArrowLeft className="size-5" />
-        </Button>
-        <div className="size-14 shrink-0 rounded-2xl bg-orange-100 grid place-items-center text-2xl">🧩</div>
-        <div className="flex flex-col min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle)">Cuestionario</span>
-          <h1 className="text-2xl font-semibold text-(--fg) leading-tight truncate min-w-0">
-            {meta?.title ?? (loading ? '…' : 'Cuestionario')}
-          </h1>
-        </div>
-      </div>,
-    );
-    return () => setPageHeader(null);
-  }, [meta?.title, courseId, loading]);
 
   const handleStart = () => {
     if (!meta) return;

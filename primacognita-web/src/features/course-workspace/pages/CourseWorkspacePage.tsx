@@ -11,7 +11,6 @@ import { useParticipants } from '../sections/student/participants/hooks/useParti
 import { useTeacherStats } from '../hooks/useTeacherStats';
 import { useUpcomingAssignments } from '../hooks/useUpcomingAssignments';
 import { useCourseWorkspaceHandlers } from '../hooks/useCourseWorkspaceHandlers';
-import { useCourseWorkspaceHeader } from '../hooks/useCourseWorkspaceHeader';
 import { createCourseWorkspaceViewModel } from '../view-models/createCourseWorkspaceViewModel';
 import { createTeacherStatsViewModel } from '../view-models/createTeacherStatsViewModel';
 import { CourseWorkspaceView } from './CourseWorkspaceView';
@@ -20,7 +19,7 @@ export default function CourseWorkspacePage() {
   const { id: courseId } = useParams({ strict: false }) as { id: string };
   const { token, userId, roleName } = useSession();
   const { courseRepository } = useDependencies();
-  const { emoji: courseEmoji, color: courseColor } = useCourseCustomization(courseId);
+  const { color: courseColor } = useCourseCustomization(courseId);
 
   const courseData = useCoursePageData(courseId, userId, token);
   const { participants, loading: participantsLoading } = useParticipants(token, courseId);
@@ -45,8 +44,6 @@ export default function CourseWorkspacePage() {
     sections: courseData.sections,
     teacherStats,
   });
-
-  useCourseWorkspaceHeader(courseData.course?.fullname, courseEmoji, courseColor);
 
   useEffect(() => {
     if (!token || !courseId) return;
