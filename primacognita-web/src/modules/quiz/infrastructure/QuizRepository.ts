@@ -4,6 +4,7 @@ import type { AttemptData, ProcessResult, UserAttempt, AttemptReviewData, QuizMe
 import type { QuizAttempt } from '../domain/QuizAttempt';
 import type { QuizAnswers } from '../domain/QuizQuestion';
 import type { CreateQuizInput, UpdateQuizInput } from '../domain/CreateQuizInput';
+import type { QuizSlotQuestion, CreateQuestionInput } from '../domain/QuizQuestionBank';
 
 export default class QuizRepository implements IQuizRepository {
   constructor(private readonly api: IPrimaCognitaApi) {}
@@ -24,8 +25,8 @@ export default class QuizRepository implements IQuizRepository {
     return this.api.quiz.getQuizByCmid(token, courseId, cmid);
   }
 
-  startAttempt(token: string, quizId: number): Promise<QuizAttempt> {
-    return this.api.quiz.startAttempt(token, quizId);
+  startAttempt(token: string, quizId: number, password?: string): Promise<QuizAttempt> {
+    return this.api.quiz.startAttempt(token, quizId, password);
   }
 
   getUserAttempts(token: string, quizId: number, userId: number): Promise<UserAttempt[]> {
@@ -46,5 +47,13 @@ export default class QuizRepository implements IQuizRepository {
 
   getAttemptReview(token: string, attemptId: number): Promise<AttemptReviewData> {
     return this.api.quiz.getAttemptReview(token, attemptId);
+  }
+
+  getQuizQuestions(token: string, cmid: number): Promise<QuizSlotQuestion[]> {
+    return this.api.quiz.getQuizQuestions(token, cmid);
+  }
+
+  createQuestion(token: string, input: CreateQuestionInput): Promise<{ questionId: number; slot: number }> {
+    return this.api.quiz.createQuestion(token, input);
   }
 }

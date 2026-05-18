@@ -57,7 +57,8 @@
       "Bash(powershell -Command \"Get-ChildItem -Directory | Select-Object -ExpandProperty Name\")",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\modules\" -Directory | ForEach-Object { $_.Name })",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\features\\\\course-workspace\" -Recurse -Directory | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\('C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\', ''\\) })",
-      "Bash(powershell -Command \"Get-ChildItem -Recurse -Directory | Select-Object -ExpandProperty Name\")"
+      "Bash(powershell -Command \"Get-ChildItem -Recurse -Directory | Select-Object -ExpandProperty Name\")",
+      "PowerShell(Remove-Item *)"
     ]
   }
 }

@@ -361,13 +361,26 @@ export default function QuizPreviewPage() {
   const { courseId, quizId: cmid } = useParams({ strict: false }) as { courseId: string; quizId: string };
   const { meta, loading, error } = useQuizMeta(courseId, cmid);
   const { attempts, bestGrade, attemptGrades } = useQuizPreview(meta ? meta.id : null);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+
+  const doNavigate = (quizInstanceId: number) => {
+    void navigate({
+      to: '/courses/$courseId/quiz/$quizId/attempt',
+      params: { courseId, quizId: String(quizInstanceId) },
+    });
+  };
 
   const handleStart = () => {
     if (!meta) return;
-    void navigate({
-      to: '/courses/$courseId/quiz/$quizId/attempt',
-      params: { courseId, quizId: String(meta.id) },
-    });
+    if (meta.hasPassword && !showPasswordPrompt) {
+      setShowPasswordPrompt(true);
+      return;
+    }
+    if (meta.hasPassword) {
+      sessionStorage.setItem(`qp_${meta.id}`, passwordInput);
+    }
+    doNavigate(meta.id);
   };
 
   if (loading) {
@@ -384,18 +397,60 @@ export default function QuizPreviewPage() {
 
   if (!meta) return null;
 
+  const passwordDialog = showPasswordPrompt && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl border border-(--border) shadow-xl p-7 w-full max-w-sm mx-4">
+        <h3 className="font-semibold text-(--fg) mb-1">Contraseña requerida</h3>
+        <p className="text-sm text-(--fg-muted) mb-4">Este cuestionario está protegido. Introduce la contraseña para acceder.</p>
+        <input
+          type="password"
+          value={passwordInput}
+          onChange={(e) => setPasswordInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleStart(); }}
+          placeholder="Contraseña"
+          autoFocus
+          className="rounded-xl border border-(--border) bg-(--surface) text-(--fg) px-4 py-3 w-full outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors mb-4 text-sm"
+        />
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => { setShowPasswordPrompt(false); setPasswordInput(''); }}
+            className="flex-1 py-2.5 rounded-xl border border-(--border) text-sm font-medium text-(--fg-muted) hover:bg-(--tint-50) transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleStart}
+            className="flex-1 py-2.5 rounded-xl bg-[#274E38] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            Empezar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   if (attempts.length > 0) {
     return (
-      <QuizPreviewWithAttempts
-        courseId={courseId}
-        meta={meta}
-        attempts={attempts}
-        bestGrade={bestGrade}
-        attemptGrades={attemptGrades}
-        onStart={handleStart}
-      />
+      <>
+        <QuizPreviewWithAttempts
+          courseId={courseId}
+          meta={meta}
+          attempts={attempts}
+          bestGrade={bestGrade}
+          attemptGrades={attemptGrades}
+          onStart={handleStart}
+        />
+        {passwordDialog}
+      </>
     );
   }
 
-  return <QuizPreviewEmpty meta={meta} onStart={handleStart} />;
+  return (
+    <>
+      <QuizPreviewEmpty meta={meta} onStart={handleStart} />
+      {passwordDialog}
+    </>
+  );
 }

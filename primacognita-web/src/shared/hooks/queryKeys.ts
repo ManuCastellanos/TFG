@@ -41,6 +41,10 @@ export const queryKeys = {
     posts:         (discussionId: number) => [...queryKeys.forum.all, 'posts', discussionId] as const,
     forumsByCourse: (courseId: number) => [...queryKeys.forum.all, 'bycourse', courseId] as const,
   },
+  quizQuestions: {
+    all:    ['quizQuestions'] as const,
+    byCmid: (cmid: number) => ['quizQuestions', 'byCmid', cmid] as const,
+  },
   notifications: {
     all:  ['notifications'] as const,
     list: (userId: number, read: 0 | 1) => ['notifications', 'list', userId, read] as const,

@@ -4,7 +4,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import CourseSectionCard from '../CourseSectionCard';
-import { CreateQuizModal } from './CreateQuizModal';
 import { CreateResourceModal } from './CreateResourceModal';
 import { CreateUrlModal } from './CreateUrlModal';
 import { CreateForumModal } from './CreateForumModal';
@@ -45,6 +44,13 @@ export function TeacherCourseEditor({
     if (type === 'assignment') {
       void navigate({
         to: '/courses/$courseId/assignments/create/$sectionNum',
+        params: { courseId, sectionNum: String(sectionNum) },
+      });
+      return;
+    }
+    if (type === 'quiz') {
+      void navigate({
+        to: '/courses/$courseId/quiz/create/$sectionNum',
         params: { courseId, sectionNum: String(sectionNum) },
       });
       return;
@@ -104,19 +110,6 @@ export function TeacherCourseEditor({
           {editor.createSection.isPending ? 'Creando tema…' : 'Añadir tema'}
         </Button>
       </div>
-
-      {addActivity?.type === 'quiz' && targetSection && (
-        <CreateQuizModal
-          open
-          onClose={closeAddActivity}
-          courseId={courseIdNum}
-          sectionNum={addActivity.sectionNum}
-          loading={editor.createQuiz.isPending}
-          onSave={(input) => {
-            editor.createQuiz.mutate(input, { onSuccess: closeAddActivity });
-          }}
-        />
-      )}
 
       {addActivity?.type === 'url' && targetSection && (
         <CreateUrlModal

@@ -8,6 +8,7 @@ export type QuizRaw = {
   grade?: number;
   gradepass?: number;
   grademethod?: number;
+  haspassword?: number;
 };
 
 export type QuizzesApiResponse = {

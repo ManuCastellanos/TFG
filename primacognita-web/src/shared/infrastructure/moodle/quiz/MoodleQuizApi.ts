@@ -4,6 +4,7 @@ import type { QuizAttempt } from '@/modules/quiz/domain/QuizAttempt';
 import type { QuizAnswers } from '@/modules/quiz/domain/QuizQuestion';
 import type { AttemptData, AttemptReviewData, ProcessResult, QuizMeta, UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { CreateQuizInput, UpdateQuizInput } from '@/modules/quiz/domain/CreateQuizInput';
+import type { QuizSlotQuestion, CreateQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
 import type {
   QuizAttemptRaw,
   StartAttemptResponse,
@@ -61,6 +62,7 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       gradeMax: raw.grade ?? 10,
       gradePass: raw.gradepass,
       gradingMethod: raw.grademethod != null ? QUIZ_GRADING_METHOD[raw.grademethod] : undefined,
+      hasPassword: (raw.haspassword ?? 0) === 1,
       viewUrl: `${env.baseUrl}/mod/quiz/view.php?id=${raw.coursemodule}`,
     }));
   }
@@ -88,11 +90,16 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
     };
   }
 
-  async startAttempt(token: string, quizId: number): Promise<QuizAttempt> {
+  async startAttempt(token: string, quizId: number, password?: string): Promise<QuizAttempt> {
+    const params: Record<string, string> = { quizid: String(quizId) };
+    if (password) {
+      params['preflightdata[0][name]'] = 'quizpassword';
+      params['preflightdata[0][value]'] = password;
+    }
     const response = await this.moodleClient.call<StartAttemptResponse>(
       token,
       'mod_quiz_start_attempt',
-      { quizid: String(quizId) },
+      params,
     );
     return mapAttempt(response.attempt);
   }
@@ -167,17 +174,64 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
   async createQuiz(token: string, input: CreateQuizInput): Promise<{ cmid: number; quizId: number }> {
     const result = await this.moodleClient.call<{ cmid: number; quizid: number }>(
       token, 'local_primacognita_create_quiz', {
-        courseid:    String(input.courseId),
-        sectionnum:  String(input.sectionNum),
-        name:        input.name,
-        intro:       input.intro ?? '',
-        timeopen:    String(input.timeOpen ? Math.floor(input.timeOpen / 1000) : 0),
-        timeclose:   String(input.timeClose ? Math.floor(input.timeClose / 1000) : 0),
-        timelimit:   String(input.timeLimit ?? 0),
-        maxattempts: String(input.maxAttempts ?? -1),
+        courseid:               String(input.courseId),
+        sectionnum:             String(input.sectionNum),
+        name:                   input.name,
+        intro:                  input.intro ?? '',
+        timeopen:               String(input.timeOpen ? Math.floor(input.timeOpen / 1000) : 0),
+        timeclose:              String(input.timeClose ? Math.floor(input.timeClose / 1000) : 0),
+        timelimit:              String(input.timeLimitMinutes ? input.timeLimitMinutes * 60 : 0),
+        maxattempts:            String(input.maxAttempts ?? 0),
+        shufflequestions:       String(input.shuffleQuestions ? 1 : 0),
+        shuffleanswers:         String(input.shuffleAnswers ? 1 : 0),
+        showresultsimmediately: String(input.showResultsImmediately ? 1 : 0),
+        visible:                String(input.visible === false ? 0 : 1),
+        password:               input.password ?? '',
+        quizdraftitemid:        String(input.quizDraftItemId ?? 0),
       },
     );
     return { cmid: result.cmid, quizId: result.quizid };
+  }
+
+  async getQuizQuestions(token: string, cmid: number): Promise<QuizSlotQuestion[]> {
+    const result = await this.moodleClient.call<{
+      slot: number; slotid: number; questionid: number; qtype: string;
+      name: string; questiontext: string;
+      answers: { text: string; iscorrect: number }[];
+      correctanswer: number;
+    }[]>(token, 'local_primacognita_get_quiz_questions', { cmid: String(cmid) });
+
+    return result.map((r) => ({
+      slot: r.slot,
+      slotId: r.slotid,
+      questionId: r.questionid,
+      type: r.qtype as 'multichoice' | 'truefalse',
+      name: r.name,
+      questionText: r.questiontext,
+      answers: r.answers.map((a) => ({ text: a.text, isCorrect: a.iscorrect === 1 })),
+      correctAnswer: r.correctanswer === -1 ? undefined : r.correctanswer === 1,
+    }));
+  }
+
+  async createQuestion(token: string, input: CreateQuestionInput): Promise<{ questionId: number; slot: number }> {
+    const params: Record<string, string> = {
+      cmid:          String(input.cmid),
+      qtype:         input.qtype,
+      name:          input.name,
+      questiontext:  input.questionText,
+      correctindex:  String(input.correctIndex ?? 0),
+      correctanswer: String(input.correctAnswer ? 1 : 0),
+    };
+    (input.answers ?? []).forEach((text, i) => {
+      params[`answers[${i}]`] = text;
+    });
+    (input.correctIndices ?? []).forEach((idx, i) => {
+      params[`correctindices[${i}]`] = String(idx);
+    });
+    const result = await this.moodleClient.call<{ questionid: number; slot: number }>(
+      token, 'local_primacognita_create_question', params,
+    );
+    return { questionId: result.questionid, slot: result.slot };
   }
 
   async updateQuiz(token: string, input: UpdateQuizInput): Promise<void> {

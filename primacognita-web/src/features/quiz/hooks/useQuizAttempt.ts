@@ -49,9 +49,14 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
         const existing = await quizRepository.getUserAttempts(token, quizId, Number(userId));
         if (cancelled) return;
         const inprogress = existing.find((a) => a.state === 'inprogress');
-        const attemptId = inprogress
-          ? inprogress.id
-          : (await quizRepository.startAttempt(token, quizId)).id;
+        let attemptId: number;
+        if (inprogress) {
+          attemptId = inprogress.id;
+        } else {
+          const password = sessionStorage.getItem(`qp_${quizId}`) ?? undefined;
+          sessionStorage.removeItem(`qp_${quizId}`);
+          attemptId = (await quizRepository.startAttempt(token, quizId, password)).id;
+        }
         if (cancelled) return;
         // Fetch all pages until nextPage === -1
         const allQuestions: import('@/modules/quiz/domain/QuizQuestion').QuizQuestion[] = [];

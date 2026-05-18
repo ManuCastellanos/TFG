@@ -8,6 +8,8 @@ import { createAssignmentRoute } from './create-assignment.route';
 import { quizAttemptRoute } from './quiz-attempt.route';
 import { quizPreviewRoute } from './quiz-preview.route';
 import { quizReviewRoute } from './quiz-review.route';
+import { createQuizRoute } from './create-quiz.route';
+import { quizEditQuestionsRoute } from './quiz-edit-questions.route';
 import { forumRoute } from './forum.route';
 
 export const appRoutes = layoutRoute.addChildren([
@@ -20,5 +22,7 @@ export const appRoutes = layoutRoute.addChildren([
   quizPreviewRoute,
   quizAttemptRoute,
   quizReviewRoute,
+  createQuizRoute,
+  quizEditQuestionsRoute,
   forumRoute,
 ]);

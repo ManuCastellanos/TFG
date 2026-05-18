@@ -65,6 +65,20 @@ $functions = [
         'type'         => 'write',
         'capabilities' => 'moodle/course:manageactivities',
     ],
+    'local_primacognita_get_quiz_questions' => [
+        'classname'    => 'local_primacognita\external\get_quiz_questions',
+        'methodname'   => 'execute',
+        'description'  => 'Devuelve las preguntas de un quiz.',
+        'type'         => 'read',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
+    'local_primacognita_create_question' => [
+        'classname'    => 'local_primacognita\external\create_question',
+        'methodname'   => 'execute',
+        'description'  => 'Crea una pregunta y la añade a un quiz.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
     'local_primacognita_delete_section' => [
         'classname'    => 'local_primacognita\external\delete_section',
         'methodname'   => 'execute',
