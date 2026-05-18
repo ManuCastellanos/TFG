@@ -6,6 +6,7 @@ import App from '@/App.tsx';
 
 import { DependenciesProvider } from '@/shared/providers/DependenciesProvider';
 import Dependencies from '@/shared/providers/Dependencies';
+import { ThemeProvider } from '@/shared/theme/ThemeContext';
 
 const dependencies = Dependencies.create();
 const queryClient = new QueryClient({
@@ -23,7 +24,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <DependenciesProvider dependencies={dependencies}>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </QueryClientProvider>
     </DependenciesProvider>
   </StrictMode>,

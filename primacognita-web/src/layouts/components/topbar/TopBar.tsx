@@ -1,5 +1,6 @@
 import { Bell, MessageCircle, MessageCircleMore } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar/Avatar';
+import { ThemeToggle } from '@/components/ui/themeToggle/ThemeToggle';
 import type { TopBarProps } from './topbar.types';
 
 export const TopBar = ({
@@ -14,7 +15,7 @@ export const TopBar = ({
       type="button"
       onClick={onMessageClick}
       aria-label="Mensajes"
-      className="relative grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-emerald-50 transition"
+      className="relative grid size-10 place-items-center rounded-2xl bg-(--surface) border border-(--border) text-(--fg) hover:bg-(--surface-muted) transition"
     >
       {unreadCount > 0 ? <MessageCircleMore className="size-5" /> : <MessageCircle className="size-5" />}
       {unreadCount > 0 && (
@@ -28,15 +29,17 @@ export const TopBar = ({
       type="button"
       onClick={onNotificationClick}
       aria-label="Notificaciones"
-      className="relative grid size-10 place-items-center rounded-2xl bg-white border border-(--border) text-(--fg-muted) hover:bg-emerald-50 transition"
+      className="relative grid size-10 place-items-center rounded-2xl bg-(--surface) border border-(--border) text-(--fg) hover:bg-(--surface-muted) transition"
     >
       <Bell className="size-5" />
       {unreadNotificationCount > 0 && (
-        <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-rose-500 text-white text-[10px] font-extrabold grid place-items-center shadow-md border-2 border-white">
+        <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-rose-500 text-white text-[10px] font-extrabold grid place-items-center shadow-md border-2 border-(--surface)">
           {unreadNotificationCount > 9 ? '9+' : unreadNotificationCount}
         </span>
       )}
     </button>
+
+    <ThemeToggle />
 
     <div className="flex items-center gap-3">
       <div className="text-right leading-tight">

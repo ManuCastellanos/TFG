@@ -396,6 +396,11 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.25);
   --shadow-md: 0 10px 28px -12px rgb(0 0 0 / 0.32);
   --shadow-lg: 0 24px 48px -24px rgb(0 0 0 / 0.4);
+
+  --tint-50: #1b2522;
+  --tint-100: #1f2b25;
+  --tint-150: #1d2824;
+  --tint-200: #243028;
 }
 
 /* -------------------------
@@ -408,6 +413,65 @@
 .dark {
   color-scheme: dark;
 }
+
+/* -------------------------
+   Dark mode: utility overrides
+   Cubre bg-white y neutral-* hardcodeados en toda la app.
+   Especificidad .dark .class (0,2,0) > .class (0,1,0) — sin !important.
+   ------------------------- */
+.dark .bg-white {
+  background-color: var(--surface);
+}
+
+.dark .bg-neutral-50 {
+  background-color: var(--surface-muted);
+}
+
+.dark .bg-neutral-100 {
+  background-color: var(--surface-muted);
+}
+
+.dark .text-neutral-500 {
+  color: var(--fg-subtle);
+}
+
+.dark .text-neutral-700 {
+  color: var(--fg-muted);
+}
+
+.dark .border-neutral-200 {
+  border-color: var(--border);
+}
+
+/* -------------------------
+   Dark mode: fondos de color suave (softBanner, TipCard, BadgesSection, Banner variants)
+   ------------------------- */
+.dark .bg-emerald-50  { background-color: #0d2419; }
+.dark .bg-sky-50      { background-color: #0a1929; }
+.dark .bg-violet-50   { background-color: #1a0d2e; }
+.dark .bg-lime-50     { background-color: #131f09; }
+.dark .bg-orange-50   { background-color: #1f1208; }
+.dark .bg-amber-50    { background-color: #1f1808; }
+.dark .bg-pink-50     { background-color: #290d1a; }
+.dark .bg-cyan-50     { background-color: #091f29; }
+.dark .bg-rose-50     { background-color: #29090d; }
+.dark .bg-indigo-50   { background-color: #0d1229; }
+.dark .bg-teal-50     { background-color: #091f1f; }
+.dark .bg-blue-50     { background-color: #0a1929; }
+
+/* Gradient from-stops */
+.dark .from-emerald-50 { --tw-gradient-from: #0d2419; }
+.dark .from-amber-50   { --tw-gradient-from: #1f1808; }
+.dark .from-blue-50    { --tw-gradient-from: #0a1929; }
+
+/* Gradient to-stops */
+.dark .to-orange-50    { --tw-gradient-to: #1f1208; }
+.dark .to-emerald-100  { --tw-gradient-to: #0a1f15; }
+.dark .to-amber-100    { --tw-gradient-to: #1a1407; }
+.dark .to-blue-100     { --tw-gradient-to: #091524; }
+
+/* via-white en gradientes de Banner success/warning/info */
+.dark .via-white       { --tw-gradient-via: var(--surface); }
 
 html,
 body,

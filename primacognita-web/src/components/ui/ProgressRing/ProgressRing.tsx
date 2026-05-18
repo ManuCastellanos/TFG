@@ -13,7 +13,7 @@ export function ProgressRing({ value, size = 56, color = '#10b981' }: Props) {
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="shrink-0">
       <circle
         cx={size / 2} cy={size / 2} r={r}
-        fill="none" stroke="#e5e5e5" strokeWidth="6"
+        fill="none" stroke="var(--border)" strokeWidth="6"
       />
       <circle
         cx={size / 2} cy={size / 2} r={r}
@@ -26,7 +26,7 @@ export function ProgressRing({ value, size = 56, color = '#10b981' }: Props) {
         x="50%" y="50%" textAnchor="middle" dy=".35em"
         fontSize={size < 48 ? 10 : 13}
         fontWeight="800"
-        fill="#262626"
+        fill="var(--fg)"
       >
         {Math.round(value)}%
       </text>

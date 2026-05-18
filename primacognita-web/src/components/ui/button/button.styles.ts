@@ -13,7 +13,7 @@ export const buttonStyles = {
   },
   variants: {
     primary: 'bg-[#274E38] text-white hover:brightness-110',
-    outline: 'border border-(--border) bg-white text-(--fg-muted) hover:bg-(--tint-50)',
+    outline: 'border border-(--border) bg-(--surface) text-(--fg-muted) hover:bg-(--tint-50)',
     tinted: 'bg-(--tint-50) border border-(--border) text-(--fg) hover:bg-(--tint-100)',
     ghost: 'bg-transparent text-(--fg-muted) hover:text-(--fg)',
     danger: 'bg-rose-500 text-white hover:bg-rose-600',

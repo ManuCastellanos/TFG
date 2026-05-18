@@ -14,7 +14,7 @@ export const NavItem = ({ item, isActive = false, danger = false, onClick }: Nav
           ? "bg-(--sidebar-active-bg) text-(--sidebar-active-fg) -ml-4 pl-8 pr-4 rounded-r-xl"
           : danger
             ? "rounded-xl px-4 text-(--fg-muted) hover:bg-(--surface) hover:text-red-600"
-            : "rounded-xl px-4 text-(--fg-muted) hover:bg-(--surface) hover:text-(--fg)",
+            : "rounded-xl px-4 text-(--sidebar-fg) hover:bg-(--surface) hover:text-(--fg)",
       )}
     >
       <Icon className="size-4 shrink-0" />
