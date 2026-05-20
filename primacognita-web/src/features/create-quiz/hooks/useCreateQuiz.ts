@@ -15,7 +15,6 @@ export function useCreateQuiz() {
       openDate: '',
       closeDate: '',
       timeLimitEnabled: false,
-      timeLimitPreset: '30',
       timeLimitCustomMinutes: 30,
       maxAttempts: '0',
       shuffleQuestions: true,

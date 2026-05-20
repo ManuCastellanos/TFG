@@ -4,7 +4,6 @@ export type CreateQuizFormValues = {
   openDate: string;
   closeDate: string;
   timeLimitEnabled: boolean;
-  timeLimitPreset: '15' | '30' | '45' | '60' | '90' | 'custom';
   timeLimitCustomMinutes: number;
   maxAttempts: '0' | '1' | '2' | '3';
   shuffleQuestions: boolean;

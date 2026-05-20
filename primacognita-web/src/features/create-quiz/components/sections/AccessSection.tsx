@@ -1,43 +1,53 @@
-import type { UseFormRegister } from 'react-hook-form';
+import type { UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { FormSection } from '@/components/ui/form-section/FormSection';
 import type { CreateQuizFormValues } from '../../types/create-quiz.types';
 
 type Props = {
   register: UseFormRegister<CreateQuizFormValues>;
+  watch: UseFormWatch<CreateQuizFormValues>;
 };
 
-export function AccessSection({ register }: Props) {
-  return (
-    <div className="rounded-3xl p-5 border-2 border-(--border) bg-white flex flex-col gap-4">
-      <h2 className="text-xl font-semibold text-(--fg)">Acceso</h2>
+export function AccessSection({ register, watch }: Props) {
+  const visible = watch('visible');
 
-      <label className="flex items-start gap-2 cursor-pointer">
-        <input
-          type="checkbox"
-          {...register('visible')}
-          className="size-4 accent-[#274E38] cursor-pointer mt-0.5 shrink-0"
-        />
+  return (
+    <FormSection icon="🔒" color="sky" title="Acceso">
+      <label className="relative flex items-start gap-3 cursor-pointer">
+        <input type="checkbox" {...register('visible')} className="sr-only" />
+        <span
+          className={`size-5 rounded-md border-2 flex items-center justify-center transition-colors mt-0.5 shrink-0 ${
+            visible ? 'bg-[#274E38] border-[#274E38]' : 'bg-white border-(--border)'
+          }`}
+        >
+          {visible && (
+            <svg viewBox="0 0 12 12" className="size-3 text-white">
+              <polyline points="1,6 4.5,9.5 11,2" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </span>
         <div>
-          <p className="text-sm font-medium text-(--fg)">Visible para los alumnos</p>
-          <p className="text-xs text-(--fg-muted)">
+          <p className="text-sm font-semibold text-(--fg) leading-snug">Visible para los alumnos</p>
+          <p className="text-xs text-(--fg-muted) mt-0.5">
             Si está desactivado, el cuestionario existe pero los alumnos no lo verán.
           </p>
         </div>
       </label>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-[10px] font-extrabold uppercase tracking-wider text-(--fg-muted)">
-          Contraseña de acceso
-        </label>
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold text-(--fg)">Contraseña de acceso</label>
+          <span className="text-[10px] text-(--fg-subtle)">opcional</span>
+        </div>
         <input
           type="text"
           {...register('password')}
           placeholder="Sin contraseña"
-          className="rounded-xl border border-(--border) bg-(--surface) text-(--fg) px-4 py-3 w-full outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors duration-200 text-sm"
+          className="rounded-xl border border-(--border) bg-white text-(--fg) px-4 py-2.5 w-full outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors text-sm"
         />
         <p className="text-xs text-(--fg-muted)">
           Si se establece, los alumnos deberán introducirla antes de empezar.
         </p>
       </div>
-    </div>
+    </FormSection>
   );
 }

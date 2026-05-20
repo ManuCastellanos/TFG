@@ -1,6 +1,9 @@
 import type { UseFormRegister } from 'react-hook-form';
-import { Input } from '@/components/ui/input/Input';
+import { FormSection } from '@/components/ui/form-section/FormSection';
 import type { CreateAssignmentFormValues } from '../../types/create-assignment.types';
+
+const numberInputClass =
+  'rounded-xl border border-(--border) bg-white text-(--fg) px-4 py-2.5 w-24 text-center outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors text-sm [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
 
 type Props = {
   register: UseFormRegister<CreateAssignmentFormValues>;
@@ -8,26 +11,29 @@ type Props = {
 
 export function GradingSection({ register }: Props) {
   return (
-    <div className="rounded-3xl p-5 border-2 border-(--border) bg-white flex flex-col gap-4">
-      <h2 className="text-xl font-semibold text-(--fg)">Calificación</h2>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1">
-          <Input
-            {...register('maxGrade', { required: true, min: 1, valueAsNumber: true })}
+    <FormSection icon="⭐" color="sky" title="Calificación">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex items-center gap-3">
+          <label className="text-xs font-bold text-(--fg) whitespace-nowrap">
+            Nota máxima <span className="text-red-500">*</span>
+          </label>
+          <input
             type="number"
-            placeholder="Nota máxima"
-            required
+            {...register('maxGrade', { required: true, min: 1, valueAsNumber: true })}
+            className={numberInputClass}
           />
         </div>
-        <div className="flex flex-col gap-1">
-          <Input
-            {...register('gradePass', { min: 0, valueAsNumber: true })}
+        <div className="flex items-center gap-3">
+          <label className="text-xs font-bold text-(--fg) whitespace-nowrap">Para aprobar</label>
+          <span className="text-[10px] text-(--fg-subtle)">opc.</span>
+          <input
             type="number"
-            placeholder="Nota para aprobar (opcional)"
+            {...register('gradePass', { min: 0, valueAsNumber: true })}
+            placeholder="—"
+            className={numberInputClass}
           />
         </div>
       </div>
-    </div>
+    </FormSection>
   );
 }

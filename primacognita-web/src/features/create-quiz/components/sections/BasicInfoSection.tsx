@@ -1,5 +1,6 @@
 import type { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { Input } from '@/components/ui/input/Input';
+import { FormSection } from '@/components/ui/form-section/FormSection';
 import type { CreateQuizFormValues } from '../../types/create-quiz.types';
 
 type Props = {
@@ -9,29 +10,28 @@ type Props = {
 
 export function BasicInfoSection({ register, errors }: Props) {
   return (
-    <div className="rounded-3xl p-5 border-2 border-(--border) bg-white flex flex-col gap-4">
-      <h2 className="text-xl font-semibold text-(--fg)">Información básica</h2>
-
-      <div className="flex flex-col gap-1">
+    <FormSection icon="📝" color="emerald" title="Información básica">
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-bold text-(--fg)">
+          Nombre del cuestionario <span className="text-red-500">*</span>
+        </label>
         <Input
           {...register('name', { required: 'El nombre es obligatorio' })}
           placeholder="Nombre del cuestionario"
           required
         />
-        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+        {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label className="text-[10px] font-extrabold uppercase tracking-wider text-(--fg-muted)">
-          Instrucciones
-        </label>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-bold text-(--fg)">Instrucciones</label>
         <textarea
           {...register('intro')}
-          rows={4}
+          rows={3}
           placeholder="Describe el cuestionario a los alumnos..."
-          className="rounded-xl border border-(--border) bg-(--surface) text-(--fg) px-4 py-3 w-full resize-none outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors duration-200 text-sm"
+          className="rounded-2xl border border-(--border) bg-white outline-none px-4 py-3 text-sm text-(--fg) resize-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors"
         />
       </div>
-    </div>
+    </FormSection>
   );
 }

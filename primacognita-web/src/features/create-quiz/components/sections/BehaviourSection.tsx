@@ -1,58 +1,63 @@
-import type { UseFormRegister } from 'react-hook-form';
+import type { UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { FormSection } from '@/components/ui/form-section/FormSection';
 import type { CreateQuizFormValues } from '../../types/create-quiz.types';
 
 type Props = {
   register: UseFormRegister<CreateQuizFormValues>;
+  watch: UseFormWatch<CreateQuizFormValues>;
 };
 
-export function BehaviourSection({ register }: Props) {
+function CheckboxIndicator({ checked }: { checked: boolean }) {
   return (
-    <div className="rounded-3xl p-5 border-2 border-(--border) bg-white flex flex-col gap-4">
-      <h2 className="text-xl font-semibold text-(--fg)">Configuración</h2>
+    <span
+      className={`size-5 rounded-md border-2 flex items-center justify-center transition-colors mt-0.5 shrink-0 ${
+        checked ? 'bg-[#274E38] border-[#274E38]' : 'bg-white border-(--border)'
+      }`}
+    >
+      {checked && (
+        <svg viewBox="0 0 12 12" className="size-3 text-white">
+          <polyline points="1,6 4.5,9.5 11,2" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+    </span>
+  );
+}
 
-      <div className="flex flex-col gap-3">
-        <label className="flex items-start gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            {...register('shuffleQuestions')}
-            className="size-4 accent-[#274E38] cursor-pointer mt-0.5 shrink-0"
-          />
+export function BehaviourSection({ register, watch }: Props) {
+  const shuffleQuestions = watch('shuffleQuestions');
+  const shuffleAnswers = watch('shuffleAnswers');
+  const showResultsImmediately = watch('showResultsImmediately');
+
+  return (
+    <FormSection icon="🎲" color="purple" title="Configuración">
+      <div className="flex flex-col gap-4">
+        <label className="relative flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" {...register('shuffleQuestions')} className="sr-only" />
+          <CheckboxIndicator checked={shuffleQuestions} />
           <div>
-            <p className="text-sm font-medium text-(--fg)">Mezclar preguntas</p>
-            <p className="text-xs text-(--fg-muted)">
-              Cada alumno verá las preguntas en un orden distinto.
-            </p>
+            <p className="text-sm font-semibold text-(--fg) leading-snug">Mezclar preguntas</p>
+            <p className="text-xs text-(--fg-muted) mt-0.5">Cada alumno verá las preguntas en un orden distinto.</p>
           </div>
         </label>
 
-        <label className="flex items-start gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            {...register('shuffleAnswers')}
-            className="size-4 accent-[#274E38] cursor-pointer mt-0.5 shrink-0"
-          />
+        <label className="relative flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" {...register('shuffleAnswers')} className="sr-only" />
+          <CheckboxIndicator checked={shuffleAnswers} />
           <div>
-            <p className="text-sm font-medium text-(--fg)">Mezclar respuestas</p>
-            <p className="text-xs text-(--fg-muted)">
-              Las opciones de cada pregunta se ordenan aleatoriamente.
-            </p>
+            <p className="text-sm font-semibold text-(--fg) leading-snug">Mezclar respuestas</p>
+            <p className="text-xs text-(--fg-muted) mt-0.5">Las opciones de cada pregunta se ordenan aleatoriamente.</p>
           </div>
         </label>
 
-        <label className="flex items-start gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            {...register('showResultsImmediately')}
-            className="size-4 accent-[#274E38] cursor-pointer mt-0.5 shrink-0"
-          />
+        <label className="relative flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" {...register('showResultsImmediately')} className="sr-only" />
+          <CheckboxIndicator checked={showResultsImmediately} />
           <div>
-            <p className="text-sm font-medium text-(--fg)">Mostrar respuestas al finalizar</p>
-            <p className="text-xs text-(--fg-muted)">
-              Los alumnos verán qué han acertado y fallado al terminar el cuestionario.
-            </p>
+            <p className="text-sm font-semibold text-(--fg) leading-snug">Mostrar respuestas al finalizar</p>
+            <p className="text-xs text-(--fg-muted) mt-0.5">Los alumnos verán qué han acertado y fallado al terminar.</p>
           </div>
         </label>
       </div>
-    </div>
+    </FormSection>
   );
 }

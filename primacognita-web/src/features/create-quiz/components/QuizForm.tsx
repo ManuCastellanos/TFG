@@ -1,5 +1,4 @@
 import type { UseFormReturn } from 'react-hook-form';
-import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { BasicInfoSection } from './sections/BasicInfoSection';
 import { AvailabilitySection } from './sections/AvailabilitySection';
@@ -14,22 +13,16 @@ import { datetimeLocalToUnixMs } from '../hooks/useCreateQuiz';
 type Props = {
   form: UseFormReturn<CreateQuizFormValues>;
   onSubmit: (input: CreateQuizInput) => void;
-  onCancel: () => void;
-  isLoading: boolean;
   error: string | null;
   courseId: number;
   sectionNum: number;
 };
 
-export function QuizForm({ form, onSubmit, onCancel, isLoading, error, courseId, sectionNum }: Props) {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = form;
+export function QuizForm({ form, onSubmit, error, courseId, sectionNum }: Props) {
+  const { register, handleSubmit, watch, formState: { errors } } = form;
 
   const submit = (values: CreateQuizFormValues) => {
-    const timeLimitMinutes = values.timeLimitEnabled
-      ? (values.timeLimitPreset === 'custom'
-        ? values.timeLimitCustomMinutes
-        : Number(values.timeLimitPreset))
-      : undefined;
+    const timeLimitMinutes = values.timeLimitEnabled ? values.timeLimitCustomMinutes : undefined;
 
     const input: CreateQuizInput = {
       courseId,
@@ -51,24 +44,15 @@ export function QuizForm({ form, onSubmit, onCancel, isLoading, error, courseId,
   };
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
+    <form id="quiz-form" onSubmit={handleSubmit(submit)} className="flex flex-col gap-4">
       {error && <Alert variant="error">{error}</Alert>}
 
       <BasicInfoSection register={register} errors={errors} />
       <AvailabilitySection register={register} />
-      <TimingSection register={register} watch={watch} setValue={setValue} />
+      <TimingSection register={register} watch={watch} />
       <AttemptsSection register={register} />
-      <BehaviourSection register={register} />
-      <AccessSection register={register} />
-
-      <div className="flex gap-3 justify-end pt-2">
-        <Button variant="outline" size="md" type="button" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <Button variant="primary" size="md" type="submit" disabled={isLoading}>
-          {isLoading ? 'Creando...' : 'Crear cuestionario'}
-        </Button>
-      </div>
+      <BehaviourSection register={register} watch={watch} />
+      <AccessSection register={register} watch={watch} />
     </form>
   );
 }

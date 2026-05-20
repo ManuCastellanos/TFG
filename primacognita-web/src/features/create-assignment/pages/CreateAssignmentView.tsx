@@ -1,5 +1,6 @@
 import { Page } from '@/components/ui/page/Page';
 import { AssignmentForm } from '../components/AssignmentForm';
+import { AssignmentSidebar } from '../components/AssignmentSidebar';
 import type { UseFormReturn } from 'react-hook-form';
 import type { CreateAssignmentFormValues } from '../types/create-assignment.types';
 import type { CreateAssignmentInput } from '@/modules/assignment/domain/CreateAssignmentInput';
@@ -25,18 +26,25 @@ export function CreateAssignmentView({
   sectionNum,
   datetimeLocalToUnixMs,
 }: Props) {
+  const allowFile = form.watch('allowFile');
+  const allowText = form.watch('allowText');
+
   return (
-    <Page title="Nueva tarea">
-      <div className="max-w-2xl flex flex-col gap-4">
+    <Page>
+      <div className="grid grid-cols-[1fr_320px] gap-5 items-start">
         <AssignmentForm
           form={form}
           onSubmit={onSubmit}
-          onCancel={onCancel}
-          isLoading={isLoading}
           error={error}
           courseId={courseId}
           sectionNum={sectionNum}
           datetimeLocalToUnixMs={datetimeLocalToUnixMs}
+        />
+        <AssignmentSidebar
+          form={form}
+          onCancel={onCancel}
+          isLoading={isLoading}
+          allowSubmit={allowFile || allowText}
         />
       </div>
     </Page>
