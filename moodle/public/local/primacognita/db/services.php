@@ -79,6 +79,13 @@ $functions = [
         'type'         => 'write',
         'capabilities' => 'moodle/course:manageactivities',
     ],
+    'local_primacognita_delete_question' => [
+        'classname'    => 'local_primacognita\external\delete_question',
+        'methodname'   => 'execute',
+        'description'  => 'Elimina una pregunta (slot) de un quiz.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
     'local_primacognita_delete_section' => [
         'classname'    => 'local_primacognita\external\delete_section',
         'methodname'   => 'execute',

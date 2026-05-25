@@ -57,7 +57,7 @@ class get_quiz_questions extends external_api {
                 foreach ($ans_rows as $a) {
                     $answers[] = [
                         'text'      => (string) $a->answer,
-                        'iscorrect' => (int) ($a->fraction >= 1.0),
+                        'iscorrect' => (int) ($a->fraction > 0),
                     ];
                 }
             } else if ($row->qtype === 'truefalse') {

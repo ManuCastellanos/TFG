@@ -4,7 +4,7 @@ import type { QuizAttempt } from '@/modules/quiz/domain/QuizAttempt';
 import type { QuizAnswers } from '@/modules/quiz/domain/QuizQuestion';
 import type { AttemptData, AttemptReviewData, ProcessResult, QuizMeta, UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { CreateQuizInput, UpdateQuizInput } from '@/modules/quiz/domain/CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
 import type {
   QuizAttemptRaw,
   StartAttemptResponse,
@@ -73,7 +73,16 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       'mod_quiz_get_quizzes_by_courses',
       { 'courseids[0]': String(courseId) },
     );
+    // DEBUG: log all quizzes to diagnose ID mapping issues
+    console.debug(
+      '[QuizApi] getQuizByCmid(courseId=%d, cmid=%d) → %d quizzes returned:',
+      courseId, cmid, response.quizzes?.length ?? 0,
+    );
+    response.quizzes?.forEach((q) =>
+      console.debug('  quiz id=%d  coursemodule=%d  name="%s"  haspassword=%d', q.id, q.coursemodule, q.name, q.haspassword ?? 0),
+    );
     const raw = response.quizzes?.find((q) => q.coursemodule === cmid);
+    console.debug('[QuizApi] → matched: %s', raw ? `id=${raw.id}` : 'NO MATCH');
     if (!raw) return null;
     return {
       id: raw.id,
@@ -86,6 +95,7 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       gradeMax: raw.grade ?? 10,
       gradePass: raw.gradepass,
       gradingMethod: raw.grademethod != null ? QUIZ_GRADING_METHOD[raw.grademethod] : undefined,
+      hasPassword: (raw.haspassword ?? 0) === 1,
       viewUrl: `${env.baseUrl}/mod/quiz/view.php?id=${cmid}`,
     };
   }
@@ -113,11 +123,16 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
     return response.attempts.map((a) => mapAttempt(a));
   }
 
-  async getAttemptData(token: string, attemptId: number, page: number): Promise<AttemptData> {
+  async getAttemptData(token: string, attemptId: number, page: number, password?: string): Promise<AttemptData> {
+    const params: Record<string, string> = { attemptid: String(attemptId), page: String(page) };
+    if (password) {
+      params['preflightdata[0][name]'] = 'quizpassword';
+      params['preflightdata[0][value]'] = password;
+    }
     const response = await this.moodleClient.call<GetAttemptDataResponse>(
       token,
       'mod_quiz_get_attempt_data',
-      { attemptid: String(attemptId), page: String(page) },
+      params,
     );
     return {
       attempt: mapAttempt(response.attempt),
@@ -132,20 +147,34 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
     };
   }
 
-  async saveAttempt(token: string, attemptId: number, answers: QuizAnswers): Promise<boolean> {
+  async saveAttempt(token: string, attemptId: number, answers: QuizAnswers, password?: string): Promise<boolean> {
+    const params = buildAnswerParams(attemptId, answers);
+    if (password) {
+      params['preflightdata[0][name]'] = 'quizpassword';
+      params['preflightdata[0][value]'] = password;
+    }
     const response = await this.moodleClient.call<SaveAttemptResponse>(
       token,
       'mod_quiz_save_attempt',
-      buildAnswerParams(attemptId, answers),
+      params,
     );
     return response.status;
   }
 
-  async processAttempt(token: string, attemptId: number, answers: QuizAnswers): Promise<ProcessResult> {
+  async processAttempt(token: string, attemptId: number, answers: QuizAnswers, password?: string): Promise<ProcessResult> {
+    const params: Record<string, string> = {
+      ...buildAnswerParams(attemptId, answers),
+      finishattempt: '1',
+      timeup: '0',
+    };
+    if (password) {
+      params['preflightdata[0][name]'] = 'quizpassword';
+      params['preflightdata[0][value]'] = password;
+    }
     const response = await this.moodleClient.call<ProcessAttemptResponse>(
       token,
       'mod_quiz_process_attempt',
-      { ...buildAnswerParams(attemptId, answers), finishattempt: '1', timeup: '0' },
+      params,
     );
     return { state: response.state };
   }
@@ -232,6 +261,15 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       token, 'local_primacognita_create_question', params,
     );
     return { questionId: result.questionid, slot: result.slot };
+  }
+
+  async deleteQuestion(token: string, input: DeleteQuestionInput): Promise<void> {
+    await this.moodleClient.call<{ success: boolean }>(
+      token, 'local_primacognita_delete_question', {
+        cmid:   String(input.cmid),
+        slotid: String(input.slotId),
+      },
+    );
   }
 
   async updateQuiz(token: string, input: UpdateQuizInput): Promise<void> {

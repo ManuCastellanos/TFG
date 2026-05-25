@@ -4,7 +4,7 @@ import type { AttemptData, ProcessResult, UserAttempt, AttemptReviewData, QuizMe
 import type { QuizAttempt } from '../domain/QuizAttempt';
 import type { QuizAnswers } from '../domain/QuizQuestion';
 import type { CreateQuizInput, UpdateQuizInput } from '../domain/CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput } from '../domain/QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from '../domain/QuizQuestionBank';
 
 export default class QuizRepository implements IQuizRepository {
   constructor(private readonly api: IPrimaCognitaApi) {}
@@ -33,16 +33,16 @@ export default class QuizRepository implements IQuizRepository {
     return this.api.quiz.getUserAttempts(token, quizId, userId);
   }
 
-  getAttemptData(token: string, attemptId: number, page: number): Promise<AttemptData> {
-    return this.api.quiz.getAttemptData(token, attemptId, page);
+  getAttemptData(token: string, attemptId: number, page: number, password?: string): Promise<AttemptData> {
+    return this.api.quiz.getAttemptData(token, attemptId, page, password);
   }
 
-  saveAttempt(token: string, attemptId: number, answers: QuizAnswers): Promise<boolean> {
-    return this.api.quiz.saveAttempt(token, attemptId, answers);
+  saveAttempt(token: string, attemptId: number, answers: QuizAnswers, password?: string): Promise<boolean> {
+    return this.api.quiz.saveAttempt(token, attemptId, answers, password);
   }
 
-  processAttempt(token: string, attemptId: number, answers: QuizAnswers): Promise<ProcessResult> {
-    return this.api.quiz.processAttempt(token, attemptId, answers);
+  processAttempt(token: string, attemptId: number, answers: QuizAnswers, password?: string): Promise<ProcessResult> {
+    return this.api.quiz.processAttempt(token, attemptId, answers, password);
   }
 
   getAttemptReview(token: string, attemptId: number): Promise<AttemptReviewData> {
@@ -55,5 +55,9 @@ export default class QuizRepository implements IQuizRepository {
 
   createQuestion(token: string, input: CreateQuestionInput): Promise<{ questionId: number; slot: number }> {
     return this.api.quiz.createQuestion(token, input);
+  }
+
+  deleteQuestion(token: string, input: DeleteQuestionInput): Promise<void> {
+    return this.api.quiz.deleteQuestion(token, input);
   }
 }

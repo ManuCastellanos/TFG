@@ -32,6 +32,7 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
   const attemptRef = useRef<QuizAttempt | null>(null);
   const answersRef = useRef<QuizAnswers>({});
   const hiddenRef = useRef<QuizAnswers>({});
+  const passwordRef = useRef<string | undefined>(undefined);
 
   useLayoutEffect(() => {
     attemptRef.current = attempt;
@@ -46,6 +47,9 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
       setLoading(true);
       setError(null);
       try {
+        const password = sessionStorage.getItem(`qp_${quizId}`) ?? undefined;
+        passwordRef.current = password;
+
         const existing = await quizRepository.getUserAttempts(token, quizId, Number(userId));
         if (cancelled) return;
         const inprogress = existing.find((a) => a.state === 'inprogress');
@@ -53,24 +57,22 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
         if (inprogress) {
           attemptId = inprogress.id;
         } else {
-          const password = sessionStorage.getItem(`qp_${quizId}`) ?? undefined;
-          sessionStorage.removeItem(`qp_${quizId}`);
           attemptId = (await quizRepository.startAttempt(token, quizId, password)).id;
         }
         if (cancelled) return;
-        // Fetch all pages until nextPage === -1
-        const allQuestions: import('@/modules/quiz/domain/QuizQuestion').QuizQuestion[] = [];
+
+        
+        const allQuestions: QuizQuestion[] = [];
         let page = 0;
         let lastAttempt = null;
         do {
-          const data = await quizRepository.getAttemptData(token, attemptId, page);
+          const data = await quizRepository.getAttemptData(token, attemptId, page, password);
           if (cancelled) return;
           allQuestions.push(...data.questions);
           lastAttempt = data.attempt;
           page = data.nextPage === -1 ? -1 : data.nextPage;
         } while (page !== -1);
 
-        // Extract hidden inputs (sequencecheck etc.) from every question's HTML
         const hidden: QuizAnswers = {};
         allQuestions.forEach((q) => {
           const parsed = parseQuizQuestion(q.html);
@@ -83,7 +85,14 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
         setAttempt(lastAttempt);
         setQuestions(allQuestions);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'Error al iniciar el cuestionario.');
+        if (!cancelled) {
+          const raw = e instanceof Error ? e.message : '';
+          if (raw.includes('noquestionsfound')) {
+            setError('Este cuestionario no tiene preguntas. Contacta con tu profesor.');
+          } else {
+            setError(raw || 'Error al iniciar el cuestionario.');
+          }
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -106,7 +115,7 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
     if (!token || !current) return;
     setSaving(true);
     try {
-      await quizRepository.saveAttempt(token, current.id, buildPayload());
+      await quizRepository.saveAttempt(token, current.id, buildPayload(), passwordRef.current);
     } catch {
       // silent fail on autosave
     } finally {
@@ -147,15 +156,15 @@ export function useQuizAttempt(quizId: number): UseQuizAttemptResult {
     setLoading(true);
     setError(null);
     try {
-      await quizRepository.processAttempt(token, current.id, buildPayload());
+      await quizRepository.processAttempt(token, current.id, buildPayload(), passwordRef.current);
+      sessionStorage.removeItem(`qp_${quizId}`);
       setAttempt((prev) => (prev ? { ...prev, state: 'finished' } : prev));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error al enviar el cuestionario.');
     } finally {
       setLoading(false);
     }
-
-  }, [quizRepository, token]);
+  }, [quizRepository, token, quizId]);
 
   return {
     attempt,

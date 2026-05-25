@@ -101,7 +101,7 @@ const CourseSectionCard = ({
     >
       {/* Edit-mode top strip */}
       {editMode && canEdit && (
-        <div className="absolute top-0 left-0 right-0 h-9 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white flex items-center justify-between px-4 z-10">
+        <div className="absolute top-0 left-0 right-0 h-9 bg-linear-to-r from-emerald-500 to-emerald-600 text-white flex items-center justify-between px-4 z-10">
           <div className="flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-wider">
             <Pencil className="size-3.5" />
             Estás editando este tema
@@ -204,7 +204,7 @@ const CourseSectionCard = ({
 
       {/* Save/cancel bar — always visible in edit mode */}
       {editMode && canEdit && (
-        <div className="px-5 py-3 border-t border-emerald-500/20 bg-emerald-500/[0.08] flex items-center justify-between">
+        <div className="px-5 py-3 border-t border-emerald-500/20 bg-emerald-500/8 flex items-center justify-between">
           <p className="text-xs font-bold text-emerald-800 dark:text-emerald-200 flex items-center gap-1.5">
             <span className="size-1.5 rounded-full bg-emerald-500" />
             {changesCount} cambios sin guardar

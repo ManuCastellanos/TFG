@@ -14,7 +14,7 @@ export default function EditQuestionsPage() {
   const navigate = useNavigate();
   const cmid = Number(quizId);
 
-  const { questions, isLoading, showAddPanel, setShowAddPanel, addQuestion, isAdding, addError } =
+  const { questions, isLoading, showAddPanel, setShowAddPanel, addQuestion, isAdding, addError, deleteQuestion, deletingSlotId } =
     useEditQuestions(cmid);
 
   const goToQuiz = () =>
@@ -39,7 +39,12 @@ export default function EditQuestionsPage() {
         ) : (
           <div className="flex flex-col gap-3">
             {questions.map((q) => (
-              <QuestionSlotCard key={q.slotId} question={q} />
+              <QuestionSlotCard
+                key={q.slotId}
+                question={q}
+                onDelete={() => deleteQuestion(q.slotId)}
+                isDeleting={deletingSlotId === q.slotId}
+              />
             ))}
           </div>
         )}

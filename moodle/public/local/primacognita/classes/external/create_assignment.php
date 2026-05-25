@@ -102,6 +102,7 @@ class create_assignment extends external_api {
         $data->markingworkflow            = 0;
         $data->markingallocation          = 0;
         $data->visible                    = 1;
+        $data->completion                 = 1; // manual — alumno puede marcar la tarea como hecha
 
         if ($params['activitydraftitemid'] > 0) {
             $data->files = $params['activitydraftitemid'];

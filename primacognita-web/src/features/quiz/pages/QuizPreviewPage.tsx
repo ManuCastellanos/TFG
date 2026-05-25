@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { Play } from 'lucide-react';
+import { useDependencies } from '@/shared/providers/DependenciesProvider';
+import { useSession } from '@/shared/hooks/useSession';
 import { useTimeNow } from '@/shared/hooks/useTimeNow';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
@@ -121,6 +123,7 @@ function QuizPreviewWithAttempts({
   bestGrade,
   attemptGrades,
   onStart,
+  loading,
 }: {
   courseId: string;
   meta: QuizMeta;
@@ -128,6 +131,7 @@ function QuizPreviewWithAttempts({
   bestGrade: string | null;
   attemptGrades: Record<number, string>;
   onStart: () => void;
+  loading?: boolean;
 }) {
   const navigate = useNavigate();
 
@@ -248,10 +252,11 @@ function QuizPreviewWithAttempts({
             variant="primary"
             type="button"
             onClick={onStart}
-            className="flex items-center justify-center gap-2 px-5 py-4 text-base shadow-sm"
+            disabled={loading}
+            className="flex items-center justify-center gap-2 px-5 py-4 text-base shadow-sm disabled:opacity-60"
           >
             <Play className="size-5" />
-            Reintentar cuestionario
+            {loading ? 'Iniciando…' : 'Reintentar cuestionario'}
           </Button>
 
           <Countdown dueDate={meta.dueDate} openDate={meta.openDate} />
@@ -277,7 +282,7 @@ function QuizPreviewWithAttempts({
 
 // ─── Quiz preview — no previous attempts ─────────────────────────────────────
 
-function QuizPreviewEmpty({ meta, onStart }: { meta: QuizMeta; onStart: () => void }) {
+function QuizPreviewEmpty({ meta, onStart, loading }: { meta: QuizMeta; onStart: () => void; loading?: boolean }) {
   const passGrade = meta.gradePass ?? meta.gradeMax * 0.5;
 
   return (
@@ -321,10 +326,11 @@ function QuizPreviewEmpty({ meta, onStart }: { meta: QuizMeta; onStart: () => vo
               variant="primary"
               type="button"
               onClick={onStart}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 text-base shadow-sm"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 text-base shadow-sm disabled:opacity-60"
             >
               <Play className="size-5" />
-              Empezar cuestionario
+              {loading ? 'Iniciando…' : 'Empezar cuestionario'}
             </Button>
             <p className="text-xs text-(--fg-subtle) text-center mt-3">
               Tu mejor calificación cuenta para la nota final.
@@ -361,8 +367,16 @@ export default function QuizPreviewPage() {
   const { courseId, quizId: cmid } = useParams({ strict: false }) as { courseId: string; quizId: string };
   const { meta, loading, error } = useQuizMeta(courseId, cmid);
   const { attempts, bestGrade, attemptGrades } = useQuizPreview(meta ? meta.id : null);
+  const { quizRepository } = useDependencies();
+  const { token } = useSession();
+
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [validating, setValidating] = useState(false);
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const doNavigate = (quizInstanceId: number) => {
     void navigate({
@@ -371,16 +385,76 @@ export default function QuizPreviewPage() {
     });
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
     if (!meta) return;
-    if (meta.hasPassword && !showPasswordPrompt) {
+    setStartError(null);
+
+    if (meta.hasPassword) {
       setShowPasswordPrompt(true);
+      setPasswordError(null);
       return;
     }
-    if (meta.hasPassword) {
-      sessionStorage.setItem(`qp_${meta.id}`, passwordInput);
+
+    if (!token) return;
+
+    // If there's already an in-progress attempt AND we have the password cached,
+    // navigate directly. Otherwise fall through to startAttempt so Moodle
+    // validates the password preflight (or confirms none is needed).
+    const inprogress = attempts.find((a) => a.state === 'inprogress');
+    if (inprogress) {
+      const cached = sessionStorage.getItem(`qp_${meta.id}`);
+      if (cached !== null) {
+        doNavigate(meta.id);
+        return;
+      }
+      // No cached password — fall through to startAttempt.
+      // Moodle checks the password preflight even for existing in-progress attempts:
+      //   - quiz needs a password → returns password error → we show modal ✓
+      //   - quiz has no password  → returns the existing attempt → navigate ✓
     }
-    doNavigate(meta.id);
+
+    // Try to start (or validate) the attempt without password.
+    // Moodle may not report hasPassword for student users, so we probe first.
+    setStarting(true);
+    try {
+      await quizRepository.startAttempt(token, meta.id);
+      sessionStorage.setItem(`qp_${meta.id}`, ''); // mark: no password needed
+      doNavigate(meta.id);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
+      if (msg.toLowerCase().includes('password') || msg.includes('requirepassword')) {
+        setShowPasswordPrompt(true);
+        setPasswordError(null);
+      } else if (msg.includes('noquestionsfound')) {
+        setStartError('Este cuestionario no tiene preguntas configuradas. Contacta con tu profesor.');
+      } else {
+        setStartError(msg || 'Error al iniciar el cuestionario.');
+      }
+    } finally {
+      setStarting(false);
+    }
+  };
+
+  const handlePasswordSubmit = async () => {
+    if (!meta || !token) return;
+    setValidating(true);
+    setPasswordError(null);
+    try {
+      await quizRepository.startAttempt(token, meta.id, passwordInput);
+      sessionStorage.setItem(`qp_${meta.id}`, passwordInput);
+      doNavigate(meta.id);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '';
+      if (msg.includes('noquestionsfound')) {
+        setPasswordError('Este cuestionario no tiene preguntas configuradas. Contacta con tu profesor.');
+      } else {
+        setPasswordError('Contraseña incorrecta. Inténtalo de nuevo.');
+        setPasswordInput('');
+        setTimeout(() => inputRef.current?.focus(), 0);
+      }
+    } finally {
+      setValidating(false);
+    }
   };
 
   if (loading) {
@@ -402,31 +476,48 @@ export default function QuizPreviewPage() {
       <div className="bg-white rounded-3xl border border-(--border) shadow-xl p-7 w-full max-w-sm mx-4">
         <h3 className="font-semibold text-(--fg) mb-1">Contraseña requerida</h3>
         <p className="text-sm text-(--fg-muted) mb-4">Este cuestionario está protegido. Introduce la contraseña para acceder.</p>
+        {passwordError && (
+          <div className="mb-3 px-3 py-2 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 font-medium">
+            {passwordError}
+          </div>
+        )}
         <input
+          ref={inputRef}
           type="password"
           value={passwordInput}
           onChange={(e) => setPasswordInput(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleStart(); }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && !validating) void handlePasswordSubmit(); }}
           placeholder="Contraseña"
           autoFocus
-          className="rounded-xl border border-(--border) bg-(--surface) text-(--fg) px-4 py-3 w-full outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors mb-4 text-sm"
+          disabled={validating}
+          className="rounded-xl border border-(--border) bg-(--surface) text-(--fg) px-4 py-3 w-full outline-none focus:border-(--color-pr) focus:ring-2 focus:ring-(--color-ring) transition-colors mb-4 text-sm disabled:opacity-60"
         />
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => { setShowPasswordPrompt(false); setPasswordInput(''); }}
-            className="flex-1 py-2.5 rounded-xl border border-(--border) text-sm font-medium text-(--fg-muted) hover:bg-(--tint-50) transition-colors"
+            onClick={() => { setShowPasswordPrompt(false); setPasswordInput(''); setPasswordError(null); }}
+            disabled={validating}
+            className="flex-1 py-2.5 rounded-xl border border-(--border) text-sm font-medium text-(--fg-muted) hover:bg-(--tint-50) transition-colors disabled:opacity-60"
           >
             Cancelar
           </button>
           <button
             type="button"
-            onClick={handleStart}
-            className="flex-1 py-2.5 rounded-xl bg-[#274E38] text-white text-sm font-medium hover:opacity-90 transition-opacity"
+            onClick={() => void handlePasswordSubmit()}
+            disabled={validating || !passwordInput}
+            className="flex-1 py-2.5 rounded-xl bg-[#274E38] text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-60"
           >
-            Empezar
+            {validating ? 'Verificando…' : 'Empezar'}
           </button>
         </div>
+      </div>
+    </div>
+  );
+
+  const startErrorBanner = startError && (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-md w-full px-4">
+      <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-700 font-medium shadow-lg">
+        {startError}
       </div>
     </div>
   );
@@ -440,8 +531,10 @@ export default function QuizPreviewPage() {
           attempts={attempts}
           bestGrade={bestGrade}
           attemptGrades={attemptGrades}
-          onStart={handleStart}
+          onStart={() => void handleStart()}
+          loading={starting}
         />
+        {startErrorBanner}
         {passwordDialog}
       </>
     );
@@ -449,7 +542,8 @@ export default function QuizPreviewPage() {
 
   return (
     <>
-      <QuizPreviewEmpty meta={meta} onStart={handleStart} />
+      <QuizPreviewEmpty meta={meta} onStart={() => void handleStart()} loading={starting} />
+      {startErrorBanner}
       {passwordDialog}
     </>
   );

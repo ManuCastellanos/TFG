@@ -9,6 +9,11 @@ export type QuizSlotQuestion = {
   correctAnswer?: boolean;
 };
 
+export type DeleteQuestionInput = {
+  cmid: number;
+  slotId: number;
+};
+
 export type CreateQuestionInput = {
   cmid: number;
   qtype: 'multichoice' | 'truefalse';

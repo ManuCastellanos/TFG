@@ -57,8 +57,9 @@ class create_question extends external_api {
         self::validate_context(\context_module::instance($cm->id));
         require_capability('moodle/course:manageactivities', \context_course::instance($cm->course));
 
-        $quiz    = $DB->get_record('quiz', ['id' => $cm->instance], '*', MUST_EXIST);
-        $context = \context_course::instance($cm->course);
+        $quiz       = $DB->get_record('quiz', ['id' => $cm->instance], '*', MUST_EXIST);
+        $quiz->cmid = (int) $cm->id; // Required by quiz_add_quiz_question in Moodle 4.x for question_references
+        $context    = \context_course::instance($cm->course);
 
         // Find or create top-level category (parent=0) for this context
         $topcategory = $DB->get_record(
@@ -154,7 +155,8 @@ class create_question extends external_api {
         $question = $qtype_instance->save_question($question, $form);
 
         quiz_add_quiz_question($question->id, $quiz, 0, 1.0);
-        quiz_update_sumgrades($quiz);
+        $quizsettings = \mod_quiz\quiz_settings::create_for_cmid($cm->id);
+        \mod_quiz\grade_calculator::create($quizsettings)->recompute_quiz_sumgrades();
 
         // Get the slot number of the newly added question
         $slot = $DB->get_field_sql(

@@ -1,10 +1,13 @@
+import { Trash2 } from 'lucide-react';
 import type { QuizSlotQuestion } from '@/modules/quiz/domain/QuizQuestionBank';
 
 type Props = {
   question: QuizSlotQuestion;
+  onDelete: () => void;
+  isDeleting: boolean;
 };
 
-export function QuestionSlotCard({ question }: Props) {
+export function QuestionSlotCard({ question, onDelete, isDeleting }: Props) {
   const typeLabel = question.type === 'multichoice' ? 'Opción múltiple' : 'Verdadero / Falso';
 
   return (
@@ -14,9 +17,20 @@ export function QuestionSlotCard({ question }: Props) {
           <span className="text-xs font-bold text-(--fg-muted) shrink-0">{question.slot}</span>
           <p className="text-sm font-medium text-(--fg)">{question.name}</p>
         </div>
-        <span className="text-xs font-medium text-(--fg-muted) bg-(--surface) border border-(--border) rounded-lg px-2 py-0.5 shrink-0">
-          {typeLabel}
-        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs font-medium text-(--fg-muted) bg-(--surface) border border-(--border) rounded-lg px-2 py-0.5">
+            {typeLabel}
+          </span>
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={isDeleting}
+            className="p-1 rounded-lg text-(--fg-muted) hover:text-red-500 hover:bg-red-50 disabled:opacity-40 transition"
+            aria-label="Eliminar pregunta"
+          >
+            <Trash2 className="size-4" />
+          </button>
+        </div>
       </div>
 
       {question.type === 'multichoice' && question.answers.length > 0 && (

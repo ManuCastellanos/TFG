@@ -1,7 +1,7 @@
 import type { QuizAttempt } from './QuizAttempt';
 import type { QuizQuestion, QuizAnswers } from './QuizQuestion';
 import type { CreateQuizInput, UpdateQuizInput } from './CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput } from './QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from './QuizQuestionBank';
 
 export type UserAttempt = QuizAttempt;
 
@@ -53,10 +53,11 @@ export default interface IQuizRepository {
   getQuizByCmid(token: string, courseId: number, cmid: number): Promise<QuizMeta | null>;
   startAttempt(token: string, quizId: number, password?: string): Promise<QuizAttempt>;
   getUserAttempts(token: string, quizId: number, userId: number): Promise<UserAttempt[]>;
-  getAttemptData(token: string, attemptId: number, page: number): Promise<AttemptData>;
-  saveAttempt(token: string, attemptId: number, answers: QuizAnswers): Promise<boolean>;
-  processAttempt(token: string, attemptId: number, answers: QuizAnswers): Promise<ProcessResult>;
+  getAttemptData(token: string, attemptId: number, page: number, password?: string): Promise<AttemptData>;
+  saveAttempt(token: string, attemptId: number, answers: QuizAnswers, password?: string): Promise<boolean>;
+  processAttempt(token: string, attemptId: number, answers: QuizAnswers, password?: string): Promise<ProcessResult>;
   getAttemptReview(token: string, attemptId: number): Promise<AttemptReviewData>;
   getQuizQuestions(token: string, cmid: number): Promise<QuizSlotQuestion[]>;
   createQuestion(token: string, input: CreateQuestionInput): Promise<{ questionId: number; slot: number }>;
+  deleteQuestion(token: string, input: DeleteQuestionInput): Promise<void>;
 }
