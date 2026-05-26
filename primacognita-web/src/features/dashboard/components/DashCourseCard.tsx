@@ -9,7 +9,7 @@ import CourseCustomizerPopover from './CourseCustomizerPopover';
 import type { Course } from '@/modules/course/domain/Course';
 
 const DashCourseCard = ({ course, index, onClick }: { course: Course; index: number; onClick: () => void }) => {
-  const progress = course.progress ?? 0;
+  const progress = Math.round(course.progress ?? 0);
   const { emoji, color, update } = useCourseCustomization(course.id, index);
   const c = COLOR_META[color];
   const [pickerOpen, setPickerOpen] = useState(false);

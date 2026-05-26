@@ -14,16 +14,11 @@ function formatDateShort(dt: string): string | null {
   return d.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
-function formatTimeLimit(
-  enabled: boolean,
-  preset: CreateQuizFormValues['timeLimitPreset'],
-  custom: number,
-): string | null {
-  if (!enabled) return null;
-  if (preset === 'custom') return `${custom} min`;
-  if (preset === '60') return '1 hora';
-  if (preset === '90') return '1,5 h';
-  return `${preset} min`;
+function formatTimeLimit(enabled: boolean, minutes: number): string | null {
+  if (!enabled || minutes <= 0) return null;
+  if (minutes >= 60 && minutes % 60 === 0) return `${minutes / 60} h`;
+  if (minutes >= 60) return `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
+  return `${minutes} min`;
 }
 
 function formatAttempts(value: string): string {
@@ -37,13 +32,12 @@ export function QuizSidebar({ form, onCancel, isLoading }: Props) {
   const intro = watch('intro');
   const closeDate = watch('closeDate');
   const timeLimitEnabled = watch('timeLimitEnabled');
-  const timeLimitPreset = watch('timeLimitPreset');
   const timeLimitCustomMinutes = watch('timeLimitCustomMinutes');
   const maxAttempts = watch('maxAttempts');
   const shuffleQuestions = watch('shuffleQuestions');
 
   const closeDateFormatted = formatDateShort(closeDate);
-  const timeLimitLabel = formatTimeLimit(timeLimitEnabled, timeLimitPreset, timeLimitCustomMinutes);
+  const timeLimitLabel = formatTimeLimit(timeLimitEnabled, timeLimitCustomMinutes);
 
   return (
     <aside className="sticky top-4 flex flex-col gap-3">
@@ -104,8 +98,8 @@ export function QuizSidebar({ form, onCancel, isLoading }: Props) {
       </div>
 
       {/* Quick summary */}
-      <div className="rounded-3xl bg-purple-50 border border-purple-200 p-4">
-        <div className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 mb-2 flex items-center gap-1.5">
+      <div className="rounded-3xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 p-4">
+        <div className="text-[10px] font-extrabold uppercase tracking-wider text-purple-700 dark:text-purple-300 mb-2 flex items-center gap-1.5">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3.5 shrink-0">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
           </svg>

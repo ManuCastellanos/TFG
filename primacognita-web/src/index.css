@@ -473,6 +473,45 @@
 /* via-white en gradientes de Banner success/warning/info */
 .dark .via-white       { --tw-gradient-via: var(--surface); }
 
+/* -------------------------
+   Dark mode: fondos -100 (badges, iconos en tarjetas)
+   ------------------------- */
+.dark .bg-sky-100     { background-color: #0d1e33; }
+.dark .bg-violet-100  { background-color: #1e0d35; }
+.dark .bg-lime-100    { background-color: #162609; }
+.dark .bg-orange-100  { background-color: #261608; }
+.dark .bg-amber-100   { background-color: #261f08; }
+.dark .bg-emerald-100 { background-color: #0a2118; }
+
+/* -------------------------
+   Dark mode: texto de color sobre fondos de color
+   (text-X-700 se vuelve claro para mantener contraste)
+   ------------------------- */
+.dark .text-sky-700     { color: #7dd3fc; }
+.dark .text-violet-700  { color: #c4b5fd; }
+.dark .text-lime-700    { color: #bef264; }
+.dark .text-orange-700  { color: #fdba74; }
+.dark .text-amber-700   { color: #fcd34d; }
+.dark .text-emerald-700 { color: #6ee7b7; }
+
+/* -------------------------
+   Dark mode: bordes de color (headers de sección, selección de tipo)
+   ------------------------- */
+.dark .border-sky-200     { border-color: #1e3a52; }
+.dark .border-violet-200  { border-color: #3a1f5e; }
+.dark .border-lime-200    { border-color: #2a4012; }
+.dark .border-orange-200  { border-color: #3d2810; }
+.dark .border-amber-200   { border-color: #3d3010; }
+.dark .border-emerald-200 { border-color: #10382a; }
+.dark .border-sky-300     { border-color: #1e4a6e; }
+.dark .border-violet-300  { border-color: #4a2878; }
+.dark .border-lime-300    { border-color: #364f18; }
+.dark .border-orange-300  { border-color: #4d3418; }
+.dark .border-amber-300   { border-color: #4d3c18; }
+.dark .border-emerald-300 { border-color: #164a38; }
+.dark .border-amber-400   { border-color: #78541a; }
+.dark .border-emerald-400 { border-color: #1a5c42; }
+
 html,
 body,
 #root {

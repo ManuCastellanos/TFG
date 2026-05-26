@@ -61,7 +61,10 @@
       "PowerShell(Remove-Item *)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\\\\theme\" -Recurse | ForEach-Object { $_.FullName })",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\shared\\\\providers\" | ForEach-Object { $_.FullName })",
-      "PowerShell(Get-ChildItem *)"
+      "PowerShell(Get-ChildItem *)",
+      "Bash(xargs wc -l)",
+      "Bash(grep -E \"\\\\.php$\")",
+      "Bash(Write-Output \"done\")"
     ]
   }
 }

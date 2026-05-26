@@ -24,3 +24,13 @@ export type CreateQuestionInput = {
   correctIndices?: number[];
   correctAnswer?: boolean;
 };
+
+export type UpdateQuestionInput = {
+  cmid: number;
+  questionId: number;
+  questionText: string;
+  answers?: string[];
+  correctIndex?: number;
+  correctIndices?: number[];
+  correctAnswer?: boolean;
+};

@@ -2,7 +2,7 @@ import type { QuizAttempt } from '@/modules/quiz/domain/QuizAttempt';
 import type { QuizAnswers } from '@/modules/quiz/domain/QuizQuestion';
 import type { AttemptData, AttemptReviewData, ProcessResult, QuizMeta, UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { CreateQuizInput, UpdateQuizInput } from '@/modules/quiz/domain/CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput, UpdateQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
 
 export default interface IMoodleQuizApi {
   getQuizzesByCourse(token: string, courseId: number): Promise<QuizMeta[]>;
@@ -18,4 +18,5 @@ export default interface IMoodleQuizApi {
   getQuizQuestions(token: string, cmid: number): Promise<QuizSlotQuestion[]>;
   createQuestion(token: string, input: CreateQuestionInput): Promise<{ questionId: number; slot: number }>;
   deleteQuestion(token: string, input: DeleteQuestionInput): Promise<void>;
+  updateQuestion(token: string, input: UpdateQuestionInput): Promise<void>;
 }

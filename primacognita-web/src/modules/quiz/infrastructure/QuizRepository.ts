@@ -4,7 +4,7 @@ import type { AttemptData, ProcessResult, UserAttempt, AttemptReviewData, QuizMe
 import type { QuizAttempt } from '../domain/QuizAttempt';
 import type { QuizAnswers } from '../domain/QuizQuestion';
 import type { CreateQuizInput, UpdateQuizInput } from '../domain/CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from '../domain/QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput, UpdateQuestionInput } from '../domain/QuizQuestionBank';
 
 export default class QuizRepository implements IQuizRepository {
   constructor(private readonly api: IPrimaCognitaApi) {}
@@ -59,5 +59,9 @@ export default class QuizRepository implements IQuizRepository {
 
   deleteQuestion(token: string, input: DeleteQuestionInput): Promise<void> {
     return this.api.quiz.deleteQuestion(token, input);
+  }
+
+  updateQuestion(token: string, input: UpdateQuestionInput): Promise<void> {
+    return this.api.quiz.updateQuestion(token, input);
   }
 }

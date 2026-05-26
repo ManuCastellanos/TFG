@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\manui\\\\Desktop\\\\TFG\\\\primacognita-web\\\\src\\\\features\\\\quiz\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(bun run *)"
+    ]
+  }
+}

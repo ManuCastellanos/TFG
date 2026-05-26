@@ -28,6 +28,11 @@ const formatDate = (date: Date) =>
 const formatGrade = (value: number) =>
   value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+const formatMaxAttempts = (max?: number): string => {
+  if (!max || max === 0) return 'Ilimitados';
+  return `${max} intento${max === 1 ? '' : 's'}`;
+};
+
 const formatDuration = (secs: number): string => {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
@@ -84,8 +89,23 @@ const Countdown = ({ dueDate, openDate }: { dueDate?: Date; openDate?: Date }) =
   const now = useTimeNow();
   if (!dueDate) return null;
   const total = openDate ? Math.round((dueDate.getTime() - openDate.getTime()) / 86400000) : 14;
-  const daysLeft = Math.max(0, Math.round((dueDate.getTime() - now) / 86400000));
-  const urgent = daysLeft <= 1;
+  const rawDaysLeft = Math.round((dueDate.getTime() - now) / 86400000);
+  const expired = rawDaysLeft < 0;
+  const daysLeft = Math.max(0, rawDaysLeft);
+  const urgent = !expired && daysLeft <= 1;
+
+  if (expired) {
+    return (
+      <div className="rounded-2xl border px-4 py-3 bg-gray-100 text-gray-700 border-gray-200">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-base">💀</span>
+          <span className="text-xs font-extrabold uppercase tracking-wider">¡Esto ya cerró, campeón!</span>
+        </div>
+        <p className="text-xs opacity-70">El plazo se acabó. Habla con tu profe 👀</p>
+      </div>
+    );
+  }
+
   const tone = urgent
     ? 'bg-rose-100 text-rose-800 border-rose-200'
     : 'bg-emerald-50 text-emerald-800 border-emerald-200';
@@ -168,7 +188,14 @@ function QuizPreviewWithAttempts({
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-(--fg)">Tus intentos</h3>
               <span className="text-xs font-bold text-(--fg-subtle)">
-                {attempts.length} {attempts.length === 1 ? 'intento' : 'intentos'} · te quedan ilimitados
+                {attempts.length} {attempts.length === 1 ? 'intento' : 'intentos'} ·{' '}
+                {!meta.maxAttempts || meta.maxAttempts === 0
+                  ? 'te quedan ilimitados'
+                  : (() => {
+                      const finished = attempts.filter((a) => a.state !== 'inprogress').length;
+                      const remaining = meta.maxAttempts - finished;
+                      return remaining > 0 ? `te quedan ${remaining}` : 'sin intentos restantes';
+                    })()}
               </span>
             </div>
             <div className="flex flex-col gap-2">
@@ -297,7 +324,10 @@ function QuizPreviewEmpty({ meta, onStart, loading }: { meta: QuizMeta; onStart:
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-(--fg) mb-1">¿Listo para empezar?</h2>
                 <p className="text-sm text-(--fg-muted)">
-                  Cuestionario de opción múltiple. Tienes todos los intentos que quieras.
+                  Cuestionario de opción múltiple.{' '}
+                  {!meta.maxAttempts || meta.maxAttempts === 0
+                    ? 'Tienes todos los intentos que quieras.'
+                    : `Tienes ${formatMaxAttempts(meta.maxAttempts)} disponibles.`}
                 </p>
               </div>
             </div>
@@ -318,7 +348,9 @@ function QuizPreviewEmpty({ meta, onStart, loading }: { meta: QuizMeta; onStart:
               </div>
               <div className="rounded-2xl bg-(--tint-50) border border-(--border) p-3 text-center">
                 <div className="text-2xl">🔄</div>
-                <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">∞</div>
+                <div className="text-lg font-extrabold text-(--fg) leading-none mt-1">
+                  {!meta.maxAttempts || meta.maxAttempts === 0 ? '∞' : meta.maxAttempts}
+                </div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-(--fg-subtle) mt-0.5">Intentos</div>
               </div>
             </div>

@@ -5,10 +5,12 @@ export type QuizRaw = {
   intro?: string;
   timeopen?: number;
   timeclose?: number;
+  timelimit?: number;
   grade?: number;
   gradepass?: number;
   grademethod?: number;
   haspassword?: number;
+  attempts?: number;
 };
 
 export type QuizzesApiResponse = {

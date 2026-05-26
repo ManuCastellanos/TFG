@@ -34,7 +34,7 @@ export const CourseCard = ({
   gradient = 'from-[var(--course-blue-from)] to-[var(--course-blue-to)]',
   onClick,
 }: CourseCardProps) => {
-  const progress = course.progress ?? 0;
+  const progress = Math.round(course.progress ?? 0);
 
   return (
     <Surface

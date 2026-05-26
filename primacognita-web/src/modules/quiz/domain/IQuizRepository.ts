@@ -1,7 +1,7 @@
 import type { QuizAttempt } from './QuizAttempt';
 import type { QuizQuestion, QuizAnswers } from './QuizQuestion';
 import type { CreateQuizInput, UpdateQuizInput } from './CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from './QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput, UpdateQuestionInput } from './QuizQuestionBank';
 
 export type UserAttempt = QuizAttempt;
 
@@ -43,6 +43,7 @@ export interface QuizMeta {
   gradePass?: number;
   gradingMethod?: string;
   hasPassword?: boolean;
+  maxAttempts?: number;
   viewUrl: string;
 }
 
@@ -60,4 +61,5 @@ export default interface IQuizRepository {
   getQuizQuestions(token: string, cmid: number): Promise<QuizSlotQuestion[]>;
   createQuestion(token: string, input: CreateQuestionInput): Promise<{ questionId: number; slot: number }>;
   deleteQuestion(token: string, input: DeleteQuestionInput): Promise<void>;
+  updateQuestion(token: string, input: UpdateQuestionInput): Promise<void>;
 }

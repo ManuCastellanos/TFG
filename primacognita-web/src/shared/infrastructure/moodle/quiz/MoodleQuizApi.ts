@@ -4,7 +4,7 @@ import type { QuizAttempt } from '@/modules/quiz/domain/QuizAttempt';
 import type { QuizAnswers } from '@/modules/quiz/domain/QuizQuestion';
 import type { AttemptData, AttemptReviewData, ProcessResult, QuizMeta, UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { CreateQuizInput, UpdateQuizInput } from '@/modules/quiz/domain/CreateQuizInput';
-import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
+import type { QuizSlotQuestion, CreateQuestionInput, DeleteQuestionInput, UpdateQuestionInput } from '@/modules/quiz/domain/QuizQuestionBank';
 import type {
   QuizAttemptRaw,
   StartAttemptResponse,
@@ -63,6 +63,7 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       gradePass: raw.gradepass,
       gradingMethod: raw.grademethod != null ? QUIZ_GRADING_METHOD[raw.grademethod] : undefined,
       hasPassword: (raw.haspassword ?? 0) === 1,
+      maxAttempts: raw.attempts,
       viewUrl: `${env.baseUrl}/mod/quiz/view.php?id=${raw.coursemodule}`,
     }));
   }
@@ -72,14 +73,6 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       token,
       'mod_quiz_get_quizzes_by_courses',
       { 'courseids[0]': String(courseId) },
-    );
-    // DEBUG: log all quizzes to diagnose ID mapping issues
-    console.debug(
-      '[QuizApi] getQuizByCmid(courseId=%d, cmid=%d) → %d quizzes returned:',
-      courseId, cmid, response.quizzes?.length ?? 0,
-    );
-    response.quizzes?.forEach((q) =>
-      console.debug('  quiz id=%d  coursemodule=%d  name="%s"  haspassword=%d', q.id, q.coursemodule, q.name, q.haspassword ?? 0),
     );
     const raw = response.quizzes?.find((q) => q.coursemodule === cmid);
     console.debug('[QuizApi] → matched: %s', raw ? `id=${raw.id}` : 'NO MATCH');
@@ -96,6 +89,7 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       gradePass: raw.gradepass,
       gradingMethod: raw.grademethod != null ? QUIZ_GRADING_METHOD[raw.grademethod] : undefined,
       hasPassword: (raw.haspassword ?? 0) === 1,
+      maxAttempts: raw.attempts,
       viewUrl: `${env.baseUrl}/mod/quiz/view.php?id=${cmid}`,
     };
   }
@@ -269,6 +263,25 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
         cmid:   String(input.cmid),
         slotid: String(input.slotId),
       },
+    );
+  }
+
+  async updateQuestion(token: string, input: UpdateQuestionInput): Promise<void> {
+    const params: Record<string, string> = {
+      cmid:          String(input.cmid),
+      questionid:    String(input.questionId),
+      questiontext:  input.questionText,
+      correctindex:  String(input.correctIndex ?? 0),
+      correctanswer: String(input.correctAnswer ? 1 : 0),
+    };
+    (input.answers ?? []).forEach((text, i) => {
+      params[`answers[${i}]`] = text;
+    });
+    (input.correctIndices ?? []).forEach((idx, i) => {
+      params[`correctindices[${i}]`] = String(idx);
+    });
+    await this.moodleClient.call<{ success: boolean }>(
+      token, 'local_primacognita_update_question', params,
     );
   }
 

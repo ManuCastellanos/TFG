@@ -86,6 +86,13 @@ $functions = [
         'type'         => 'write',
         'capabilities' => 'moodle/course:manageactivities',
     ],
+    'local_primacognita_update_question' => [
+        'classname'    => 'local_primacognita\external\update_question',
+        'methodname'   => 'execute',
+        'description'  => 'Actualiza el texto y respuestas de una pregunta existente.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/course:manageactivities',
+    ],
     'local_primacognita_delete_section' => [
         'classname'    => 'local_primacognita\external\delete_section',
         'methodname'   => 'execute',

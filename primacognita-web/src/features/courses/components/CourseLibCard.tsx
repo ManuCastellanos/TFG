@@ -16,7 +16,7 @@ type CourseLibCardProps = {
 };
 
 const CourseLibCard = ({ course, index, onClick }: CourseLibCardProps) => {
-  const progress = course.progress ?? 0;
+  const progress = Math.round(course.progress ?? 0);
   const { color, update } = useCourseCustomization(course.id, index);
   const c = COLOR_META[color];
   const [pickerOpen, setPickerOpen] = useState(false);
