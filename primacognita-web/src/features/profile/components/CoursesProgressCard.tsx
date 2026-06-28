@@ -40,7 +40,7 @@ export function CoursesProgressCard({ courses }: CoursesProgressCardProps) {
                   <span className="font-extrabold text-sm text-(--fg) truncate">{course.fullname}</span>
                   <span className="text-xs font-extrabold text-(--fg-muted) ml-2 shrink-0">{Math.round(progress)}%</span>
                 </div>
-                <InlineProgressBar value={progress} colorClass={`from-${cm.grad.split(' ')[0].replace('from-', '')} ${cm.grad.split(' ')[1]}`} height="h-2" />
+                <InlineProgressBar value={progress} colorClass={cm.grad} height="h-2" />
               </div>
             </div>
           );

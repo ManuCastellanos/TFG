@@ -53,7 +53,7 @@ export function EditProfileModal({ open, onClose, profile, isStudent, onSave, sa
   return (
     <Modal open={open} onClose={onClose} width="md">
       <Modal.Header title="Editar perfil" subtitle="Actualiza tu información personal" onClose={onClose} />
-      <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+      <form id="edit-profile-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
         <div className="p-6 flex flex-col gap-6">
           {/* Sobre mí */}
           <section>
@@ -121,8 +121,7 @@ export function EditProfileModal({ open, onClose, profile, isStudent, onSave, sa
         </button>
         <button
           type="submit"
-          form=""
-          onClick={handleSubmit}
+          form="edit-profile-form"
           disabled={saving}
           className="px-5 py-2.5 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110 disabled:opacity-60"
         >
