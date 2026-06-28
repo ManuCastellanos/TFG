@@ -7,6 +7,7 @@ export type QuizRaw = {
   timeclose?: number;
   timelimit?: number;
   grade?: number;
+  sumgrades?: number;
   gradepass?: number;
   grademethod?: number;
   haspassword?: number;

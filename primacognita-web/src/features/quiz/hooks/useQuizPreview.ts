@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
+import type { UserAttempt, QuizMeta } from '@/modules/quiz/domain/IQuizRepository';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { useSession } from '@/shared/hooks/useSession';
 
@@ -11,7 +11,12 @@ export type UseQuizPreviewResult = {
   attemptGrades: Record<number, string>;
 };
 
-export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
+function scaleGrade(sumGrades: number, quizSumgrades: number, gradeMax: number): string {
+  if (quizSumgrades <= 0) return '0.00';
+  return (sumGrades * (gradeMax / quizSumgrades)).toFixed(2);
+}
+
+export function useQuizPreview(quizId: number | null, meta?: QuizMeta | null): UseQuizPreviewResult {
   const { quizRepository } = useDependencies();
   const { token, userId } = useSession();
 
@@ -44,6 +49,13 @@ export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
             const r = reviews[i];
             if (r.status === 'fulfilled' && r.value.grade) {
               gradesMap[a.id] = r.value.grade;
+            } else if (
+              a.sumGrades != null &&
+              meta?.sumgrades != null &&
+              meta.sumgrades > 0 &&
+              meta.gradeMax != null
+            ) {
+              gradesMap[a.id] = scaleGrade(a.sumGrades, meta.sumgrades, meta.gradeMax);
             }
           });
 
@@ -70,7 +82,7 @@ export function useQuizPreview(quizId: number | null): UseQuizPreviewResult {
 
     void fetchAttempts();
     return () => { cancelled = true; };
-  }, [quizRepository, token, userId, quizId]);
+  }, [quizRepository, token, userId, quizId, meta]);
 
   return { attempts, loading, attemptsError, bestGrade, attemptGrades };
 }

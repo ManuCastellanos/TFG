@@ -398,7 +398,7 @@ export default function QuizPreviewPage() {
   const navigate = useNavigate();
   const { courseId, quizId: cmid } = useParams({ strict: false }) as { courseId: string; quizId: string };
   const { meta, loading, error } = useQuizMeta(courseId, cmid);
-  const { attempts, bestGrade, attemptGrades } = useQuizPreview(meta ? meta.id : null);
+  const { attempts, bestGrade, attemptGrades } = useQuizPreview(meta ? meta.id : null, meta);
   const { quizRepository } = useDependencies();
   const { token } = useSession();
 

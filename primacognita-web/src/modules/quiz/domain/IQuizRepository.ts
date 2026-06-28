@@ -40,6 +40,7 @@ export interface QuizMeta {
   openDate?: Date;
   dueDate?: Date;
   gradeMax: number;
+  sumgrades?: number;
   gradePass?: number;
   gradingMethod?: string;
   hasPassword?: boolean;

@@ -219,6 +219,25 @@ export default function QuizReviewPage() {
     );
   }
 
+  if (error) {
+    const isNoReview = error.includes('noreview') || error.includes('noreviewattempt');
+    return (
+      <Page>
+        <div className="bg-white rounded-3xl border border-(--border) p-8 flex flex-col items-center gap-3 text-center max-w-md mx-auto mt-8">
+          <div className="size-14 rounded-2xl bg-amber-100 grid place-items-center text-3xl">🔒</div>
+          <h3 className="font-extrabold text-(--fg) text-lg">
+            {isNoReview ? 'Revisión no disponible' : 'Error al cargar la revisión'}
+          </h3>
+          <p className="text-sm text-(--fg-muted)">
+            {isNoReview
+              ? 'El profesor no ha habilitado la revisión de este cuestionario. Podrás ver tus respuestas cuando lo active.'
+              : error}
+          </p>
+        </div>
+      </Page>
+    );
+  }
+
   return (
     <Page>
       {error && <Alert variant="error" className="mb-4">{error}</Alert>}
