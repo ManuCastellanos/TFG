@@ -9,8 +9,6 @@ export function AssignCountdown({ dueDate, openDate }: { dueDate?: number; openD
     const hoursUntilOpen = Math.max(0, Math.round((openDate - now) / 3600000));
     const display = daysUntilOpen >= 1 ? `${daysUntilOpen}` : `${hoursUntilOpen}`;
     const unit = daysUntilOpen >= 1 ? 'días' : 'horas';
-    // barra de progreso: cuánto de la espera queda (desde ahora hasta apertura)
-    const totalWait = dueDate ? dueDate - (openDate - (openDate - now)) : openDate - now;
     const pct = Math.max(5, Math.min(95, ((openDate - now) / Math.max(openDate - (now - 86400000 * 30), 1)) * 100));
 
     return (

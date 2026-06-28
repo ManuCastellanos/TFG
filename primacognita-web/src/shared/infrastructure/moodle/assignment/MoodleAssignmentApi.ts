@@ -95,7 +95,7 @@ export default class MoodleAssignmentApi implements IMoodleAssignmentApi {
       params['plugindata[onlinetext_editor][itemid]'] = '0';
     }
     // mod_assign_save_submission returns an array of warnings on failure (not exceptions)
-    const warnings = await this.moodleClient.call<Array<{ warningcode: string; message: string }>>(
+    const warnings = await this.moodleClient.call<Array<{ warningcode: string; message: string; item?: string }>>(
       token, 'mod_assign_save_submission', params,
     );
     if (Array.isArray(warnings) && warnings.length > 0) {
