@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Modal } from '@/components/ui/modal/Modal';
 import { FormField } from '@/components/ui/formField/FormField';
 import { Input } from '@/components/ui/input/Input';
@@ -18,29 +18,19 @@ type EditFamilyModalProps = {
   saving: boolean;
 };
 
-function emptyFamily(): FamilyFields {
-  return {
-    tutor1_nombre: '', tutor1_email: '', tutor1_telefono: '',
-    tutor2_nombre: '', tutor2_email: '', tutor2_telefono: '',
-  };
-}
-
 export function EditFamilyModal({ open, onClose, profile, onSave, saving }: EditFamilyModalProps) {
-  const [form, setForm] = useState<FamilyFields>(emptyFamily());
-
-  useEffect(() => {
-    if (!profile || !open) return;
-    const t1 = profile.family[0];
-    const t2 = profile.family[1];
-    setForm({
+  const [form, setForm] = useState<FamilyFields>(() => {
+    const t1 = profile?.family[0];
+    const t2 = profile?.family[1];
+    return {
       tutor1_nombre:   t1?.nombre   ?? '',
       tutor1_email:    t1?.email    ?? '',
       tutor1_telefono: t1?.telefono ?? '',
       tutor2_nombre:   t2?.nombre   ?? '',
       tutor2_email:    t2?.email    ?? '',
       tutor2_telefono: t2?.telefono ?? '',
-    });
-  }, [profile, open]);
+    };
+  });
 
   const set = (key: keyof FamilyFields) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));

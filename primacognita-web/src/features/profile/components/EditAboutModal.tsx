@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Modal } from '@/components/ui/modal/Modal';
 import { FormField } from '@/components/ui/formField/FormField';
 import { Input } from '@/components/ui/input/Input';
@@ -14,22 +14,13 @@ type EditAboutModalProps = {
   saving: boolean;
 };
 
-function emptyAbout(): AboutFields {
-  return { superpoder: '', cumpleanos: '', animal: '', talento: '' };
-}
-
 export function EditAboutModal({ open, onClose, profile, onSave, saving }: EditAboutModalProps) {
-  const [form, setForm] = useState<AboutFields>(emptyAbout());
-
-  useEffect(() => {
-    if (!profile || !open) return;
-    setForm({
-      superpoder: profile.about.superpoder,
-      cumpleanos: profile.about.cumpleanos,
-      animal:     profile.about.animal,
-      talento:    profile.about.talento,
-    });
-  }, [profile, open]);
+  const [form, setForm] = useState<AboutFields>(() => ({
+    superpoder: profile?.about.superpoder ?? '',
+    cumpleanos: profile?.about.cumpleanos ?? '',
+    animal:     profile?.about.animal     ?? '',
+    talento:    profile?.about.talento    ?? '',
+  }));
 
   const set = (key: keyof AboutFields) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
