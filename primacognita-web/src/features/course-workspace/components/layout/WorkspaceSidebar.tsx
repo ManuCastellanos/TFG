@@ -34,6 +34,8 @@ export const WorkspaceSidebar = ({
     return (
       <StudentSidebar
         activeTab={activeTab}
+        participants={participants}
+        participantsLoading={participantsLoading}
         upcomingAssignments={upcomingAssignments}
         upcomingAssignmentsLoading={upcomingAssignmentsLoading}
         onUpcomingNavigate={onUpcomingNavigate}

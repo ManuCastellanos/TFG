@@ -54,7 +54,7 @@ const CourseSectionCard = ({
   const [confirmDeleteSection, setConfirmDeleteSection] = useState(false);
   const [confirmDeleteCmid, setConfirmDeleteCmid] = useState<number | null>(null);
 
-  const isGeneral = section.id === 0;
+  const isGeneral = sectionNumber === 0;
   const safeColorIndex = colorIdx >= 0 ? colorIdx % SECTION_COLORS.length : 0;
   const sectionColor = SECTION_COLORS[safeColorIndex];
   const ringColor = RING_COLORS[safeColorIndex % RING_COLORS.length];

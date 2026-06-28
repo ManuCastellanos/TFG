@@ -9,8 +9,8 @@ export type EnrichedSection = {
 
 export function enrichSections(sections: CourseSection[]): EnrichedSection[] {
   return sections.reduce<{ items: EnrichedSection[]; idx: number }>(
-    (acc, section) => {
-      const isGeneral = section.id === 0;
+    (acc, section, index) => {
+      const isGeneral = index === 0;
       const colorIdx = isGeneral ? -1 : acc.idx;
       const sectionNumber = isGeneral ? 0 : acc.idx + 1;
 
