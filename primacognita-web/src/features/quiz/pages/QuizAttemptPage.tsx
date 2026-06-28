@@ -20,7 +20,7 @@ function QuizCountdown({ endTime, onExpire }: { endTime: number; onExpire: () =>
       return;
     }
     const id = setInterval(() => {
-      setRemaining((r) => {
+      setRemaining((_r) => {
         const next = Math.max(0, endTime - Math.floor(Date.now() / 1000));
         if (next <= 0 && !expiredRef.current) {
           expiredRef.current = true;
