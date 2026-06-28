@@ -12,10 +12,12 @@ type StudentProfileViewProps = {
   user: User;
   courses: Course[];
   profile: Profile | null;
-  onEdit: () => void;
+  onEditAccount: () => void;
+  onEditAbout: () => void;
+  onEditFamily: () => void;
 };
 
-export function StudentProfileView({ user, courses, profile, onEdit }: StudentProfileViewProps) {
+export function StudentProfileView({ user, courses, profile, onEditAccount, onEditAbout, onEditFamily }: StudentProfileViewProps) {
   const stats = [
     {
       icon: '🏆',
@@ -44,18 +46,18 @@ export function StudentProfileView({ user, courses, profile, onEdit }: StudentPr
         roleName={user.roleName}
         avatarUrl={user.avatarUrl}
         stats={stats}
-        onEdit={onEdit}
+        onEditAccount={onEditAccount}
       />
 
       <div className="grid grid-cols-[1fr_320px] gap-6">
         <div className="flex flex-col gap-5">
-          <AboutMeCard about={profile?.about ?? { superpoder: '', cumpleanos: '', animal: '', talento: '' }} onEdit={onEdit} />
+          <AboutMeCard about={profile?.about ?? { superpoder: '', cumpleanos: '', animal: '', talento: '' }} onEdit={onEditAbout} />
           <CoursesProgressCard courses={courses} />
           <ActivityCard activities={profile?.recentActivity ?? []} />
         </div>
         <div className="flex flex-col gap-3">
           <BadgesCard badges={profile?.recentBadges ?? []} total={profile?.badgeCount ?? 0} />
-          <FamilyCard family={profile?.family ?? []} onEdit={onEdit} />
+          <FamilyCard family={profile?.family ?? []} onEdit={onEditFamily} />
         </div>
       </div>
     </div>

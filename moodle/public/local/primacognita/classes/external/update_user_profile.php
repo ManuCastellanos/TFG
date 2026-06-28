@@ -54,7 +54,7 @@ class update_user_profile extends external_api {
             'tutor2_telefono' => $tutor2_telefono,
         ]);
 
-        self::validate_context(\context_user::instance($USER->id));
+        self::validate_context(\context_system::instance());
 
         $userobj = new \stdClass();
         $userobj->id = $USER->id;

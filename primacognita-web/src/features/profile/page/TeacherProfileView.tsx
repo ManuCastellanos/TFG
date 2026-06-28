@@ -9,10 +9,11 @@ type TeacherProfileViewProps = {
   user: User;
   courses: Course[];
   profile: Profile | null;
-  onEdit: () => void;
+  onEditAccount: () => void;
+  onEditAbout: () => void;
 };
 
-export function TeacherProfileView({ user, courses, profile, onEdit }: TeacherProfileViewProps) {
+export function TeacherProfileView({ user, courses, profile, onEditAccount, onEditAbout }: TeacherProfileViewProps) {
   const stats = [
     {
       icon: '📚',
@@ -41,17 +42,15 @@ export function TeacherProfileView({ user, courses, profile, onEdit }: TeacherPr
         roleName={user.roleName}
         avatarUrl={user.avatarUrl}
         stats={stats}
-        onEdit={onEdit}
+        onEditAccount={onEditAccount}
       />
 
       <div className="grid grid-cols-[1fr_320px] gap-6">
         <div className="flex flex-col gap-5">
-          <AboutMeCard about={profile?.about ?? { superpoder: '', cumpleanos: '', animal: '', talento: '' }} onEdit={onEdit} />
+          <AboutMeCard about={profile?.about ?? { superpoder: '', cumpleanos: '', animal: '', talento: '' }} onEdit={onEditAbout} />
           <TeacherCoursesCard courses={courses} />
         </div>
-        <div className="flex flex-col gap-3">
-          {/* Espacio reservado para futuras tarjetas (ranking de clase, etc.) */}
-        </div>
+        <div className="flex flex-col gap-3" />
       </div>
     </div>
   );

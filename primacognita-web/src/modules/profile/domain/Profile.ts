@@ -44,3 +44,15 @@ export interface UpdateProfileParams {
   tutor2_email: string;
   tutor2_telefono: string;
 }
+
+export interface UpdateAccountParams {
+  firstname: string;
+  lastname: string;
+  pictureFile?: File;
+  userId: string;
+}
+
+export interface ChangePasswordParams {
+  currentpassword: string;
+  newpassword: string;
+}

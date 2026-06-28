@@ -55,5 +55,9 @@ function xmldb_local_primacognita_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025010110, 'local', 'primacognita');
     }
 
+    if ($oldversion < 2025010111) {
+        upgrade_plugin_savepoint(true, 2025010111, 'local', 'primacognita');
+    }
+
     return true;
 }

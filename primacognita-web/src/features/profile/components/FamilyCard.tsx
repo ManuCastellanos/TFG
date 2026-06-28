@@ -24,7 +24,7 @@ export function FamilyCard({ family, onEdit }: FamilyCardProps) {
       ) : (
         <div className="flex flex-col gap-2">
           {family.map((tutor, i) => {
-            const initials = tutor.nombre.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+            const initials = (tutor.nombre || '?').split(' ').map((n) => n[0] || '').join('').slice(0, 2).toUpperCase() || '?';
             return (
               <div key={i} className="flex items-center gap-3 p-2 rounded-xl hover:bg-(--tint-50)">
                 <div className={`size-9 rounded-xl bg-gradient-to-br ${AVATAR_COLORS[i % AVATAR_COLORS.length]} grid place-items-center text-white font-extrabold text-xs shrink-0`}>

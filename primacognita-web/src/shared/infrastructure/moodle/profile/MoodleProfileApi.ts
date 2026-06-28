@@ -1,7 +1,8 @@
 import type IMoodleProfileApi from './IMoodleProfileApi';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
-import type { Profile, UpdateProfileParams } from '@/modules/profile/domain/Profile';
+import type { Profile, UpdateProfileParams, UpdateAccountParams, ChangePasswordParams } from '@/modules/profile/domain/Profile';
 import type { ProfileResponse } from '@/modules/profile/infrastructure/ProfileResponse';
+import { env } from '@/shared/utils/env';
 
 export default class MoodleProfileApi implements IMoodleProfileApi {
   constructor(private readonly moodleClient: IMoodleClient) {}
@@ -48,6 +49,42 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
       tutor2_nombre:   params.tutor2_nombre,
       tutor2_email:    params.tutor2_email,
       tutor2_telefono: params.tutor2_telefono,
+    });
+  }
+
+  async updateAccount(token: string, params: UpdateAccountParams): Promise<void> {
+    let picturedraftitemid = 0;
+
+    if (params.pictureFile) {
+      // Step 1: get draft item id
+      const { itemid } = await this.moodleClient.call<{ itemid: number }>(
+        token, 'core_files_get_unused_draft_itemid', {},
+      );
+      picturedraftitemid = itemid;
+
+      // Step 2: upload file to draft area
+      const formData = new FormData();
+      formData.append('token', token);
+      formData.append('filearea', 'draft');
+      formData.append('itemid', String(itemid));
+      formData.append('filepath', '/');
+      formData.append('filename', params.pictureFile.name);
+      formData.append('file_1', params.pictureFile, params.pictureFile.name);
+      const res = await fetch(`${env.baseUrl}/webservice/upload.php`, { method: 'POST', body: formData });
+      if (!res.ok) throw new Error(`Error al subir la imagen: ${res.statusText}`);
+    }
+
+    await this.moodleClient.call(token, 'local_primacognita_update_account', {
+      firstname:          params.firstname,
+      lastname:           params.lastname,
+      picturedraftitemid: String(picturedraftitemid),
+    });
+  }
+
+  async changePassword(token: string, params: ChangePasswordParams): Promise<void> {
+    await this.moodleClient.call(token, 'local_primacognita_change_password', {
+      currentpassword: params.currentpassword,
+      newpassword:     params.newpassword,
     });
   }
 }

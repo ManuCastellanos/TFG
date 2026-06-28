@@ -114,11 +114,28 @@ $functions = [
         'type'         => 'write',
         'capabilities' => '',
     ],
+    'local_primacognita_update_account' => [
+        'classname'    => 'local_primacognita\external\update_account',
+        'methodname'   => 'execute',
+        'description'  => 'Actualiza nombre y foto de perfil del usuario actual.',
+        'type'         => 'write',
+        'capabilities' => 'moodle/user:editownprofile',
+    ],
+    'local_primacognita_change_password' => [
+        'classname'    => 'local_primacognita\external\change_password',
+        'methodname'   => 'execute',
+        'description'  => 'Cambia la contraseña del usuario actual verificando la contraseña actual.',
+        'type'         => 'write',
+        'capabilities' => '',
+    ],
 ];
 
 $services = [
     'PrimaCognita API' => [
-        'functions'       => array_keys($functions),
+        'functions'       => array_merge(array_keys($functions), [
+            'core_files_get_unused_draft_itemid',
+            'core_user_update_picture',
+        ]),
         'restrictedusers' => 0,
         'enabled'         => 1,
         'shortname'       => 'primacognita',

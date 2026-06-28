@@ -13,17 +13,17 @@ type ProfileHeroProps = {
   roleName: string | null;
   avatarUrl: string | null;
   stats: StatChip[];
-  onEdit: () => void;
+  onEditAccount: () => void;
 };
 
-export function ProfileHero({ fullName, roleName, avatarUrl, stats, onEdit }: ProfileHeroProps) {
+export function ProfileHero({ fullName, roleName, avatarUrl, stats, onEditAccount }: ProfileHeroProps) {
   const initials = fullName.trim().slice(0, 1).toUpperCase();
   const roleLabel = roleName === 'student' ? 'alumno' : roleName === 'editingteacher' || roleName === 'teacher' ? 'profesor/a' : roleName ?? '';
 
   return (
     <div className="relative rounded-3xl overflow-hidden mb-6 bg-white border border-(--border)">
       {/* Cover */}
-      <div className="h-40 bg-gradient-to-br from-emerald-300 via-sky-300 to-violet-300 relative">
+      <div className="h-40 bg-linear-to-br from-emerald-300 via-sky-300 to-violet-300 relative">
         <svg viewBox="0 0 800 160" className="absolute inset-0 w-full h-full" aria-hidden>
           {[...Array(20)].map((_, i) => (
             <circle key={i} cx={`${(i * 37) % 100}%`} cy={`${(i * 23) % 100}%`} r={2 + (i % 3)} fill="white" opacity="0.4" />
@@ -38,7 +38,7 @@ export function ProfileHero({ fullName, roleName, avatarUrl, stats, onEdit }: Pr
             {avatarUrl ? (
               <img src={avatarUrl} alt={fullName} className="size-28 rounded-3xl border-4 border-white shadow-lg object-cover" />
             ) : (
-              <div className="size-28 rounded-3xl bg-gradient-to-br from-sky-300 to-sky-500 grid place-items-center text-white font-extrabold text-5xl border-4 border-white shadow-lg">
+              <div className="size-28 rounded-3xl bg-linear-to-br from-sky-300 to-sky-500 grid place-items-center text-white font-extrabold text-5xl border-4 border-white shadow-lg">
                 {initials}
               </div>
             )}
@@ -61,7 +61,7 @@ export function ProfileHero({ fullName, roleName, avatarUrl, stats, onEdit }: Pr
 
           <button
             type="button"
-            onClick={onEdit}
+            onClick={onEditAccount}
             className="px-4 py-2.5 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110"
           >
             ✏️ Editar perfil
