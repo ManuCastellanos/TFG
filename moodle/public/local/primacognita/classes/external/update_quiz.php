@@ -45,14 +45,15 @@ class update_quiz extends external_api {
         $course = get_course($cm->course);
 
         $data = new \stdClass();
-        $data->coursemodule = $params['cmid'];
-        $data->modulename   = 'quiz';
-        $data->name         = $params['name'];
-        $data->intro        = $params['intro'];
-        $data->introformat  = FORMAT_HTML;
-        $data->timeopen     = $params['timeopen'];
-        $data->timeclose    = $params['timeclose'];
-        $data->timelimit    = $params['timelimit'];
+        $data->coursemodule  = $params['cmid'];
+        $data->modulename    = 'quiz';
+        $data->name          = $params['name'];
+        $data->intro         = $params['intro'];
+        $data->introformat   = FORMAT_HTML;
+        $data->timeopen      = $params['timeopen'];
+        $data->timeclose     = $params['timeclose'];
+        $data->timelimit     = $params['timelimit'];
+        $data->reviewattempt = 0x11110;
 
         update_moduleinfo($cm, $data, $course);
         return ['success' => true];

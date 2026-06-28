@@ -92,6 +92,7 @@ class create_quiz extends external_api {
         $data->completionview     = 1;
 
         $reviewall = 0x11110;
+        $data->reviewattempt = $reviewall;
         if ($params['showresultsimmediately']) {
             $data->reviewcorrectness      = $reviewall;
             $data->reviewmarks            = $reviewall;
