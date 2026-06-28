@@ -87,6 +87,7 @@ export default class MoodleQuizApi implements IMoodleQuizApi {
       openDate: raw.timeopen ? new Date(raw.timeopen * 1000) : undefined,
       dueDate: raw.timeclose ? new Date(raw.timeclose * 1000) : undefined,
       gradeMax: raw.grade ?? 10,
+      sumgrades: raw.sumgrades,
       gradePass: raw.gradepass,
       gradingMethod: raw.grademethod != null ? QUIZ_GRADING_METHOD[raw.grademethod] : undefined,
       hasPassword: (raw.haspassword ?? 0) === 1,
