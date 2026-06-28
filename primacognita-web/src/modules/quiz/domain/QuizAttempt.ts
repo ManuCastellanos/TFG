@@ -10,5 +10,6 @@ export interface QuizAttempt {
   state: QuizAttemptState;
   timeStart: number;
   timeFinish: number;
+  timeCheckState: number;
   sumGrades: number | null;
 }

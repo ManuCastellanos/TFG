@@ -29,6 +29,7 @@ function mapAttempt(raw: QuizAttemptRaw): QuizAttempt {
     state: raw.state as QuizAttempt['state'],
     timeStart: raw.timestart,
     timeFinish: raw.timefinish,
+    timeCheckState: raw.timecheckstate ?? 0,
     sumGrades: raw.sumgrades,
   };
 }

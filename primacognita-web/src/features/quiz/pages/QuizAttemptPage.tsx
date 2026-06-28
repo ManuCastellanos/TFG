@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ChevronLeft, ChevronRight, Flag, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
@@ -8,6 +8,57 @@ import { Page } from '@/components/ui/page/Page';
 import { QuizContentSkeleton } from '../components/QuizContentSkeleton';
 import { useQuizAttempt } from '../hooks/useQuizAttempt';
 import { parseQuizQuestion } from '../utils/parseQuizQuestion';
+
+function QuizCountdown({ endTime, onExpire }: { endTime: number; onExpire: () => void }) {
+  const [remaining, setRemaining] = useState(() => Math.max(0, endTime - Math.floor(Date.now() / 1000)));
+  const expiredRef = useRef(false);
+
+  useEffect(() => {
+    if (remaining <= 0 && !expiredRef.current) {
+      expiredRef.current = true;
+      onExpire();
+      return;
+    }
+    const id = setInterval(() => {
+      setRemaining((r) => {
+        const next = Math.max(0, endTime - Math.floor(Date.now() / 1000));
+        if (next <= 0 && !expiredRef.current) {
+          expiredRef.current = true;
+          clearInterval(id);
+          onExpire();
+        }
+        return next;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [endTime, onExpire, remaining]);
+
+  const h = Math.floor(remaining / 3600);
+  const m = Math.floor((remaining % 3600) / 60);
+  const s = remaining % 60;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const display = h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+
+  const urgent = remaining < 60;
+  const warning = !urgent && remaining < 300;
+
+  const colors = urgent
+    ? 'bg-rose-100 text-rose-800 border-rose-200'
+    : warning
+      ? 'bg-amber-100 text-amber-800 border-amber-200'
+      : 'bg-emerald-50 text-emerald-800 border-emerald-200';
+
+  return (
+    <div className={`rounded-2xl border px-4 py-3 ${colors}`}>
+      <div className="text-[10px] font-bold uppercase tracking-wider opacity-70 mb-0.5">
+        {urgent ? '⏰ ¡Tiempo agotándose!' : warning ? '⚠️ Tiempo restante' : '⏱️ Tiempo restante'}
+      </div>
+      <div className={`text-3xl font-extrabold tabular-nums leading-none ${urgent ? 'animate-pulse' : ''}`}>
+        {display}
+      </div>
+    </div>
+  );
+}
 
 export default function QuizAttemptPage() {
   const navigate = useNavigate();
@@ -239,6 +290,9 @@ export default function QuizAttemptPage() {
 
           {/* Right: question palette */}
           <div className="flex flex-col gap-4">
+            {attempt?.timeCheckState != null && attempt.timeCheckState > 0 && (
+              <QuizCountdown endTime={attempt.timeCheckState} onExpire={submit} />
+            )}
             <div className="bg-white rounded-3xl border border-(--border) p-5">
               <div className="text-xs font-bold uppercase tracking-wider text-(--fg-subtle) mb-1">Navegación</div>
               <h3 className="font-semibold text-(--fg) mb-4">Preguntas</h3>

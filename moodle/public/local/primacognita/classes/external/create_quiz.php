@@ -91,22 +91,27 @@ class create_quiz extends external_api {
         $data->completion         = 1;
         $data->completionview     = 1;
 
-        $reviewall = 0x11110;
-        $data->reviewattempt = $reviewall;
+        // quiz_process_options() reads individual checkbox fields (e.g. attemptimmediately)
+        // and rebuilds the combined reviewattempt bitmask, so we must set those fields
+        // rather than reviewattempt directly.
+        $data->attemptduring      = 1;
+        $data->attemptimmediately = 1;
+        $data->attemptopen        = 1;
+        $data->attemptclosed      = 1;
+
         if ($params['showresultsimmediately']) {
-            $data->reviewcorrectness      = $reviewall;
-            $data->reviewmarks            = $reviewall;
-            $data->reviewspecificfeedback = $reviewall;
-            $data->reviewgeneralfeedback  = $reviewall;
-            $data->reviewrightanswer      = $reviewall;
-            $data->reviewoverallfeedback  = $reviewall;
-        } else {
-            $data->reviewcorrectness      = 0;
-            $data->reviewmarks            = 0;
-            $data->reviewspecificfeedback = 0;
-            $data->reviewgeneralfeedback  = 0;
-            $data->reviewrightanswer      = 0;
-            $data->reviewoverallfeedback  = 0;
+            $data->correctnessduring      = 1; $data->correctnessimmediately = 1;
+            $data->correctnessopen        = 1; $data->correctnessclosed      = 1;
+            $data->marksduring            = 1; $data->marksimmediately       = 1;
+            $data->marksopen              = 1; $data->marksclosed            = 1;
+            $data->specificfeedbackduring = 1; $data->specificfeedbackimmediately = 1;
+            $data->specificfeedbackopen   = 1; $data->specificfeedbackclosed      = 1;
+            $data->generalfeedbackduring  = 1; $data->generalfeedbackimmediately  = 1;
+            $data->generalfeedbackopen    = 1; $data->generalfeedbackclosed       = 1;
+            $data->rightanswerduring      = 1; $data->rightanswerimmediately      = 1;
+            $data->rightansweropen        = 1; $data->rightanswerclosed           = 1;
+            $data->overallfeedbackduring  = 1; $data->overallfeedbackimmediately  = 1;
+            $data->overallfeedbackopen    = 1; $data->overallfeedbackclosed       = 1;
         }
 
         if ($params['quizdraftitemid'] > 0) {
