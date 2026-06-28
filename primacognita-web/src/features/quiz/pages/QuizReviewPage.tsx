@@ -104,15 +104,17 @@ function ReviewQuestionCard({ question, idx }: { question: ReviewQuestion; idx: 
           {question.mark != null ? (
             <span className="text-sm font-extrabold text-(--fg)">
               {question.mark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              <span className="text-xs font-bold text-(--fg-muted)">
-                {' '}/ {question.maxmark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span>
+              {question.maxmark != null && (
+                <span className="text-xs font-bold text-(--fg-muted)">
+                  {' '}/ {question.maxmark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+              )}
             </span>
-          ) : (
+          ) : question.maxmark != null ? (
             <span className="text-sm font-bold text-(--fg-muted)">
-              : / {question.maxmark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              - / {question.maxmark.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
-          )}
+          ) : null}
         </div>
       </div>
 
