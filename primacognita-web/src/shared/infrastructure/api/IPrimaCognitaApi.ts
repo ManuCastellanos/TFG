@@ -7,6 +7,7 @@ import type IMoodleChatApi from '@/shared/infrastructure/moodle/chat/IMoodleChat
 import type IMoodleQuizApi from '@/shared/infrastructure/moodle/quiz/IMoodleQuizApi';
 import type IMoodleAssignmentApi from '@/shared/infrastructure/moodle/assignment/IMoodleAssignmentApi';
 import type IMoodleCourseApi from '@/shared/infrastructure/moodle/course/IMoodleCourseApi';
+import type IMoodleProfileApi from '@/shared/infrastructure/moodle/profile/IMoodleProfileApi';
 
 export default interface IPrimaCognitaApi {
   readonly user: IMoodleUserApi;
@@ -18,4 +19,5 @@ export default interface IPrimaCognitaApi {
   readonly quiz: IMoodleQuizApi;
   readonly assignment: IMoodleAssignmentApi;
   readonly course: IMoodleCourseApi;
+  readonly profile: IMoodleProfileApi;
 }

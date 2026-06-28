@@ -49,4 +49,8 @@ export const queryKeys = {
     all:  ['notifications'] as const,
     list: (userId: number, read: 0 | 1) => ['notifications', 'list', userId, read] as const,
   },
+  profile: {
+    all:    ['profile'] as const,
+    detail: (userId: string) => [...['profile'], 'detail', userId] as const,
+  },
 };

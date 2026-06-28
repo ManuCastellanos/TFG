@@ -9,6 +9,7 @@ import MoodleChatApi from '../infrastructure/moodle/chat/MoodleChatApi';
 import MoodleQuizApi from '../infrastructure/moodle/quiz/MoodleQuizApi';
 import MoodleAssignmentApi from '../infrastructure/moodle/assignment/MoodleAssignmentApi';
 import MoodleCourseApi from '../infrastructure/moodle/course/MoodleCourseApi';
+import MoodleProfileApi from '../infrastructure/moodle/profile/MoodleProfileApi';
 
 import AuthRepository from '@/modules/auth/infrastructure/AuthRepository';
 import CourseRepository from '@/modules/course/infrastructure/CourseRepository';
@@ -22,6 +23,7 @@ import QuizRepository from '@/modules/quiz/infrastructure/QuizRepository';
 import ForumRepository from '@/modules/forum/infrastructure/ForumRepository';
 import ChatRepository from '@/modules/chat/infrastructure/ChatRepository';
 import NotificationRepository from '@/modules/notifications/infrastructure/NotificationRepository';
+import ProfileRepository from '@/modules/profile/infrastructure/ProfileRepository';
 
 import type IAuthRepository from '@/modules/auth/domain/IAuthRepository';
 import type ICourseRepository from '@/modules/course/domain/ICourseRepository';
@@ -35,6 +37,7 @@ import type IQuizRepository from '@/modules/quiz/domain/IQuizRepository';
 import type IForumRepository from '@/modules/forum/domain/IForumRepository';
 import type IChatRepository from '@/modules/chat/domain/IChatRepository';
 import type INotificationRepository from '@/modules/notifications/domain/INotificationRepository';
+import type IProfileRepository from '@/modules/profile/domain/IProfileRepository';
 
 
 export default class Dependencies {
@@ -50,6 +53,7 @@ export default class Dependencies {
   readonly forumRepository: IForumRepository;
   readonly chatRepository: IChatRepository;
   readonly notificationRepository: INotificationRepository;
+  readonly profileRepository: IProfileRepository;
 
   private constructor(params: {
     authRepository: IAuthRepository;
@@ -64,6 +68,7 @@ export default class Dependencies {
     forumRepository: IForumRepository;
     chatRepository: IChatRepository;
     notificationRepository: INotificationRepository;
+    profileRepository: IProfileRepository;
   }) {
     this.authRepository = params.authRepository;
     this.courseRepository = params.courseRepository;
@@ -77,6 +82,7 @@ export default class Dependencies {
     this.forumRepository = params.forumRepository;
     this.chatRepository = params.chatRepository;
     this.notificationRepository = params.notificationRepository;
+    this.profileRepository = params.profileRepository;
   }
 
   static create(): Dependencies {
@@ -91,6 +97,7 @@ export default class Dependencies {
       new MoodleQuizApi(moodleClient),
       new MoodleAssignmentApi(moodleClient),
       new MoodleCourseApi(moodleClient),
+      new MoodleProfileApi(moodleClient),
     );
 
     return new Dependencies({
@@ -106,6 +113,7 @@ export default class Dependencies {
       forumRepository: new ForumRepository(api),
       chatRepository: new ChatRepository(api),
       notificationRepository: new NotificationRepository(api),
+      profileRepository: new ProfileRepository(api),
     });
   }
 }

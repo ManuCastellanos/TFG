@@ -100,6 +100,20 @@ $functions = [
         'type'         => 'write',
         'capabilities' => 'moodle/course:update',
     ],
+    'local_primacognita_get_user_profile' => [
+        'classname'    => 'local_primacognita\external\get_user_profile',
+        'methodname'   => 'execute',
+        'description'  => 'Devuelve los datos de perfil extendido del usuario actual.',
+        'type'         => 'read',
+        'capabilities' => '',
+    ],
+    'local_primacognita_update_user_profile' => [
+        'classname'    => 'local_primacognita\external\update_user_profile',
+        'methodname'   => 'execute',
+        'description'  => 'Actualiza los campos de perfil personalizados del usuario actual.',
+        'type'         => 'write',
+        'capabilities' => '',
+    ],
 ];
 
 $services = [
