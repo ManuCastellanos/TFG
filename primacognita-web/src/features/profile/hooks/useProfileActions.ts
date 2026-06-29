@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useUpdateProfile } from './useUpdateProfile';
 import { useUpdateAccount } from './useUpdateAccount';
 import { useChangePassword } from './useChangePassword';
-import type { UpdateProfileParams, UpdateAccountParams, ChangePasswordParams } from '@/modules/profile/domain/Profile';
+import type { Profile, UpdateProfileParams, UpdateAccountParams, ChangePasswordParams } from '@/modules/profile/domain/Profile';
 
 type AboutFields = Pick<UpdateProfileParams, 'superpoder' | 'cumpleanos' | 'animal' | 'talento'>;
 type FamilyFields = Pick<UpdateProfileParams, 'tutor1_nombre' | 'tutor1_email' | 'tutor1_telefono' | 'tutor2_nombre' | 'tutor2_email' | 'tutor2_telefono'>;
 
-export function useProfileActions(userId: string | null, token: string | null) {
+export function useProfileActions(userId: string | null, token: string | null, profile: Profile | null) {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const updateProfileMutation = useUpdateProfile(userId, token);
@@ -15,10 +15,24 @@ export function useProfileActions(userId: string | null, token: string | null) {
   const changePasswordMutation = useChangePassword(token);
 
   const saveAbout = (params: AboutFields) =>
-    updateProfileMutation.mutateAsync(params as UpdateProfileParams);
+    updateProfileMutation.mutateAsync({
+      ...params,
+      tutor1_nombre:   profile?.family[0]?.nombre   ?? '',
+      tutor1_email:    profile?.family[0]?.email     ?? '',
+      tutor1_telefono: profile?.family[0]?.telefono  ?? '',
+      tutor2_nombre:   profile?.family[1]?.nombre    ?? '',
+      tutor2_email:    profile?.family[1]?.email     ?? '',
+      tutor2_telefono: profile?.family[1]?.telefono  ?? '',
+    });
 
   const saveFamily = (params: FamilyFields) =>
-    updateProfileMutation.mutateAsync(params as UpdateProfileParams);
+    updateProfileMutation.mutateAsync({
+      superpoder: profile?.about.superpoder ?? '',
+      cumpleanos: profile?.about.cumpleanos ?? '',
+      animal:     profile?.about.animal     ?? '',
+      talento:    profile?.about.talento    ?? '',
+      ...params,
+    });
 
   const saveAccount = (params: UpdateAccountParams) =>
     updateAccountMutation.mutateAsync(params);

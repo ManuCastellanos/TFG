@@ -39,16 +39,16 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
 
   async updateProfile(token: string, params: UpdateProfileParams): Promise<void> {
     await this.moodleClient.call(token, 'local_primacognita_update_user_profile', {
-      superpoder:      params.superpoder,
-      cumpleanos:      params.cumpleanos,
-      animal:          params.animal,
-      talento:         params.talento,
-      tutor1_nombre:   params.tutor1_nombre,
-      tutor1_email:    params.tutor1_email,
-      tutor1_telefono: params.tutor1_telefono,
-      tutor2_nombre:   params.tutor2_nombre,
-      tutor2_email:    params.tutor2_email,
-      tutor2_telefono: params.tutor2_telefono,
+      superpoder:      params.superpoder      ?? '',
+      cumpleanos:      params.cumpleanos      ?? '',
+      animal:          params.animal          ?? '',
+      talento:         params.talento         ?? '',
+      tutor1_nombre:   params.tutor1_nombre   ?? '',
+      tutor1_email:    params.tutor1_email    ?? '',
+      tutor1_telefono: params.tutor1_telefono ?? '',
+      tutor2_nombre:   params.tutor2_nombre   ?? '',
+      tutor2_email:    params.tutor2_email    ?? '',
+      tutor2_telefono: params.tutor2_telefono ?? '',
     });
   }
 
@@ -56,13 +56,11 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
     let picturedraftitemid = 0;
 
     if (params.pictureFile) {
-      // Step 1: get draft item id
       const { itemid } = await this.moodleClient.call<{ itemid: number }>(
         token, 'core_files_get_unused_draft_itemid', {},
       );
       picturedraftitemid = itemid;
 
-      // Step 2: upload file to draft area
       const formData = new FormData();
       formData.append('token', token);
       formData.append('filearea', 'draft');
@@ -72,6 +70,11 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
       formData.append('file_1', params.pictureFile, params.pictureFile.name);
       const res = await fetch(`${env.baseUrl}/webservice/upload.php`, { method: 'POST', body: formData });
       if (!res.ok) throw new Error(`Error al subir la imagen: ${res.statusText}`);
+      const uploadData = (await res.json()) as Array<{ itemid: number }> | { exception: string; message: string };
+      if (!Array.isArray(uploadData) || !uploadData[0]?.itemid) {
+        const msg = !Array.isArray(uploadData) ? (uploadData as { message: string }).message : 'Respuesta de upload inválida.';
+        throw new Error(msg);
+      }
     }
 
     await this.moodleClient.call(token, 'local_primacognita_update_account', {

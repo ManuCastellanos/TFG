@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const { user } = useCurrentUser();
   const { courses } = useUserCourses(userId, token);
   const { profile } = useProfile(userId, token);
-  const actions = useProfileActions(userId, token);
+  const actions = useProfileActions(userId, token, profile);
 
   if (!user) return null;
 
