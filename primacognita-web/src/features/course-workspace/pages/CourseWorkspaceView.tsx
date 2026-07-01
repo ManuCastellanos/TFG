@@ -120,10 +120,16 @@ export function CourseWorkspaceView({
           pendingByModule={showTeacherStats ? teacherStats.pendingByModule : undefined}
           teacherSectionProgress={showTeacherStats ? teacherStats.sectionProgress : undefined}
           canReviewExercises={showTeacherStats}
+          pendingItems={showTeacherStats ? teacherStats.pendingItems : undefined}
+          teacherAssignments={showTeacherStats ? teacherStats.assignments : undefined}
+          gradesByAssign={showTeacherStats ? teacherStats.gradesByAssign : undefined}
         />
       }
       sidebar={
-        activeTab !== 'ejercicios' && activeTab !== 'anuncios' && activeTab !== 'companeros' ? (
+        activeTab !== 'ejercicios' &&
+        activeTab !== 'anuncios' &&
+        activeTab !== 'companeros' &&
+        !(showTeacherStats && activeTab === 'logros') ? (
           <WorkspaceSidebar
             caps={caps}
             courseId={courseId}

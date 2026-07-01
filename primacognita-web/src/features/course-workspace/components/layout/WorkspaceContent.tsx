@@ -5,9 +5,13 @@ import { TaskView } from '../../sections/student/task/TaskView';
 import { CalificationsView } from '../../sections/student/califications/CalificationsView';
 import { ParticipantsView } from '../../sections/student/participants/ParticipantsView';
 import { AnnouncementsView } from '../../sections/student/announcements/AnnouncementsView';
+import { TeacherPendingView } from '../../sections/teacher/pending/TeacherPendingView';
+import { TeacherGradebookView } from '../../sections/teacher/gradebook/TeacherGradebookView';
 import type { WorkspaceTab } from '../../types/workspace.types';
 import type { CourseModule, CourseSection } from '@/modules/course/domain/CourseSection';
 import type { Participant } from '@/modules/course/domain/Participant';
+import type { GradeEntry } from '@/modules/assignment/domain/GradeEntry';
+import type { PendingItem } from '../../view-models/types';
 
 type WorkspaceContentProps = {
   activeTab: WorkspaceTab;
@@ -22,6 +26,9 @@ type WorkspaceContentProps = {
   pendingByModule?: Record<number, number>;
   teacherSectionProgress?: Record<number, number>;
   canReviewExercises: boolean;
+  pendingItems?: PendingItem[];
+  teacherAssignments?: { id: number; cmId: number; title: string; maxGrade: number }[];
+  gradesByAssign?: Record<number, GradeEntry[]>;
 };
 
 const tabClass = (tab: WorkspaceTab, activeTab: WorkspaceTab) => (tab === activeTab ? 'block' : 'hidden');
@@ -38,6 +45,10 @@ export const WorkspaceContent = ({
   onToggleComplete,
   pendingByModule,
   teacherSectionProgress,
+  canReviewExercises,
+  pendingItems,
+  teacherAssignments,
+  gradesByAssign,
 }: WorkspaceContentProps) => {
   if (loading) return <WorkspaceSkeleton />;
 
@@ -71,24 +82,38 @@ export const WorkspaceContent = ({
       </div>
 
       <div className={tabClass('ejercicios', activeTab)}>
-        <TaskView
-          exercises={exercises}
-          sections={sections.map((s) => s.section)}
-          courseId={courseId}
-          onExerciseClick={onModuleClick}
-        />
+        {canReviewExercises ? (
+          <TeacherPendingView courseId={courseId} items={pendingItems ?? []} />
+        ) : (
+          <TaskView
+            exercises={exercises}
+            sections={sections.map((s) => s.section)}
+            courseId={courseId}
+            onExerciseClick={onModuleClick}
+          />
+        )}
       </div>
 
       <div className={tabClass('logros', activeTab)}>
-        <CalificationsView
-          sections={sections.map((s) => s.section)}
-          exercises={exercises}
-          courseId={courseId}
-          onExerciseClick={(cmid, modName) => {
-            const mod = exercises.find((e) => e.cmid === cmid && e.modName === modName);
-            if (mod) onModuleClick(mod);
-          }}
-        />
+        {canReviewExercises ? (
+          <TeacherGradebookView
+            courseId={courseId}
+            sections={sections.map((s) => s.section)}
+            participants={participants}
+            assignments={teacherAssignments ?? []}
+            gradesByAssign={gradesByAssign ?? {}}
+          />
+        ) : (
+          <CalificationsView
+            sections={sections.map((s) => s.section)}
+            exercises={exercises}
+            courseId={courseId}
+            onExerciseClick={(cmid, modName) => {
+              const mod = exercises.find((e) => e.cmid === cmid && e.modName === modName);
+              if (mod) onModuleClick(mod);
+            }}
+          />
+        )}
       </div>
 
       <div className={tabClass('anuncios', activeTab)}>

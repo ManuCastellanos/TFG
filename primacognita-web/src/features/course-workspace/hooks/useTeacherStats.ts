@@ -8,7 +8,7 @@ export function useTeacherStats(
   token: string | null,
   courseId: string,
 ): {
-  assignments: { id: number; cmId: number; title: string }[];
+  assignments: { id: number; cmId: number; title: string; maxGrade: number }[];
   submissionsByAssign: Record<number, SubmissionEntry[]>;
   gradesByAssign: Record<number, GradeEntry[]>;
   loading: boolean;
@@ -22,7 +22,7 @@ export function useTeacherStats(
       const courseIdNum = Number(courseId);
       const fetched = await assignmentRepository.getAssignmentsForCourse(token!, courseIdNum);
 
-      const assignments = fetched.map((a) => ({ id: a.id, cmId: a.cmId, title: a.title }));
+      const assignments = fetched.map((a) => ({ id: a.id, cmId: a.cmId, title: a.title, maxGrade: a.maxGrade }));
 
       if (fetched.length === 0) {
         return { assignments, submissionsByAssign: {} as Record<number, SubmissionEntry[]>, gradesByAssign: {} as Record<number, GradeEntry[]> };

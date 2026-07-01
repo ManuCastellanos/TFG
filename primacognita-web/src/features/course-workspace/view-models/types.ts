@@ -14,12 +14,15 @@ export type CourseWorkspaceViewModel = {
 
 export type PendingItem = {
   activityName: string;
-  activityKind: 'assign';
+  activityKind: 'assign' | 'quiz';
   assignId: number;
   cmId: number;
   userId: number;
   userName: string;
   submittedAt: number;
+  topic?: string;
+  detail?: string;
+  subKind?: 'manual' | 'resubmit';
 };
 
 export type TeacherStatsData = {
@@ -30,6 +33,8 @@ export type TeacherStatsData = {
   sectionProgress: Record<number, number>;
   progressByStudent: Record<string, number>;
   pendingItems: PendingItem[];
+  assignments: { id: number; cmId: number; title: string; maxGrade: number }[];
+  gradesByAssign: Record<number, import('@/modules/assignment/domain/GradeEntry').GradeEntry[]>;
   loading: boolean;
   error: string | null;
 };
