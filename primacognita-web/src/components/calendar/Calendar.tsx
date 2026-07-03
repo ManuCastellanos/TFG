@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/shared/utils/cn";
 import { calendarClasses as c } from "./calendar.styles";
 import type { CalendarViewModel } from "./calendar.types";
+import { EventPopover } from "./EventPopover";
 
 interface Props {
   viewModel: CalendarViewModel;
@@ -21,6 +23,8 @@ export default function Calendar({
   onDayHover,
   onDayClick,
 }: Props) {
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+
   return (
     <div className={c.root}>
       <div className={c.header}>
@@ -91,7 +95,7 @@ export default function Calendar({
           }
 
           return (
-            <div key={cell.key} className={c.cell}>
+            <div key={cell.key} className={cn(c.cell, "relative")}>
               <div
                 className={cn(
                   c.dayBase,
@@ -99,8 +103,14 @@ export default function Calendar({
                   cell.hasOverdue && c.dayHasOverdue,
                   c.dayHasEvents,
                 )}
-                onMouseEnter={() => onDayHover?.(cell.timestamp)}
-                onMouseLeave={() => onDayHover?.(null)}
+                onMouseEnter={() => {
+                  setHoveredKey(cell.key);
+                  onDayHover?.(cell.timestamp);
+                }}
+                onMouseLeave={() => {
+                  setHoveredKey(null);
+                  onDayHover?.(null);
+                }}
                 onClick={() => onDayClick?.(cell.timestamp)}
                 onKeyDown={(e) =>
                   (e.key === 'Enter' || e.key === ' ') && onDayClick?.(cell.timestamp)
@@ -110,6 +120,12 @@ export default function Calendar({
               >
                 <span className={c.dayText}>{cell.dayOfMonth}</span>
               </div>
+              {hoveredKey === cell.key && (
+                <EventPopover
+                  timestamp={cell.timestamp}
+                  events={cell.events}
+                />
+              )}
             </div>
           );
         })}
