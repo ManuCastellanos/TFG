@@ -4,6 +4,7 @@ import { Play } from 'lucide-react';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { useSession } from '@/shared/hooks/useSession';
 import { useTimeNow } from '@/shared/hooks/useTimeNow';
+import { isTeacherRole } from '@/modules/user/domain/User';
 import { Button } from '@/components/ui/button/Button';
 import { Alert } from '@/components/ui/alert/Alert';
 import { Page } from '@/components/ui/page/Page';
@@ -11,6 +12,7 @@ import { QuizContentSkeleton } from '../components/QuizContentSkeleton';
 import { ResultBanner } from '@/features/quiz/components/ResultBanner';
 import { useQuizMeta } from '../hooks/useQuizMeta';
 import { useQuizPreview } from '../hooks/useQuizPreview';
+import QuizGradesPage from './QuizGradesPage';
 import type { UserAttempt } from '@/modules/quiz/domain/IQuizRepository';
 import type { QuizMeta } from '@/modules/quiz/domain/IQuizRepository';
 
@@ -392,9 +394,9 @@ function QuizPreviewEmpty({ meta, onStart, loading }: { meta: QuizMeta; onStart:
   );
 }
 
-// ─── Main export ──────────────────────────────────────────────────────────────
+// ─── Student view ─────────────────────────────────────────────────────────────
 
-export default function QuizPreviewPage() {
+function QuizPreviewStudentView() {
   const navigate = useNavigate();
   const { courseId, quizId: cmid } = useParams({ strict: false }) as { courseId: string; quizId: string };
   const { meta, loading, error } = useQuizMeta(courseId, cmid);
@@ -579,4 +581,11 @@ export default function QuizPreviewPage() {
       {passwordDialog}
     </>
   );
+}
+
+// ─── Main export ──────────────────────────────────────────────────────────────
+
+export default function QuizPreviewPage() {
+  const { roleName } = useSession();
+  return isTeacherRole(roleName) ? <QuizGradesPage /> : <QuizPreviewStudentView />;
 }
