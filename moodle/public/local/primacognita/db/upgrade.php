@@ -44,8 +44,8 @@ function xmldb_local_primacognita_upgrade($oldversion) {
             $field->signup            = 0;
             $field->defaultdata       = '';
             $field->defaultdataformat = 0;
-            $field->param1            = 255;
-            $field->param2            = 0;
+            $field->param1            = 30;
+            $field->param2            = 255;
             $field->param3            = '';
             $field->param4            = '';
             $field->param5            = '';
@@ -57,6 +57,23 @@ function xmldb_local_primacognita_upgrade($oldversion) {
 
     if ($oldversion < 2025010111) {
         upgrade_plugin_savepoint(true, 2025010111, 'local', 'primacognita');
+    }
+
+    if ($oldversion < 2025010112) {
+        $shortnames = [
+            'pc_superpoder', 'pc_cumpleanos', 'pc_animal', 'pc_talento',
+            'pc_tutor1_nombre', 'pc_tutor1_email', 'pc_tutor1_telefono',
+            'pc_tutor2_nombre', 'pc_tutor2_email', 'pc_tutor2_telefono',
+        ];
+
+        foreach ($shortnames as $shortname) {
+            $DB->set_field('user_info_field', 'param2', 255, [
+                'shortname' => $shortname,
+                'param2'    => 0,
+            ]);
+        }
+
+        upgrade_plugin_savepoint(true, 2025010112, 'local', 'primacognita');
     }
 
     return true;

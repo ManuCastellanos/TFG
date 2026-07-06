@@ -40,8 +40,8 @@ function xmldb_local_primacognita_install() {
         $field->signup          = 0;
         $field->defaultdata     = '';
         $field->defaultdataformat = 0;
-        $field->param1          = 255;
-        $field->param2          = 0;
+        $field->param1          = 30;
+        $field->param2          = 255;
         $field->param3          = '';
         $field->param4          = '';
         $field->param5          = '';
