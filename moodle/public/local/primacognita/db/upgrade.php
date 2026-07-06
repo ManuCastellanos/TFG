@@ -67,10 +67,10 @@ function xmldb_local_primacognita_upgrade($oldversion) {
         ];
 
         foreach ($shortnames as $shortname) {
-            $DB->set_field('user_info_field', 'param2', 255, [
-                'shortname' => $shortname,
-                'param2'    => 0,
-            ]);
+            $field = $DB->get_record('user_info_field', ['shortname' => $shortname]);
+            if ($field && (int) $field->param2 === 0) {
+                $DB->set_field('user_info_field', 'param2', 255, ['id' => $field->id]);
+            }
         }
 
         upgrade_plugin_savepoint(true, 2025010112, 'local', 'primacognita');
