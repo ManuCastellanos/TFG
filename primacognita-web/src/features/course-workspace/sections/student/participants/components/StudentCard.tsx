@@ -7,9 +7,10 @@ import type { Participant } from '@/modules/course/domain/Participant';
 type StudentCardProps = {
   student: Participant;
   isCurrentUser: boolean;
+  onOpenProfile?: () => void;
 };
 
-export function StudentCard({ student, isCurrentUser }: StudentCardProps) {
+export function StudentCard({ student, isCurrentUser, onOpenProfile }: StudentCardProps) {
   const now = useTimeNow();
   const { openWithUser } = useChatDrawer();
   const colorIdx = Number(student.id) % SECTION_COLORS.length;
@@ -25,7 +26,10 @@ export function StudentCard({ student, isCurrentUser }: StudentCardProps) {
 
   return (
     <div
-      className={`p-4 rounded-2xl border bg-white text-center ${
+      onClick={onOpenProfile}
+      role={onOpenProfile ? 'button' : undefined}
+      tabIndex={onOpenProfile ? 0 : undefined}
+      className={`p-4 rounded-2xl border bg-white text-center ${onOpenProfile ? 'cursor-pointer hover:border-emerald-300 transition' : ''} ${
         isCurrentUser ? 'border-emerald-300 bg-emerald-50/40' : 'border-(--border)'
       }`}
     >
@@ -63,7 +67,7 @@ export function StudentCard({ student, isCurrentUser }: StudentCardProps) {
       {!isCurrentUser && (
         <button
           type="button"
-          onClick={() => openWithUser(Number(student.id))}
+          onClick={(e) => { e.stopPropagation(); openWithUser(Number(student.id)); }}
           className="mt-3 w-full text-xs font-extrabold py-2 rounded-xl bg-(--tint-50) hover:bg-emerald-100 text-(--fg-muted) hover:text-emerald-800 transition"
         >
           💬 Mensaje

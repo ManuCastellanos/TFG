@@ -15,7 +15,7 @@ export const useProfile = (userId: string | null, token: string | null): UseProf
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: queryKeys.profile.detail(userId ?? ''),
-    queryFn: () => profileRepository.getProfile(token!),
+    queryFn: () => profileRepository.getProfile(token!, userId!),
     enabled: !!userId && !!token,
     staleTime: 5 * 60 * 1000,
   });

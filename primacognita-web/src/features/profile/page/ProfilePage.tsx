@@ -3,6 +3,7 @@ import { useCurrentUser } from '@/shared/hooks/useCurrentUser';
 import { useSession } from '@/shared/hooks/useSession';
 import { useUserCourses } from '@/shared/hooks/useUserCourses';
 import { isStudentRole } from '@/modules/user/domain/User';
+import type { ProfileTutor } from '@/modules/profile/domain/Profile';
 import { useProfile } from '../hooks/useProfile';
 import { useProfileActions } from '../hooks/useProfileActions';
 import { StudentProfileView } from './StudentProfileView';
@@ -10,11 +11,13 @@ import { TeacherProfileView } from './TeacherProfileView';
 import { EditAboutModal } from '../components/EditAboutModal';
 import { EditFamilyModal } from '../components/EditFamilyModal';
 import { EditAccountModal } from '../components/EditAccountModal';
+import { FamilyContactModal } from '../components/FamilyContactModal';
 
 const ProfilePage = () => {
   const [editAboutOpen, setEditAboutOpen]     = useState(false);
   const [editFamilyOpen, setEditFamilyOpen]   = useState(false);
   const [editAccountOpen, setEditAccountOpen] = useState(false);
+  const [contactTutor, setContactTutor]       = useState<ProfileTutor | null>(null);
 
   const { userId, token } = useSession();
   const { user } = useCurrentUser();
@@ -36,6 +39,7 @@ const ProfilePage = () => {
           onEditAccount={() => setEditAccountOpen(true)}
           onEditAbout={() => setEditAboutOpen(true)}
           onEditFamily={() => setEditFamilyOpen(true)}
+          onSelectTutor={setContactTutor}
         />
       ) : (
         <TeacherProfileView
@@ -78,6 +82,8 @@ const ProfilePage = () => {
         savingPassword={actions.savingPassword}
         passwordError={actions.passwordError}
       />
+
+      <FamilyContactModal open={!!contactTutor} tutor={contactTutor} onClose={() => setContactTutor(null)} />
     </>
   );
 };

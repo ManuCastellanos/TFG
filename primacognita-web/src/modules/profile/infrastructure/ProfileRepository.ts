@@ -5,12 +5,12 @@ import type IPrimaCognitaApi from '@/shared/infrastructure/api/IPrimaCognitaApi'
 export default class ProfileRepository implements IProfileRepository {
   constructor(private readonly api: IPrimaCognitaApi) {}
 
-  getProfile(token: string): Promise<Profile> {
-    return this.api.profile.getProfile(token);
+  getProfile(token: string, userId: string): Promise<Profile> {
+    return this.api.profile.getProfile(token, userId);
   }
 
-  updateProfile(token: string, params: UpdateProfileParams): Promise<void> {
-    return this.api.profile.updateProfile(token, params);
+  updateProfile(token: string, params: UpdateProfileParams, userId: string): Promise<void> {
+    return this.api.profile.updateProfile(token, params, userId);
   }
 
   updateAccount(token: string, params: UpdateAccountParams): Promise<void> {

@@ -121,7 +121,7 @@ export const WorkspaceContent = ({
       </div>
 
       <div className={tabClass('companeros', activeTab)}>
-        <ParticipantsView participants={participants} loading={participantsLoading} />
+        <ParticipantsView participants={participants} loading={participantsLoading} courseId={courseId} />
       </div>
     </>
   );

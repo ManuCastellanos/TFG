@@ -12,19 +12,33 @@ defined('MOODLE_INTERNAL') || die();
 class get_user_profile extends external_api {
 
     public static function execute_parameters(): external_function_parameters {
-        return new external_function_parameters([]);
+        return new external_function_parameters([
+            'userid' => new external_value(PARAM_INT, 'ID del usuario cuyo perfil se consulta (0 = el propio)', VALUE_DEFAULT, 0),
+        ]);
     }
 
-    public static function execute(): array {
+    public static function execute(int $userid = 0): array {
         global $CFG, $DB, $USER;
 
         require_once($CFG->dirroot . '/user/profile/lib.php');
         require_once($CFG->libdir  . '/badgeslib.php');
+        require_once($CFG->dirroot . '/local/primacognita/classes/access.php');
+
+        $validated = self::validate_parameters(self::execute_parameters(), ['userid' => $userid]);
 
         self::validate_context(\context_system::instance());
 
+        if ($validated['userid'] === 0 || $validated['userid'] === (int) $USER->id) {
+            $targetid = (int) $USER->id;
+        } else {
+            if (!\local_primacognita\access::teacher_shares_course_with_student((int) $USER->id, $validated['userid'])) {
+                throw new \moodle_exception('nopermissions', 'error', '', 'ver el perfil de este alumno');
+            }
+            $targetid = $validated['userid'];
+        }
+
         // Load custom profile fields into $USER object.
-        $userobj = $DB->get_record('user', ['id' => $USER->id], '*', MUST_EXIST);
+        $userobj = $DB->get_record('user', ['id' => $targetid], '*', MUST_EXIST);
         profile_load_data($userobj);
 
         $get = static function ($field) use ($userobj): string {
@@ -58,7 +72,7 @@ class get_user_profile extends external_api {
         $badge_count  = 0;
         $recent_badges = [];
         try {
-            $badges = badges_get_user_badges($USER->id, 0, 0, 3);
+            $badges = badges_get_user_badges($targetid, 0, 0, 3);
             $badge_count = count($badges);
             foreach ($badges as $badge) {
                 $recent_badges[] = [
@@ -80,7 +94,7 @@ class get_user_profile extends external_api {
                    AND gi.itemtype != 'course'
                    AND gi.itemname IS NOT NULL
               ORDER BY gg.timemodified DESC";
-        $rows = $DB->get_records_sql($sql, ['userid' => $USER->id], 0, 5);
+        $rows = $DB->get_records_sql($sql, ['userid' => $targetid], 0, 5);
         foreach ($rows as $row) {
             $recent_activity[] = [
                 'itemname'   => (string) $row->itemname,
@@ -92,16 +106,16 @@ class get_user_profile extends external_api {
 
         // Student count (useful for teachers).
         $student_count = 0;
-        $courses = enrol_get_users_courses($USER->id, true, ['id']);
+        $courses = enrol_get_users_courses($targetid, true, ['id']);
         if (!empty($courses)) {
             $courseids = array_column($courses, 'id');
-            list($insql, $params) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'c');
+            list($insql, $sqlparams) = $DB->get_in_or_equal($courseids, SQL_PARAMS_NAMED, 'c');
             $sql = "SELECT COUNT(DISTINCT ue.userid) AS cnt
                       FROM {user_enrolments} ue
                       JOIN {enrol} e ON e.id = ue.enrolid AND e.courseid $insql
                      WHERE ue.status = 0 AND ue.userid != :myid";
-            $params['myid'] = $USER->id;
-            $result = $DB->get_record_sql($sql, $params);
+            $sqlparams['myid'] = $targetid;
+            $result = $DB->get_record_sql($sql, $sqlparams);
             $student_count = (int) ($result->cnt ?? 0);
         }
 

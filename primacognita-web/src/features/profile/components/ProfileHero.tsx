@@ -13,7 +13,7 @@ type ProfileHeroProps = {
   roleName: string | null;
   avatarUrl: string | null;
   stats: StatChip[];
-  onEditAccount: () => void;
+  onEditAccount?: () => void;
 };
 
 export function ProfileHero({ fullName, roleName, avatarUrl, stats, onEditAccount }: ProfileHeroProps) {
@@ -59,13 +59,15 @@ export function ProfileHero({ fullName, roleName, avatarUrl, stats, onEditAccoun
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onEditAccount}
-            className="px-4 py-2.5 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110"
-          >
-            ✏️ Editar perfil
-          </button>
+          {onEditAccount && (
+            <button
+              type="button"
+              onClick={onEditAccount}
+              className="px-4 py-2.5 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110"
+            >
+              ✏️ Editar perfil
+            </button>
+          )}
         </div>
 
         {/* Stats strip */}

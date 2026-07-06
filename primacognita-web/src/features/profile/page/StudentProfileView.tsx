@@ -1,6 +1,6 @@
 import type { User } from '@/modules/user/domain/User';
 import type { Course } from '@/modules/course/domain/Course';
-import type { Profile } from '@/modules/profile/domain/Profile';
+import type { Profile, ProfileTutor } from '@/modules/profile/domain/Profile';
 import { ProfileHero } from '../components/ProfileHero';
 import { AboutMeCard } from '../components/AboutMeCard';
 import { CoursesProgressCard } from '../components/CoursesProgressCard';
@@ -12,12 +12,13 @@ type StudentProfileViewProps = {
   user: User;
   courses: Course[];
   profile: Profile | null;
-  onEditAccount: () => void;
-  onEditAbout: () => void;
-  onEditFamily: () => void;
+  onEditAccount?: () => void;
+  onEditAbout?: () => void;
+  onEditFamily?: () => void;
+  onSelectTutor?: (tutor: ProfileTutor) => void;
 };
 
-export function StudentProfileView({ user, courses, profile, onEditAccount, onEditAbout, onEditFamily }: StudentProfileViewProps) {
+export function StudentProfileView({ user, courses, profile, onEditAccount, onEditAbout, onEditFamily, onSelectTutor }: StudentProfileViewProps) {
   const stats = [
     {
       icon: '🏆',
@@ -57,7 +58,7 @@ export function StudentProfileView({ user, courses, profile, onEditAccount, onEd
         </div>
         <div className="flex flex-col gap-3">
           <BadgesCard badges={profile?.recentBadges ?? []} total={profile?.badgeCount ?? 0} />
-          <FamilyCard family={profile?.family ?? []} onEdit={onEditFamily} />
+          <FamilyCard family={profile?.family ?? []} onEdit={onEditFamily} onSelectTutor={onSelectTutor} />
         </div>
       </div>
     </div>

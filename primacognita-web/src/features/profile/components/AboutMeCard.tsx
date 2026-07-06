@@ -2,7 +2,7 @@ import type { ProfileAbout } from '@/modules/profile/domain/Profile';
 
 type AboutMeCardProps = {
   about: ProfileAbout;
-  onEdit: () => void;
+  onEdit?: () => void;
 };
 
 const FIELDS: { key: keyof ProfileAbout; label: string; emoji: string }[] = [
@@ -17,9 +17,11 @@ export function AboutMeCard({ about, onEdit }: AboutMeCardProps) {
     <div className="bg-white rounded-3xl border border-(--border) p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-extrabold text-(--fg)">Sobre mí</h3>
-        <button type="button" onClick={onEdit} className="text-xs font-extrabold text-emerald-700 hover:text-emerald-800">
-          Editar
-        </button>
+        {onEdit && (
+          <button type="button" onClick={onEdit} className="text-xs font-extrabold text-emerald-700 hover:text-emerald-800">
+            Editar
+          </button>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-4">
         {FIELDS.map(({ key, label, emoji }) => (

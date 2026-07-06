@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { useSession } from '@/shared/hooks/useSession';
 import { isTeacherRole } from '@/modules/user/domain/User';
 import { EmptyState } from '@/components/patterns/emptyState/EmptyState';
@@ -11,10 +12,13 @@ import type { Participant } from '@/modules/course/domain/Participant';
 export type ParticipantsViewProps = {
   participants: Participant[];
   loading?: boolean;
+  courseId: string;
 };
 
-export const ParticipantsView = ({ participants, loading }: ParticipantsViewProps) => {
-  const { userId } = useSession();
+export const ParticipantsView = ({ participants, loading, courseId }: ParticipantsViewProps) => {
+  const { userId, roleName } = useSession();
+  const navigate = useNavigate();
+  const isTeacherViewer = isTeacherRole(roleName);
   const [query, setQuery] = useState('');
 
   const teacher = participants.find((p) => isTeacherRole(p.roleName));
@@ -67,7 +71,16 @@ export const ParticipantsView = ({ participants, loading }: ParticipantsViewProp
           ) : (
             <div className="grid grid-cols-3 gap-3">
               {filteredStudents.map((s) => (
-                <StudentCard key={s.id} student={s} isCurrentUser={s.id === userId} />
+                <StudentCard
+                  key={s.id}
+                  student={s}
+                  isCurrentUser={s.id === userId}
+                  onOpenProfile={
+                    isTeacherViewer
+                      ? () => navigate({ to: '/profile/$userId', params: { userId: s.id }, search: { courseId } })
+                      : undefined
+                  }
+                />
               ))}
             </div>
           )}

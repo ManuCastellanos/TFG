@@ -8,7 +8,7 @@ export const useUpdateProfile = (userId: string | null, token: string | null) =>
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: UpdateProfileParams) => profileRepository.updateProfile(token!, params),
+    mutationFn: (params: UpdateProfileParams) => profileRepository.updateProfile(token!, params, userId!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.profile.detail(userId ?? '') });
     },

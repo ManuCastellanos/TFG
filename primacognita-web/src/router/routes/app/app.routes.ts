@@ -13,11 +13,13 @@ import { createQuizRoute } from './create-quiz.route';
 import { quizEditQuestionsRoute } from './quiz-edit-questions.route';
 import { forumRoute } from './forum.route';
 import { profileRoute } from './profile.route';
+import { teacherStudentProfileRoute } from './profile.$userId.route';
 
 export const appRoutes = layoutRoute.addChildren([
   dashboardRoute,
   scheduleRoute,
   profileRoute,
+  teacherStudentProfileRoute,
   coursesRoute,
   createCourseRoute,
   courseRoute,

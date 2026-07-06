@@ -22,6 +22,7 @@ class update_user_profile extends external_api {
             'tutor2_nombre'  => new external_value(PARAM_TEXT, 'Tutor 2 - Nombre',      VALUE_DEFAULT, ''),
             'tutor2_email'   => new external_value(PARAM_TEXT, 'Tutor 2 - Email',       VALUE_DEFAULT, ''),
             'tutor2_telefono'=> new external_value(PARAM_TEXT, 'Tutor 2 - Teléfono',    VALUE_DEFAULT, ''),
+            'userid'         => new external_value(PARAM_INT,  'ID del usuario a actualizar (0 = el propio)', VALUE_DEFAULT, 0),
         ]);
     }
 
@@ -36,10 +37,12 @@ class update_user_profile extends external_api {
         string $tutor2_nombre   = '',
         string $tutor2_email    = '',
         string $tutor2_telefono = '',
+        int    $userid          = 0,
     ): array {
         global $CFG, $USER;
 
         require_once($CFG->dirroot . '/user/profile/lib.php');
+        require_once($CFG->dirroot . '/local/primacognita/classes/access.php');
 
         $params = self::validate_parameters(self::execute_parameters(), [
             'superpoder'      => $superpoder,
@@ -52,16 +55,30 @@ class update_user_profile extends external_api {
             'tutor2_nombre'   => $tutor2_nombre,
             'tutor2_email'    => $tutor2_email,
             'tutor2_telefono' => $tutor2_telefono,
+            'userid'          => $userid,
         ]);
 
         self::validate_context(\context_system::instance());
 
+        $isown = $params['userid'] === 0 || $params['userid'] === (int) $USER->id;
+        if ($isown) {
+            $targetid = (int) $USER->id;
+        } else {
+            if (!\local_primacognita\access::teacher_shares_course_with_student((int) $USER->id, $params['userid'])) {
+                throw new \moodle_exception('nopermissions', 'error', '', 'editar el perfil de este alumno');
+            }
+            $targetid = $params['userid'];
+        }
+
         $userobj = new \stdClass();
-        $userobj->id = $USER->id;
-        $userobj->profile_field_pc_superpoder      = $params['superpoder'];
-        $userobj->profile_field_pc_cumpleanos      = $params['cumpleanos'];
-        $userobj->profile_field_pc_animal          = $params['animal'];
-        $userobj->profile_field_pc_talento         = $params['talento'];
+        $userobj->id = $targetid;
+
+        if ($isown) {
+            $userobj->profile_field_pc_superpoder = $params['superpoder'];
+            $userobj->profile_field_pc_cumpleanos = $params['cumpleanos'];
+            $userobj->profile_field_pc_animal     = $params['animal'];
+            $userobj->profile_field_pc_talento    = $params['talento'];
+        }
         $userobj->profile_field_pc_tutor1_nombre   = $params['tutor1_nombre'];
         $userobj->profile_field_pc_tutor1_email    = $params['tutor1_email'];
         $userobj->profile_field_pc_tutor1_telefono = $params['tutor1_telefono'];

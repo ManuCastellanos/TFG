@@ -7,11 +7,11 @@ import { env } from '@/shared/utils/env';
 export default class MoodleProfileApi implements IMoodleProfileApi {
   constructor(private readonly moodleClient: IMoodleClient) {}
 
-  async getProfile(token: string): Promise<Profile> {
+  async getProfile(token: string, userId: string): Promise<Profile> {
     const raw = await this.moodleClient.call<ProfileResponse>(
       token,
       'local_primacognita_get_user_profile',
-      {},
+      { userid: userId },
     );
     return {
       about: {
@@ -37,7 +37,7 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
     };
   }
 
-  async updateProfile(token: string, params: UpdateProfileParams): Promise<void> {
+  async updateProfile(token: string, params: UpdateProfileParams, userId: string): Promise<void> {
     await this.moodleClient.call(token, 'local_primacognita_update_user_profile', {
       superpoder:      params.superpoder      ?? '',
       cumpleanos:      params.cumpleanos      ?? '',
@@ -49,6 +49,7 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
       tutor2_nombre:   params.tutor2_nombre   ?? '',
       tutor2_email:    params.tutor2_email    ?? '',
       tutor2_telefono: params.tutor2_telefono ?? '',
+      userid:          userId,
     });
   }
 

@@ -1,6 +1,6 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'local_primacognita';
-$plugin->version   = 2025010112;
+$plugin->version   = 2025010113;
 $plugin->requires  = 2025100600;
 $plugin->maturity  = MATURITY_STABLE;
