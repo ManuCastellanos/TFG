@@ -1,5 +1,6 @@
 import { layoutRoute } from './layout.route';
 import { dashboardRoute } from './dashboard.route';
+import { scheduleRoute } from './schedule.route';
 import { coursesRoute } from './courses.route';
 import { createCourseRoute } from './create-course.route';
 import { courseRoute } from './course.route';
@@ -15,6 +16,7 @@ import { profileRoute } from './profile.route';
 
 export const appRoutes = layoutRoute.addChildren([
   dashboardRoute,
+  scheduleRoute,
   profileRoute,
   coursesRoute,
   createCourseRoute,

@@ -35,6 +35,7 @@ export default class MoodleCalendarApi implements IMoodleCalendarApi {
             isActionEvent: (e.isactionevent ?? 0) === 1,
             url: e.url ?? null,
             viewUrl: e.viewurl ?? null,
+            courseId: e.course?.id ?? null,
             courseName: e.course?.fullname ?? null,
             courseViewUrl: e.course?.viewurl ?? null,
           })),

@@ -12,6 +12,7 @@ export interface CalendarEvent {
   eventType: string;
   moduleName: string | null;
   instance: number | null;
+  courseId: number | null;
   courseName: string | null;
   courseViewUrl: string | null;
 };

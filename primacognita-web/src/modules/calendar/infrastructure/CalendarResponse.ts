@@ -26,6 +26,7 @@ export type CalendarResponse = {
         viewurl?: string;
 
         course?: {
+          id?: number;
           fullname?: string;
           viewurl?: string;
         };
