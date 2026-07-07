@@ -48,7 +48,6 @@ export interface UpdateProfileParams {
 export interface UpdateAccountParams {
   firstname: string;
   lastname: string;
-  pictureFile?: File;
   userId: string;
 }
 

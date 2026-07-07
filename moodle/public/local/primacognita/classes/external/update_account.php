@@ -12,23 +12,20 @@ class update_account extends external_api {
 
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'firstname'         => new external_value(PARAM_TEXT, 'Nombre',    VALUE_DEFAULT, ''),
-            'lastname'          => new external_value(PARAM_TEXT, 'Apellidos', VALUE_DEFAULT, ''),
-            'picturedraftitemid'=> new external_value(PARAM_INT,  'Draft item id de la foto de perfil (0 = sin cambio)', VALUE_DEFAULT, 0),
+            'firstname' => new external_value(PARAM_TEXT, 'Nombre',    VALUE_DEFAULT, ''),
+            'lastname'  => new external_value(PARAM_TEXT, 'Apellidos', VALUE_DEFAULT, ''),
         ]);
     }
 
     public static function execute(
-        string $firstname          = '',
-        string $lastname           = '',
-        int    $picturedraftitemid = 0,
+        string $firstname = '',
+        string $lastname  = '',
     ): array {
-        global $CFG, $DB, $USER;
+        global $DB, $USER;
 
         $params = self::validate_parameters(self::execute_parameters(), [
-            'firstname'          => $firstname,
-            'lastname'           => $lastname,
-            'picturedraftitemid' => $picturedraftitemid,
+            'firstname' => $firstname,
+            'lastname'  => $lastname,
         ]);
 
         self::validate_context(\context_system::instance());
@@ -48,17 +45,6 @@ class update_account extends external_api {
                 $USER->lastname   = $params['lastname'];
             }
             $DB->update_record('user', $record);
-        }
-
-        // Update profile picture.
-        if ($params['picturedraftitemid'] > 0) {
-            require_once($CFG->libdir . '/gdlib.php');
-            $usercontext = \context_user::instance($USER->id);
-            $newpicture  = process_new_icon($usercontext, 'user', 'icon', 0, $params['picturedraftitemid']);
-            if ($newpicture !== false) {
-                $DB->set_field('user', 'picture', $newpicture, ['id' => $USER->id]);
-                $USER->picture = $newpicture;
-            }
         }
 
         return ['success' => true];

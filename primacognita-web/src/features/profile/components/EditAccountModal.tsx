@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Modal } from '@/components/ui/modal/Modal';
 import { FormField } from '@/components/ui/formField/FormField';
 import { Input } from '@/components/ui/input/Input';
@@ -32,24 +32,14 @@ export function EditAccountModal({
 
   const [firstname, setFirstname]             = useState(defaultFirstname);
   const [lastname, setLastname]               = useState(defaultLastname);
-  const [pictureFile, setPictureFile]         = useState<File | null>(null);
-  const [picturePreview, setPicturePreview]   = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword]         = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [pwMatchError, setPwMatchError]       = useState('');
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setPictureFile(file);
-    setPicturePreview(URL.createObjectURL(file));
-  };
 
   const handleSaveAccount = (e: React.FormEvent) => {
     e.preventDefault();
-    onSaveAccount({ firstname, lastname, pictureFile: pictureFile ?? undefined, userId: user.id });
+    onSaveAccount({ firstname, lastname, userId: user.id });
   };
 
   const handleChangePassword = (e: React.FormEvent) => {
@@ -62,41 +52,14 @@ export function EditAccountModal({
     onChangePassword({ currentpassword: currentPassword, newpassword: newPassword });
   };
 
-  const avatarSrc = picturePreview ?? user.avatarUrl ?? null;
-  const initials  = user.fullName.trim().slice(0, 1).toUpperCase();
-
   return (
     <Modal open={open} onClose={onClose} width="md">
-      <Modal.Header title="Editar perfil" subtitle="Nombre, foto y contraseña" onClose={onClose} />
+      <Modal.Header title="Editar perfil" subtitle="Nombre y contraseña" onClose={onClose} />
 
       <div className="flex-1 overflow-y-auto">
-        {/* ── Nombre y foto ── */}
+        {/* ── Nombre ── */}
         <form id="edit-account-form" onSubmit={handleSaveAccount} className="p-6 flex flex-col gap-5 border-b border-(--border)">
           <h3 className="text-xs font-extrabold uppercase tracking-wider text-(--fg-subtle)">Datos de la cuenta</h3>
-
-          {/* Avatar picker */}
-          <div className="flex items-center gap-5">
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="relative group shrink-0"
-            >
-              {avatarSrc ? (
-                <img src={avatarSrc} alt="Avatar" className="size-20 rounded-2xl object-cover border-2 border-(--border)" />
-              ) : (
-                <div className="size-20 rounded-2xl bg-linear-to-br from-sky-300 to-sky-500 grid place-items-center text-white font-extrabold text-3xl border-2 border-(--border)">
-                  {initials}
-                </div>
-              )}
-              <div className="absolute inset-0 rounded-2xl bg-black/40 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-xl">
-                📷
-              </div>
-            </button>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-            <div className="text-xs text-(--fg-muted) leading-relaxed">
-              Haz clic en la imagen para<br />cambiar tu foto de perfil.
-            </div>
-          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Nombre">

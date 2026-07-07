@@ -2,7 +2,6 @@ import type IMoodleProfileApi from './IMoodleProfileApi';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import type { Profile, UpdateProfileParams, UpdateAccountParams, ChangePasswordParams } from '@/modules/profile/domain/Profile';
 import type { ProfileResponse } from '@/modules/profile/infrastructure/ProfileResponse';
-import { env } from '@/shared/utils/env';
 
 export default class MoodleProfileApi implements IMoodleProfileApi {
   constructor(private readonly moodleClient: IMoodleClient) {}
@@ -54,34 +53,9 @@ export default class MoodleProfileApi implements IMoodleProfileApi {
   }
 
   async updateAccount(token: string, params: UpdateAccountParams): Promise<void> {
-    let picturedraftitemid = 0;
-
-    if (params.pictureFile) {
-      const { itemid } = await this.moodleClient.call<{ itemid: number }>(
-        token, 'core_files_get_unused_draft_itemid', {},
-      );
-      picturedraftitemid = itemid;
-
-      const formData = new FormData();
-      formData.append('token', token);
-      formData.append('filearea', 'draft');
-      formData.append('itemid', String(itemid));
-      formData.append('filepath', '/');
-      formData.append('filename', params.pictureFile.name);
-      formData.append('file_1', params.pictureFile, params.pictureFile.name);
-      const res = await fetch(`${env.baseUrl}/webservice/upload.php`, { method: 'POST', body: formData });
-      if (!res.ok) throw new Error(`Error al subir la imagen: ${res.statusText}`);
-      const uploadData = (await res.json()) as Array<{ itemid: number }> | { exception: string; message: string };
-      if (!Array.isArray(uploadData) || !uploadData[0]?.itemid) {
-        const msg = !Array.isArray(uploadData) ? (uploadData as { message: string }).message : 'Respuesta de upload inválida.';
-        throw new Error(msg);
-      }
-    }
-
     await this.moodleClient.call(token, 'local_primacognita_update_account', {
-      firstname:          params.firstname,
-      lastname:           params.lastname,
-      picturedraftitemid: String(picturedraftitemid),
+      firstname: params.firstname,
+      lastname:  params.lastname,
     });
   }
 
