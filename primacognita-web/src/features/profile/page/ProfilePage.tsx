@@ -47,18 +47,19 @@ const ProfilePage = () => {
           courses={courses}
           profile={profile}
           onEditAccount={() => setEditAccountOpen(true)}
-          onEditAbout={() => setEditAboutOpen(true)}
         />
       )}
 
-      <EditAboutModal
-        key={editAboutOpen ? 'about-open' : 'about-closed'}
-        open={editAboutOpen}
-        onClose={() => setEditAboutOpen(false)}
-        profile={profile}
-        onSave={async (p) => { await actions.saveAbout(p); setEditAboutOpen(false); }}
-        saving={actions.savingProfile}
-      />
+      {isStudent && (
+        <EditAboutModal
+          key={editAboutOpen ? 'about-open' : 'about-closed'}
+          open={editAboutOpen}
+          onClose={() => setEditAboutOpen(false)}
+          profile={profile}
+          onSave={async (p) => { await actions.saveAbout(p); setEditAboutOpen(false); }}
+          saving={actions.savingProfile}
+        />
+      )}
 
       {isStudent && (
         <EditFamilyModal

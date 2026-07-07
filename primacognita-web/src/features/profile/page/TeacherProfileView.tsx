@@ -2,7 +2,6 @@ import type { User } from '@/modules/user/domain/User';
 import type { Course } from '@/modules/course/domain/Course';
 import type { Profile } from '@/modules/profile/domain/Profile';
 import { ProfileHero } from '../components/ProfileHero';
-import { AboutMeCard } from '../components/AboutMeCard';
 import { TeacherCoursesCard } from '../components/TeacherCoursesCard';
 
 type TeacherProfileViewProps = {
@@ -10,10 +9,9 @@ type TeacherProfileViewProps = {
   courses: Course[];
   profile: Profile | null;
   onEditAccount: () => void;
-  onEditAbout: () => void;
 };
 
-export function TeacherProfileView({ user, courses, profile, onEditAccount, onEditAbout }: TeacherProfileViewProps) {
+export function TeacherProfileView({ user, courses, profile, onEditAccount }: TeacherProfileViewProps) {
   const stats = [
     {
       icon: '📚',
@@ -45,13 +43,7 @@ export function TeacherProfileView({ user, courses, profile, onEditAccount, onEd
         onEditAccount={onEditAccount}
       />
 
-      <div className="grid grid-cols-[1fr_320px] gap-6">
-        <div className="flex flex-col gap-5">
-          <AboutMeCard about={profile?.about ?? { superpoder: '', cumpleanos: '', animal: '', talento: '' }} onEdit={onEditAbout} />
-          <TeacherCoursesCard courses={courses} />
-        </div>
-        <div className="flex flex-col gap-3" />
-      </div>
+      <TeacherCoursesCard courses={courses} />
     </div>
   );
 }
