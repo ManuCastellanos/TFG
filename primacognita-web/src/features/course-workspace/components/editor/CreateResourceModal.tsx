@@ -25,7 +25,6 @@ export function CreateResourceModal({
 }: CreateResourceModalProps) {
   const { assignmentRepository } = useDependencies();
   const [name, setName] = useState('');
-  const [intro, setIntro] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -35,7 +34,7 @@ export function CreateResourceModal({
     setUploading(true);
     try {
       const draftItemId = await assignmentRepository.uploadDraftFile(token, file);
-      onSave({ courseId, sectionNum, name, intro, draftItemId });
+      onSave({ courseId, sectionNum, name, draftItemId });
     } finally {
       setUploading(false);
     }
@@ -43,7 +42,6 @@ export function CreateResourceModal({
 
   const handleClose = () => {
     setName('');
-    setIntro('');
     setFile(null);
     onClose();
   };
@@ -72,16 +70,6 @@ export function CreateResourceModal({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             className="rounded-xl border border-(--border) px-3 py-2 text-sm text-(--fg) bg-white focus:outline-none"
             required
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-(--fg)">Descripción</label>
-          <textarea
-            value={intro}
-            onChange={(e) => setIntro(e.target.value)}
-            rows={2}
-            className="rounded-xl border border-(--border) px-3 py-2 text-sm text-(--fg) bg-white resize-none focus:outline-none focus:ring-2 focus:ring-(--primary)"
-            placeholder="Descripción opcional"
           />
         </div>
       </form>

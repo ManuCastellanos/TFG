@@ -23,6 +23,7 @@ const COLORS = [
 
 export function QuestionCard({ question, index, onDelete, isDeleting, onUpdate, isUpdating }: Props) {
   const c = COLORS[index % COLORS.length];
+  const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   // Edit state
@@ -47,7 +48,7 @@ export function QuestionCard({ question, index, onDelete, isDeleting, onUpdate, 
 
   const typeLabel = question.type === 'multichoice' ? 'Opción múltiple' : 'V o F';
 
-  const handleDiscard = () => {
+  const resetFields = () => {
     setQuestionText(question.questionText);
     setAnswers(question.type === 'multichoice' ? question.answers.map((a) => a.text) : ['', '']);
     setCorrectIndex(question.type === 'multichoice' ? question.answers.findIndex((a) => a.isCorrect) : 0);
@@ -57,7 +58,30 @@ export function QuestionCard({ question, index, onDelete, isDeleting, onUpdate, 
         : [],
     );
     setCorrectAnswer(question.correctAnswer ?? true);
+  };
+
+  const handleDiscard = () => {
+    resetFields();
     setIsEditing(false);
+  };
+
+  const toggleOpen = () => {
+    if (isOpen) {
+      resetFields();
+      setIsEditing(false);
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  };
+
+  const handleEditClick = () => {
+    if (isEditing) {
+      handleDiscard();
+    } else {
+      setIsOpen(true);
+      setIsEditing(true);
+    }
   };
 
   const handleSave = () => {
@@ -81,6 +105,7 @@ export function QuestionCard({ question, index, onDelete, isDeleting, onUpdate, 
     }
     onUpdate(input);
     setIsEditing(false);
+    setIsOpen(false);
   };
 
   const toggleCorrectIndex = (i: number) => {
@@ -122,7 +147,7 @@ export function QuestionCard({ question, index, onDelete, isDeleting, onUpdate, 
         <div className="flex items-center gap-1 shrink-0">
           <button
             type="button"
-            onClick={() => setIsEditing((v) => !v)}
+            onClick={handleEditClick}
             className="size-9 grid place-items-center rounded-xl text-(--fg-muted) hover:bg-(--tint-100) transition"
             aria-label="Editar"
           >
@@ -139,14 +164,86 @@ export function QuestionCard({ question, index, onDelete, isDeleting, onUpdate, 
           </button>
           <button
             type="button"
-            onClick={() => setIsEditing((v) => !v)}
+            onClick={toggleOpen}
             className="size-9 grid place-items-center rounded-xl text-(--fg-muted) hover:bg-(--tint-100) transition"
-            aria-label={isEditing ? 'Cerrar' : 'Expandir'}
+            aria-label={isOpen ? 'Cerrar' : 'Expandir'}
           >
-            <ChevronDown className={`size-4 transition-transform ${isEditing ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`size-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
           </button>
         </div>
       </header>
+
+      {/* Vista de solo lectura */}
+      {isOpen && !isEditing && (
+        <div className="px-4 pb-4 pt-2 border-t border-(--border)/60 flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-extrabold uppercase tracking-wider text-(--fg-muted)">Enunciado</label>
+            <p className="text-sm text-(--fg) whitespace-pre-wrap">{question.questionText}</p>
+          </div>
+
+          {question.type === 'multichoice' && (
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-extrabold uppercase tracking-wider text-(--fg-muted)">Respuestas</label>
+              {question.answers.map((a, i) => (
+                <div
+                  key={i}
+                  className={`flex items-center gap-3 p-2 rounded-2xl border-2 ${
+                    a.isCorrect ? 'border-emerald-400 bg-emerald-50' : 'border-(--border) bg-white'
+                  }`}
+                >
+                  <span
+                    className={`size-9 rounded-xl grid place-items-center font-extrabold text-sm shrink-0 ${
+                      a.isCorrect ? 'bg-emerald-500 text-white' : 'bg-(--tint-100) text-(--fg-muted)'
+                    }`}
+                  >
+                    {a.isCorrect ? <Check className="size-4" strokeWidth={3} /> : String.fromCharCode(97 + i)}
+                  </span>
+                  <span className="flex-1 text-sm text-(--fg) font-bold">{a.text}</span>
+                  {a.isCorrect && (
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 shrink-0">Correcta</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {question.type === 'truefalse' && (
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-extrabold uppercase tracking-wider text-(--fg-muted)">Respuesta correcta</label>
+              <div className="grid grid-cols-2 gap-3">
+                <div
+                  className={`p-4 rounded-2xl border-2 flex items-center gap-3 ${
+                    question.correctAnswer ? 'border-emerald-400 bg-emerald-50' : 'border-(--border) bg-white opacity-50'
+                  }`}
+                >
+                  <span
+                    className={`size-10 rounded-xl grid place-items-center ${
+                      question.correctAnswer ? 'bg-emerald-500 text-white' : 'bg-(--tint-100) text-(--fg-muted)'
+                    }`}
+                  >
+                    <Check className="size-5" strokeWidth={3} />
+                  </span>
+                  <span className="text-sm font-extrabold text-(--fg)">Verdadero</span>
+                </div>
+                <div
+                  className={`p-4 rounded-2xl border-2 flex items-center gap-3 ${
+                    !question.correctAnswer ? 'border-emerald-400 bg-emerald-50' : 'border-(--border) bg-white opacity-50'
+                  }`}
+                >
+                  <span
+                    className={`size-10 rounded-xl grid place-items-center ${
+                      !question.correctAnswer ? 'bg-emerald-500 text-white' : 'bg-(--tint-100) text-(--fg-muted)'
+                    }`}
+                  >
+                    <X className="size-5" strokeWidth={3} />
+                  </span>
+                  <span className="text-sm font-extrabold text-(--fg)">Falso</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Inline editor */}
       {isEditing && (

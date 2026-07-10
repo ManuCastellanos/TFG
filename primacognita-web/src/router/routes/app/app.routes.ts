@@ -2,7 +2,6 @@ import { layoutRoute } from './layout.route';
 import { dashboardRoute } from './dashboard.route';
 import { scheduleRoute } from './schedule.route';
 import { coursesRoute } from './courses.route';
-import { createCourseRoute } from './create-course.route';
 import { courseRoute } from './course.route';
 import { assignmentRoute } from './assignment.route';
 import { createAssignmentRoute } from './create-assignment.route';
@@ -21,7 +20,6 @@ export const appRoutes = layoutRoute.addChildren([
   profileRoute,
   teacherStudentProfileRoute,
   coursesRoute,
-  createCourseRoute,
   courseRoute,
   assignmentRoute,
   createAssignmentRoute,
