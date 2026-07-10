@@ -456,10 +456,11 @@ function QuizPreviewStudentView() {
       doNavigate(meta.id);
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
-      if (msg.toLowerCase().includes('password') || msg.includes('requirepassword')) {
+      const msgLower = msg.toLowerCase();
+      if (msgLower.includes('password') || msgLower.includes('requirepassword') || msgLower.includes('contraseña')) {
         setShowPasswordPrompt(true);
         setPasswordError(null);
-      } else if (msg.includes('noquestionsfound')) {
+      } else if (msgLower.includes('noquestionsfound')) {
         setStartError('Este cuestionario no tiene preguntas configuradas. Contacta con tu profesor.');
       } else {
         setStartError(msg || 'Error al iniciar el cuestionario.');
