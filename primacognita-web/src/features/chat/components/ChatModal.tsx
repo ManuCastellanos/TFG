@@ -1,22 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useChatDrawer } from '../useChatDrawer';
-import { useStartConversation } from '../hooks/useStartConversation';
+import { useConversationBetweenUsers } from '../hooks/useConversationBetweenUsers';
 import { ConversationList } from './ConversationList';
 import { MessageThread } from './MessageThread';
 
 export function ChatModal() {
-  const { isOpen, close, activeConversationId, openWithUserId, selectConversation } = useChatDrawer();
-  const startConversation = useStartConversation();
-  const processedRef = useRef<number | null>(null);
+  const { isOpen, close, activeConversationId, pendingUser, selectConversation } = useChatDrawer();
+  const { data: existing } = useConversationBetweenUsers(pendingUser?.id ?? null);
 
   useEffect(() => {
-    if (openWithUserId && processedRef.current !== openWithUserId) {
-      processedRef.current = openWithUserId;
-      startConversation.mutateAsync(openWithUserId).then((result) => {
-        selectConversation(result.conversationId);
-      });
+    if (pendingUser && existing) {
+      selectConversation(existing.conversation.id);
     }
-  }, [openWithUserId, startConversation, selectConversation]);
+  }, [pendingUser, existing, selectConversation]);
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center px-8 py-6 pointer-events-none">
@@ -36,7 +32,7 @@ export function ChatModal() {
 
         {/* Right panel: active conversation or placeholder */}
         <div className="flex-1 flex flex-col">
-          {activeConversationId ? (
+          {activeConversationId || pendingUser ? (
             <MessageThread />
           ) : (
             <div className="flex-1 flex items-center justify-center text-sm text-(--fg-muted)">

@@ -4,7 +4,9 @@ import type { SidebarProps } from './sidebar.types';
 export const Sidebar = ({ navItems, activePath, onNavigate }: SidebarProps) => (
   <aside className="flex h-full w-64 shrink-0 flex-col bg-(--sidebar-bg) px-4 py-6">
     <div className="mb-8 flex items-center px-4">
-      <img src="/logo.png" alt="Prima Cognita" className="w-40" />
+      <button type="button" onClick={() => onNavigate('/dashboard')} className="cursor-pointer">
+        <img src="/logo.png" alt="Prima Cognita" className="w-40" />
+      </button>
     </div>
 
     <nav className="flex flex-1 flex-col gap-1.5">

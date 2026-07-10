@@ -3,19 +3,26 @@ import EmojiPicker from 'emoji-picker-react';
 import { useSendMessage } from '../hooks/useSendMessage';
 
 type ChatComposerProps = {
-  conversationId: number;
+  conversationId: number | null;
+  otherUserId?: number;
+  onConversationCreated?: (conversationId: number) => void;
 };
 
-export function ChatComposer({ conversationId }: ChatComposerProps) {
+export function ChatComposer({ conversationId, otherUserId, onConversationCreated }: ChatComposerProps) {
   const [text, setText] = useState('');
   const [showPicker, setShowPicker] = useState(false);
-  const sendMessage = useSendMessage(conversationId);
+  const sendMessage = useSendMessage(conversationId != null ? { conversationId } : { otherUserId: otherUserId! });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim() || sendMessage.isPending) return;
-    sendMessage.mutate(text.trim());
+    const value = text.trim();
     setText('');
+    sendMessage.mutate(value, {
+      onSuccess: (result) => {
+        if (conversationId == null) onConversationCreated?.(result.conversationId);
+      },
+    });
   };
 
   return (

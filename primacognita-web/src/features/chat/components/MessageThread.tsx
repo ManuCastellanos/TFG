@@ -15,7 +15,7 @@ export function MessageThread() {
   const { chatRepository } = useDependencies();
   const queryClient = useQueryClient();
   const uid = userId ? Number(userId) : 0;
-  const { activeConversationId, clearActiveConversation } = useChatDrawer();
+  const { activeConversationId, pendingUser, clearActiveConversation, selectConversation } = useChatDrawer();
   const { data, isLoading, isError, error } = useConversation(activeConversationId);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +40,7 @@ export function MessageThread() {
 
   const conversation = data?.conversation;
   const messages = useMemo(() => data?.messages ?? [], [data?.messages]);
-  const otherMember = conversation?.members.find((m) => m.id !== uid) ?? conversation?.members[0];
+  const otherMember = conversation?.members.find((m) => m.id !== uid) ?? conversation?.members[0] ?? pendingUser ?? undefined;
 
   const displayName = conversation?.name || otherMember?.fullname || 'Usuario';
   const initials = displayName
@@ -56,7 +56,7 @@ export function MessageThread() {
     bottomRef.current?.scrollIntoView({ behavior: 'auto' });
   }, [messages]);
 
-  if (isError) {
+  if (activeConversationId && isError) {
     return (
       <div className="flex-1 p-5">
         <Alert variant="error">Error cargando mensajes: {String(error)}</Alert>
@@ -64,7 +64,7 @@ export function MessageThread() {
     );
   }
 
-  if (isLoading) {
+  if (activeConversationId && isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center text-sm text-(--fg-muted)">
         Cargando mensajes…
@@ -135,9 +135,13 @@ export function MessageThread() {
       </div>
 
       {/* Composer */}
-      {conversation?.cansendmessagetoconversation !== false && (
-        <ChatComposer conversationId={activeConversationId!} />
-      )}
+      {activeConversationId ? (
+        conversation?.cansendmessagetoconversation !== false && (
+          <ChatComposer conversationId={activeConversationId} />
+        )
+      ) : pendingUser ? (
+        <ChatComposer conversationId={null} otherUserId={pendingUser.id} onConversationCreated={selectConversation} />
+      ) : null}
     </div>
   );
 }

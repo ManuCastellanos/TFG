@@ -67,7 +67,16 @@ export function StudentCard({ student, isCurrentUser, onOpenProfile }: StudentCa
       {!isCurrentUser && (
         <button
           type="button"
-          onClick={(e) => { e.stopPropagation(); openWithUser(Number(student.id)); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            openWithUser({
+              id: Number(student.id),
+              fullname: student.fullName,
+              profileimageurl: student.avatarUrl ?? student.avatarUrlSmall ?? '',
+              isonline: isOnline,
+              showonlinestatus: true,
+            });
+          }}
           className="mt-3 w-full text-xs font-extrabold py-2 rounded-xl bg-(--tint-50) hover:bg-emerald-100 text-(--fg-muted) hover:text-emerald-800 transition"
         >
           💬 Mensaje

@@ -57,7 +57,7 @@ export function NewConversationModal({ onClose }: NewConversationModalProps) {
                   key={user.id}
                   type="button"
                   onClick={() => {
-                    openWithUser(user.id);
+                    openWithUser(user);
                     onClose();
                   }}
                   className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-(--tint-50) transition text-left"

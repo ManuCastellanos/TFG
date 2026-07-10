@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ChatDrawerContext } from './chatContext';
+import type { ChatConversationMember } from '@/modules/chat/domain/ChatConversation';
 
 type Props = {
   children: React.ReactNode;
@@ -8,35 +9,44 @@ type Props = {
 export const ChatDrawerProvider = ({ children }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState<number | null>(null);
-  const [openWithUserId, setOpenWithUserId] = useState<number | null>(null);
+  const [pendingUser, setPendingUser] = useState<ChatConversationMember | null>(null);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
     setIsOpen(false);
     setActiveConversationId(null);
-    setOpenWithUserId(null);
+    setPendingUser(null);
   }, []);
 
   const selectConversation = useCallback((id: number) => {
     setActiveConversationId(id);
-    setOpenWithUserId(null);
+    setPendingUser(null);
   }, []);
 
-  const openWithUser = useCallback((userId: number) => {
-    setOpenWithUserId(userId);
+  const openWithUser = useCallback((user: ChatConversationMember) => {
+    setPendingUser(user);
     setActiveConversationId(null);
     setIsOpen(true);
   }, []);
 
   const clearActiveConversation = useCallback(() => {
     setActiveConversationId(null);
-    setOpenWithUserId(null);
+    setPendingUser(null);
   }, []);
 
-  const clearOpenWithUser = useCallback(() => setOpenWithUserId(null), []);
-
   return (
-    <ChatDrawerContext value={{ isOpen, activeConversationId, openWithUserId, open, close, selectConversation, openWithUser, clearActiveConversation, clearOpenWithUser }}>
+    <ChatDrawerContext
+      value={{
+        isOpen,
+        activeConversationId,
+        pendingUser,
+        open,
+        close,
+        selectConversation,
+        openWithUser,
+        clearActiveConversation,
+      }}
+    >
       {children}
     </ChatDrawerContext>
   );

@@ -170,6 +170,12 @@ function QuizPreviewWithAttempts({
         )
       : null;
 
+  const hasInProgress = attempts.some((a) => a.state === 'inprogress');
+  const finishedCount = attempts.filter((a) => a.state !== 'inprogress').length;
+  const remainingAttempts =
+    !meta.maxAttempts || meta.maxAttempts === 0 ? null : meta.maxAttempts - finishedCount;
+  const noAttemptsLeft = remainingAttempts != null && remainingAttempts <= 0 && !hasInProgress;
+
   return (
     <Page>
       <div className="grid grid-cols-[1fr_300px] gap-6">
@@ -191,13 +197,11 @@ function QuizPreviewWithAttempts({
               <h3 className="font-semibold text-(--fg)">Tus intentos</h3>
               <span className="text-xs font-bold text-(--fg-subtle)">
                 {attempts.length} {attempts.length === 1 ? 'intento' : 'intentos'} ·{' '}
-                {!meta.maxAttempts || meta.maxAttempts === 0
+                {remainingAttempts == null
                   ? 'te quedan ilimitados'
-                  : (() => {
-                      const finished = attempts.filter((a) => a.state !== 'inprogress').length;
-                      const remaining = meta.maxAttempts - finished;
-                      return remaining > 0 ? `te quedan ${remaining}` : 'sin intentos restantes';
-                    })()}
+                  : remainingAttempts > 0
+                    ? `te quedan ${remainingAttempts}`
+                    : 'sin intentos restantes'}
               </span>
             </div>
             <div className="flex flex-col gap-2">
@@ -281,11 +285,17 @@ function QuizPreviewWithAttempts({
             variant="primary"
             type="button"
             onClick={onStart}
-            disabled={loading}
+            disabled={loading || noAttemptsLeft}
             className="flex items-center justify-center gap-2 px-5 py-4 text-base shadow-sm disabled:opacity-60"
           >
             <Play className="size-5" />
-            {loading ? 'Iniciando…' : 'Reintentar cuestionario'}
+            {loading
+              ? 'Iniciando…'
+              : noAttemptsLeft
+                ? 'Sin intentos restantes'
+                : hasInProgress
+                  ? 'Continuar cuestionario'
+                  : 'Reintentar cuestionario'}
           </Button>
 
           <Countdown dueDate={meta.dueDate} openDate={meta.openDate} />
