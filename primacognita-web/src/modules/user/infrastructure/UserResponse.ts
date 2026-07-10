@@ -24,3 +24,13 @@ export type EnrolledUsersResponse = Array<{
   profileimageurl?: string;
   roles: MoodleRole[];
 }>;
+
+export type UserSearchResponse = {
+  users: Array<{
+    id: number;
+    fullname?: string;
+    firstname?: string;
+    lastname?: string;
+    profileimageurl?: string;
+  }>;
+};

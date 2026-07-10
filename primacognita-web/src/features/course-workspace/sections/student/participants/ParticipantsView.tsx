@@ -7,6 +7,7 @@ import { SectionListSkeleton } from '@/components/patterns/sectionSkeleton/Secti
 import { StudentCard } from './components/StudentCard';
 import { TeacherCard } from './components/TeacherCard';
 import { TipCard } from './components/TipCard';
+import { AddStudentModal } from './components/AddStudentModal';
 import type { Participant } from '@/modules/course/domain/Participant';
 
 export type ParticipantsViewProps = {
@@ -20,6 +21,7 @@ export const ParticipantsView = ({ participants, loading, courseId }: Participan
   const navigate = useNavigate();
   const isTeacherViewer = isTeacherRole(roleName);
   const [query, setQuery] = useState('');
+  const [addStudentOpen, setAddStudentOpen] = useState(false);
 
   const teacher = participants.find((p) => isTeacherRole(p.roleName));
   const students = participants.filter((p) => !isTeacherRole(p.roleName));
@@ -30,7 +32,7 @@ export const ParticipantsView = ({ participants, loading, courseId }: Participan
     return <SectionListSkeleton />;
   }
 
-  if (participants.length === 0) {
+  if (participants.length === 0 && !isTeacherViewer) {
     return <EmptyState emoji="👥" title="Sin participantes" subtitle="No hay participantes en este curso." />;
   }
 
@@ -43,24 +45,35 @@ export const ParticipantsView = ({ participants, loading, courseId }: Participan
               <h3 className="font-extrabold text-(--fg)">Tus compañeros</h3>
               <p className="text-sm text-(--fg-muted)">{students.length} alumnos en esta clase</p>
             </div>
-            <div className="relative">
-              <input
-                type="search"
-                placeholder="Buscar..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="rounded-2xl border border-(--border) bg-white pl-9 pr-4 py-2 text-sm w-56 focus:outline-none focus:border-emerald-400 transition"
-              />
-              <svg
-                viewBox="0 0 24 24"
-                className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-(--fg-muted)"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="M20 20l-3-3" />
-              </svg>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="search"
+                  placeholder="Buscar..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="rounded-2xl border border-(--border) bg-white pl-9 pr-4 py-2 text-sm w-56 focus:outline-none focus:border-emerald-400 transition"
+                />
+                <svg
+                  viewBox="0 0 24 24"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-(--fg-muted)"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3-3" />
+                </svg>
+              </div>
+              {isTeacherViewer && (
+                <button
+                  type="button"
+                  onClick={() => setAddStudentOpen(true)}
+                  className="px-4 py-2 rounded-2xl bg-[#274E38] text-white text-sm font-extrabold hover:brightness-110 transition"
+                >
+                  + Añadir alumno
+                </button>
+              )}
             </div>
           </div>
 
@@ -91,6 +104,15 @@ export const ParticipantsView = ({ participants, loading, courseId }: Participan
         {teacher && <TeacherCard teacher={teacher} />}
         <TipCard />
       </aside>
+
+      {isTeacherViewer && (
+        <AddStudentModal
+          open={addStudentOpen}
+          onClose={() => setAddStudentOpen(false)}
+          courseId={courseId}
+          existingParticipantIds={new Set(participants.map((p) => p.id))}
+        />
+      )}
     </div>
   );
 };

@@ -21,6 +21,7 @@ export default interface ICourseRepository {
   createCourse(token: string, input: CreateCourseInput, imageItemId?: number): Promise<CourseId>;
   updateCourse(token: string, input: UpdateCourseInput): Promise<void>;
   enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void>;
+  enrollStudentInCourse(token: string, userId: string, courseId: CourseId): Promise<void>;
   getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]>;
   getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]>;
   markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void>;

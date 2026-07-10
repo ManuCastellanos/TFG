@@ -65,6 +65,10 @@ export default class CourseRepository implements ICourseRepository {
     return this.api.course.enrollTeacherInCourse(token, userId, courseId);
   }
 
+  enrollStudentInCourse(token: string, userId: string, courseId: CourseId): Promise<void> {
+    return this.api.course.enrollStudentInCourse(token, userId, courseId);
+  }
+
   getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]> {
     return this.api.course.getCourseContents(token, courseId);
   }

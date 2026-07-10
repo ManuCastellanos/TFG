@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { useSession } from '@/shared/hooks/useSession';
+import { queryKeys } from '@/shared/hooks/queryKeys';
 import type { CreateCourseInput } from '@/modules/course/domain/CreateCourseInput';
 import type { CourseId } from '@/modules/course/domain/Course';
 
@@ -13,6 +15,7 @@ type UseCreateCourseResult = {
 export const useCreateCourse = (): UseCreateCourseResult => {
   const { token, userId } = useSession();
   const { courseRepository } = useDependencies();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,6 +27,7 @@ export const useCreateCourse = (): UseCreateCourseResult => {
       try {
         const courseId = await courseRepository.createCourseWithImage(token, input, imageFile);
         await courseRepository.enrollTeacherInCourse(token, userId, courseId);
+        await queryClient.invalidateQueries({ queryKey: queryKeys.courses.list(userId) });
         return courseId;
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Error desconocido');
@@ -32,7 +36,7 @@ export const useCreateCourse = (): UseCreateCourseResult => {
         setLoading(false);
       }
     },
-    [token, userId, courseRepository],
+    [token, userId, courseRepository, queryClient],
   );
 
   return { submit, loading, error };

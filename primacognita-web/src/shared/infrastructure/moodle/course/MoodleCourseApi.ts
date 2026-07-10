@@ -210,6 +210,14 @@ export default class MoodleCourseApi implements IMoodleCourseApi {
     });
   }
 
+  async enrollStudentInCourse(token: string, userId: string, courseId: CourseId): Promise<void> {
+    await this.moodleClient.call<null>(token, 'enrol_manual_enrol_users', {
+      'enrolments[0][roleid]': '5',
+      'enrolments[0][userid]': userId,
+      'enrolments[0][courseid]': courseId,
+    });
+  }
+
   async viewCourse(token: string, courseId: CourseId): Promise<void> {
     await this.moodleClient.call<unknown>(token, 'core_course_view_course', { courseid: courseId });
   }

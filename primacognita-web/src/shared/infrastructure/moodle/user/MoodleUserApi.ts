@@ -1,11 +1,12 @@
 import type IMoodleUserApi from './IMoodleUserApi';
-import type { CachedRole } from './IMoodleUserApi';
+import type { CachedRole, UserSearchResult } from './IMoodleUserApi';
 import type IMoodleClient from '@/shared/clients/IMoodleClient';
 import type { User } from '@/modules/user/domain/User';
 import type {
   UserResponse,
   UserCoursesResponse,
   EnrolledUsersResponse,
+  UserSearchResponse,
 } from '@/modules/user/infrastructure/UserResponse';
 
 const TEACHER_SHORTNAMES = new Set(['editingteacher', 'teacher']);
@@ -25,6 +26,18 @@ export default class MoodleUserApi implements IMoodleUserApi {
       roleId,
       roleName,
     };
+  }
+
+  async searchUsers(token: string, search: string): Promise<UserSearchResult[]> {
+    const response = await this.moodleClient.call<UserSearchResponse>(token, 'core_user_get_users', {
+      'criteria[0][key]': 'fullname',
+      'criteria[0][value]': search,
+    });
+    return (response.users ?? []).map((u) => ({
+      id: u.id,
+      fullName: u.fullname ?? [u.firstname, u.lastname].filter(Boolean).join(' '),
+      avatarUrl: u.profileimageurl ?? null,
+    }));
   }
 
   private async getUserRole(

@@ -23,6 +23,7 @@ export default interface IMoodleCourseApi {
   uploadCourseImage(token: string, file: File, userId: string): Promise<number>;
   getEnrolledUsers(token: string, courseId: CourseId): Promise<Participant[]>;
   enrollTeacherInCourse(token: string, userId: string, courseId: CourseId): Promise<void>;
+  enrollStudentInCourse(token: string, userId: string, courseId: CourseId): Promise<void>;
   viewCourse(token: string, courseId: CourseId): Promise<void>;
   markActivityComplete(token: string, cmId: number, completed: boolean): Promise<void>;
   getCourseContents(token: string, courseId: CourseId): Promise<CourseSection[]>;
