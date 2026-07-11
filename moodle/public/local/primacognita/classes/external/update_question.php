@@ -90,21 +90,23 @@ class update_question extends external_api {
         } else if ($question->qtype === 'truefalse') {
             // For truefalse, update fractions in question_answers
             $tf_answers = $DB->get_records('question_answers', ['question' => $question->id], 'id ASC');
+            $trueanswerid = null;
             foreach ($tf_answers as $ans) {
                 $label    = strtolower(strip_tags($ans->answer));
                 $isTrue   = strpos($label, 'true') !== false || strpos($label, 'verdad') !== false;
+                if ($isTrue) {
+                    $trueanswerid = $ans->id;
+                }
                 $fraction = ($isTrue && $params['correctanswer'] == 1) || (!$isTrue && $params['correctanswer'] == 0)
                     ? 1.0
                     : 0.0;
                 $DB->set_field('question_answers', 'fraction', $fraction, ['id' => $ans->id]);
             }
-            $DB->set_field('qtype_truefalse_options', 'trueanswer',
-                $DB->get_field_sql(
-                    "SELECT id FROM {question_answers} WHERE question = ? ORDER BY id ASC LIMIT 1",
-                    [$question->id]
-                ),
-                ['question' => $question->id]
-            );
+            if ($trueanswerid !== null) {
+                $DB->set_field('qtype_truefalse_options', 'trueanswer', $trueanswerid,
+                    ['question' => $question->id]
+                );
+            }
         }
 
         // Bump question version so Moodle picks up the changes

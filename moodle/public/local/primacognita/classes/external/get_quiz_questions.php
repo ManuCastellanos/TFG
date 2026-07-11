@@ -69,7 +69,8 @@ class get_quiz_questions extends external_api {
                 );
                 foreach ($tf as $a) {
                     if ($a->fraction >= 1.0) {
-                        $correctanswer = strtolower($a->answer) === 'true' ? 1 : 0;
+                        $label = strtolower(strip_tags($a->answer));
+                        $correctanswer = (strpos($label, 'true') !== false || strpos($label, 'verdad') !== false) ? 1 : 0;
                         break;
                     }
                 }

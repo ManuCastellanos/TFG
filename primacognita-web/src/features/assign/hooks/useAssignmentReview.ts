@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDependencies } from '@/shared/providers/DependenciesProvider';
 import { isStudentRole } from '@/modules/user/domain/User';
+import { queryKeys } from '@/shared/hooks/queryKeys';
 import type { AssignmentMeta } from '@/modules/assignment/domain/AssignmentMeta';
 import type { StudentSubmission } from '@/modules/assignment/domain/StudentSubmission';
 
@@ -26,6 +28,7 @@ export function useAssignmentReview(
   cmid: string,
 ): UseAssignmentReviewResult {
   const { assignmentRepository, courseRepository } = useDependencies();
+  const queryClient = useQueryClient();
   const [assignment, setAssignment] = useState<AssignmentMeta | null>(null);
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
   const [loading, setLoading] = useState(true);
@@ -130,11 +133,13 @@ export function useAssignmentReview(
       try {
         await assignmentRepository.saveGrade(token, assignment.id, userId, grade, feedback);
         await load();
+        await queryClient.invalidateQueries({ queryKey: ['califications'] });
+        await queryClient.invalidateQueries({ queryKey: queryKeys.assignments.meta(parseInt(courseId, 10)) });
       } finally {
         setSaving(false);
       }
     },
-    [token, assignment, assignmentRepository, load],
+    [token, assignment, assignmentRepository, load, queryClient, courseId],
   );
 
   return { assignment, submissions, loading, error, saving, saveGrade, refetch: load };
